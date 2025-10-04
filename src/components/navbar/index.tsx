@@ -16,8 +16,8 @@ export function Navbar() {
   }, []);
 
   const navItems = [
-    { name: "JSON Form", href: "/JSON Formatter" },
-    { name: "XML Form", href: "/XML Formatter" },
+    { name: "JSON Formatter", href: "/JSON Formatter" },
+    { name: "XML Formatter", href: "/XML Formatter" },
     { name: "Calculators", href: "/Calculators" },
     { name: "JSON Beautifier", href: "/JSON Beautifier" },
     { name: "Recent Links", href: "/Recent Links" },
