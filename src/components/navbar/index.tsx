@@ -16,13 +16,13 @@ export function Navbar() {
   }, []);
 
   const navItems = [
-    { name: "JSON Formatter", href: "/JSON Formatter" },
-    { name: "XML Formatter", href: "/XML Formatter" },
-    { name: "Calculators", href: "/Calculators" },
-    { name: "JSON Beautifier", href: "/JSON Beautifier" },
-    { name: "Recent Links", href: "/Recent Links" },
-    { name: "Sitemap", href: "/Sitemap" },
-    { name: "Blog", href: "/Blog" }
+    { name: "JSON Formatter", href: "/json-formatter" },
+    { name: "XML Formatter", href: "/xml-formatter" },
+    { name: "Calculators", href: "/calculators" },
+    { name: "JSON Beautifier", href: "/json-beautifier" },
+    { name: "Recent Links", href: "/recent-links" },
+    { name: "Sitemap", href: "/sitemap" },
+    { name: "Blog", href: "/blog" }
   ];
 
   return (
@@ -97,3 +97,4 @@ export function Navbar() {
     </header>
   );
 }
+
