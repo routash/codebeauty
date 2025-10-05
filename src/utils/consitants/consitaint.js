@@ -470,6 +470,445 @@ export const category = [
       { name: 'More Image Tools', to: 'more-image-tools' }
     ]
   },
+  {
+    name: 'Converters',
+    subcategories: [
+
+      { name: 'Base64 to Image', to: 'base64-to-image' },
+      { name: 'Date Calculator', to: 'date-calculator' },
+      { name: 'EXCEL to HTML', to: 'excel-to-html' },
+      { name: 'EXCEL to XML', to: 'excel-to-xml' },
+      { name: 'EXCEL to JSON', to: 'excel-to-json' },
+      { name: 'OPML to JSON', to: 'opml-to-json' },
+      { name: 'Word to HTML', to: 'word-to-html' },
+      { name: 'Online Tableizer', to: 'online-tableizer' }
+    ]
+  },
+  {
+    name: 'JSON Converters',
+    subcategories: [
+      { name: 'JSON to JAVA', to: 'json-to-java' },
+      { name: 'JSON to XML', to: 'json-to-xml' },
+      { name: 'JSON to YAML', to: 'json-to-yaml' },
+      { name: 'JSON to CSV', to: 'json-to-csv' },
+      { name: 'JSON to TSV', to: 'json-to-tsv' },
+      { name: 'JSON to Text', to: 'json-to-text' },
+      { name: 'JSON to Excel', to: 'json-to-excel' },
+      { name: 'JSON to HTML', to: 'json-to-html' }
+    ]
+  },
+  {
+    name: 'XML Converters',
+    subcategories: [
+      { name: 'XML Converter', to: 'xml-converter' },
+      { name: 'XML to JSON', to: 'xml-to-json' },
+      { name: 'XML to YAML', to: 'xml-to-yaml' },
+      { name: 'XML to CSV', to: 'xml-to-csv' },
+      { name: 'XML to TSV', to: 'xml-to-tsv' },
+      { name: 'XML to Text', to: 'xml-to-text' },
+      { name: 'XML-XSL Transform', to: 'xml-xsl-transform' },
+      { name: 'XML to HTML', to: 'xml-to-html' },
+      { name: 'XML to Excel', to: 'xml-to-excel' },
+      { name: 'XML to JAVA', to: 'xml-to-java' }
+    ]
+  },
+  {
+    name: 'HTML Converters',
+    subcategories: [
+      { name: 'HTML Stripper', to: 'html-stripper' },
+      { name: 'HTML Table Generator', to: 'html-table-generator' },
+      { name: 'HTML to CSV Converter', to: 'html-to-csv-converter' },
+      { name: 'HTML to TSV Converter', to: 'html-to-tsv-converter' },
+      { name: 'HTML to PHP Converter', to: 'html-to-php-converter' },
+      { name: 'HTML to CSV', to: 'html-to-csv' },
+      { name: 'HTML to JSON', to: 'html-to-json' },
+      { name: 'HTML to XML', to: 'html-to-xml' },
+      { name: 'HTML to YAML', to: 'html-to-yaml' },
+      { name: 'HTML to Text', to: 'html-to-text' },
+      { name: 'Text to HTML Entities', to: 'text-to-html-entities' },
+      { name: 'HTML Entities to Text', to: 'html-entities-to-text' },
+      { name: 'HTML to Markdown', to: 'html-to-markdown' },
+      { name: 'Markdown to HTML', to: 'markdown-to-html' },
+      { name: 'PUG to HTML Converter', to: 'pug-to-html-converter' },
+      { name: 'HTML to PUG Converter', to: 'html-to-pug-converter' },
+      { name: 'JADE to HTML Converter', to: 'jade-to-html-converter' },
+      { name: 'HTML to JADE Converter', to: 'html-to-jade-converter' },
+      { name: 'HTML to BBCode Converter', to: 'html-to-bbcode-converter' },
+      { name: 'BBCode to HTML Converter', to: 'bbcode-to-html-converter' }
+    ]
+  },
+  {
+    name: 'YAML Converters',
+    subcategories: [
+      { name: 'YAML Converter', to: 'yaml-converter' },
+      { name: 'YAML to XML', to: 'yaml-to-xml' },
+      { name: 'YAML to JSON', to: 'yaml-to-json' },
+      { name: 'YAML to CSV', to: 'yaml-to-csv' },
+      { name: 'YAML to Excel', to: 'yaml-to-excel' }
+    ]
+  },
+  {
+    name: 'Utility',
+    subcategories: [
+      { name: 'Send Snap Message', to: 'send-snap-message' },
+      { name: 'Responsive Website Tester', to: 'responsive-website-tester' },
+      { name: 'Credit Card Validator', to: 'credit-card-validator' },
+      { name: 'Credit Card Fake Number Generator', to: 'credit-card-fake-number-generator' },
+      { name: 'XPath Tester', to: 'xpath-tester' },
+      { name: 'JSON Path Tester', to: 'json-path-tester' },
+      { name: 'JSON Minifier', to: 'json-minifier' },
+      { name: 'File Difference', to: 'file-difference' },
+      { name: 'JSON Diff', to: 'json-diff' },
+      { name: 'XML Diff', to: 'xml-diff' },
+      { name: 'Broken Link Checker', to: 'broken-link-checker' },
+      { name: 'JSON Deserialize Online', to: 'json-deserialize-online' },
+      { name: 'JSON Serialize Online', to: 'json-serialize-online' },
+      { name: 'JSON Stringify Online', to: 'json-stringify-online' },
+      { name: 'XML Stringify Online', to: 'xml-stringify-online' },
+      { name: 'String to JSON Online', to: 'string-to-json-online' },
+      { name: 'JavaScript Obfuscator', to: 'javascript-obfuscator' },
+      { name: 'Curl to PHP', to: 'curl-to-php' },
+      { name: 'Crontab Format', to: 'crontab-format' }
+    ]
+  },
+  {
+    name: 'Chart Tools',
+    subcategories: [
+      { name: 'Line Graph Maker', to: 'line-graph-maker' },
+      { name: 'Bar Graph Maker', to: 'bar-graph-maker' },
+      { name: 'Pie Chart Maker', to: 'pie-chart-maker' },
+      { name: 'Doughnut Chart Maker', to: 'doughnut-chart-maker' },
+      { name: 'Scatter Plot Maker', to: 'scatter-plot-maker' }
+    ]
+  },
+  {
+    name: 'Viewers',
+    subcategories: [
+      { name: 'JSON Viewer', to: 'json-viewer' },
+      { name: 'XML Viewer', to: 'xml-viewer' },
+      { name: 'YAML Viewer', to: 'yaml-viewer' },
+      { name: 'MXML Viewer', to: 'mxml-viewer' },
+      { name: 'HTML Viewer', to: 'html-viewer' },
+      { name: 'JavaScript Viewer', to: 'javascript-viewer' },
+      { name: 'RSS Viewer', to: 'rss-viewer' },
+      { name: 'SOURCE CODE Viewer', to: 'source-code-viewer' },
+      { name: 'OPML Viewer', to: 'opml-viewer' },
+      { name: 'CSV Viewer', to: 'csv-viewer' },
+      { name: 'BBCode Viewer', to: 'bbcode-viewer' },
+      { name: 'Markdown Viewer', to: 'markdown-viewer' }
+    ]
+  },
+  {
+    name: 'Programming Editors',
+    subcategories: [
+      { name: 'XML Editor', to: 'xml-editor' },
+      { name: 'JSON Editor', to: 'json-editor' },
+      { name: 'Real Time HTML Editor', to: 'real-time-html-editor' },
+      { name: 'YAML Editor', to: 'yaml-editor' },
+      { name: 'ONLINE Editor', to: 'online-editor' },
+      { name: 'JAVA Editor', to: 'java-editor' },
+      { name: 'C# Editor', to: 'csharp-editor' },
+      { name: 'Actionscript Editor', to: 'actionscript-editor' },
+      { name: 'Markdown Editor', to: 'markdown-editor' }
+    ]
+  },
+  {
+    name: 'Parsers',
+    subcategories: [
+      { name: 'URL Parser', to: 'url-parser' },
+      { name: 'JSON Parser', to: 'json-parser' },
+      { name: 'XML Parser', to: 'xml-parser' },
+      { name: 'YAML Parser', to: 'yaml-parser' }
+    ]
+  },
+  {
+    name: 'CSS Tools',
+    subcategories: [
+      { name: 'CSS Beautifier', to: 'css-beautifier' },
+      { name: 'CSS to LESS', to: 'css-to-less' },
+      { name: 'CSS to SCSS', to: 'css-to-scss' },
+      { name: 'CSS to SASS', to: 'css-to-sass' },
+      { name: 'CSS to Stylus', to: 'css-to-stylus' },
+      { name: 'Stylus Compiler', to: 'stylus-compiler' },
+      { name: 'Stylus to CSS', to: 'stylus-to-css' },
+      { name: 'Stylus to LESS', to: 'stylus-to-less' },
+      { name: 'Stylus to SCSS', to: 'stylus-to-scss' },
+      { name: 'Stylus to SASS', to: 'stylus-to-sass' },
+      { name: 'LESS Compiler', to: 'less-compiler' },
+      { name: 'LESS to CSS', to: 'less-to-css' },
+      { name: 'LESS to Stylus', to: 'less-to-stylus' },
+      { name: 'LESS to SCSS', to: 'less-to-scss' },
+      { name: 'LESS to SASS', to: 'less-to-sass' },
+      { name: 'SCSS Compiler', to: 'scss-compiler' },
+      { name: 'SCSS to CSS', to: 'scss-to-css' },
+      { name: 'SCSS to Stylus', to: 'scss-to-stylus' },
+      { name: 'SCSS to LESS', to: 'scss-to-less' },
+      { name: 'SCSS to SASS', to: 'scss-to-sass' },
+      { name: 'SASS Compiler', to: 'sass-compiler' },
+      { name: 'SASS to CSS', to: 'sass-to-css' },
+      { name: 'SASS to Stylus', to: 'sass-to-stylus' },
+      { name: 'SASS to SCSS', to: 'sass-to-scss' },
+      { name: 'SASS to LESS', to: 'sass-to-less' }
+    ]
+  },
+  {
+    name: 'Escape Unescape',
+    subcategories: [
+      { name: 'HTML Escape Unescape', to: 'html-escape-unescape' },
+      { name: 'XML Escape Unescape', to: 'xml-escape-unescape' },
+      { name: 'Java Escape Unescape', to: 'java-escape-unescape' },
+      { name: 'C# Escape Unescape', to: 'csharp-escape-unescape' },
+      { name: 'Javascript Escape Unescape', to: 'javascript-escape-unescape' },
+      { name: 'CSV Escape Unescape', to: 'csv-escape-unescape' },
+      { name: 'SQL Escape Unescape', to: 'sql-escape-unescape' },
+      { name: 'JSON Escape Unescape', to: 'json-escape-unescape' },
+      { name: 'Un-Google Link', to: 'un-google-link' }
+    ]
+  },
+  {
+    name: 'CryptoGraphy Tools',
+    subcategories: [
+      { name: 'Encryption-Decryption', to: 'encryption-decryption' },
+      { name: 'HMAC Generator', to: 'hmac-generator' },
+      { name: 'MD2 Hash Generator', to: 'md2-hash-generator' },
+      { name: 'MD4 Hash Generator', to: 'md4-hash-generator' },
+      { name: 'MD5 Hash Generator', to: 'md5-hash-generator' },
+      { name: 'MD6 Hash Generator', to: 'md6-hash-generator' },
+      { name: 'NTLM Hash Generator', to: 'ntlm-hash-generator' },
+      { name: 'SHA1 Hash Generator', to: 'sha1-hash-generator' },
+      { name: 'SHA2 Hash Generator', to: 'sha2-hash-generator' },
+      { name: 'SHA224 Hash Generator', to: 'sha224-hash-generator' },
+      { name: 'SHA256 Hash Generator', to: 'sha256-hash-generator' },
+      { name: 'SHA384 Hash Generator', to: 'sha384-hash-generator' },
+      { name: 'SHA512 Hash Generator', to: 'sha512-hash-generator' },
+      { name: 'SHA512/224 Hash Generator', to: 'sha512-224-hash-generator' },
+      { name: 'SHA512/256 Hash Generator', to: 'sha512-256-hash-generator' },
+      { name: 'SHA3-224 Hash Generator', to: 'sha3-224-hash-generator' },
+      { name: 'SHA3-256 Hash Generator', to: 'sha3-256-hash-generator' },
+      { name: 'SHA3-384 Hash Generator', to: 'sha3-384-hash-generator' },
+      { name: 'SHA3-512 Hash Generator', to: 'sha3-512-hash-generator' },
+      { name: 'CRC-16 Hash Generator', to: 'crc-16-hash-generator' },
+      { name: 'CRC-32 Hash Generator', to: 'crc-32-hash-generator' },
+      { name: 'Shake-128 Hash Generator', to: 'shake-128-hash-generator' },
+      { name: 'Shake-256 Hash Generator', to: 'shake-256-hash-generator' },
+      { name: 'Whirlpool Hash Generator', to: 'whirlpool-hash-generator' },
+      { name: 'Wordpress Password Hash Generator', to: 'wordpress-password-hash-generator' }
+    ]
+  },
+  {
+    name: 'Beautifiers',
+    subcategories: [
+      { name: 'JSON Beautifier', to: 'json-beautifier' },
+      { name: 'CSS Beautifier', to: 'css-beautifier' },
+      { name: 'XML Beautifier', to: 'xml-beautifier' },
+      { name: 'Javascript Beautifier', to: 'javascript-beautifier' },
+      { name: 'YAML Beautifier', to: 'yaml-beautifier' },
+      { name: 'C# Beautifier', to: 'csharp-beautifier' },
+      { name: 'Java Beautifier', to: 'java-beautifier' },
+      { name: 'C Beautifier', to: 'c-beautifier' },
+      { name: 'C++ Beautifier', to: 'cpp-beautifier' },
+      { name: 'TypeScript Formatter', to: 'typescript-formatter' },
+      { name: 'SQL Formatter', to: 'sql-formatter' },
+      { name: 'Babel Formatter', to: 'babel-formatter' },
+      { name: 'Markdown Formatter', to: 'markdown-formatter' },
+      { name: 'MDX Formatter', to: 'mdx-formatter' },
+      { name: 'LESS Beautifier', to: 'less-beautifier' },
+      { name: 'SCSS Beautifier', to: 'scss-beautifier' },
+      { name: 'GraphQL Beautifier', to: 'graphql-beautifier' },
+      { name: 'PHP Beautifier', to: 'php-beautifier' },
+      { name: 'Python Beautifier', to: 'python-beautifier' },
+      { name: 'Perl Beautifier', to: 'perl-beautifier' },
+      { name: 'Ruby Beautifier', to: 'ruby-beautifier' },
+      { name: 'Angular Formatter', to: 'angular-formatter' },
+      { name: 'React Formatter', to: 'react-formatter' },
+      { name: 'Lua Beautifier', to: 'lua-beautifier' },
+      { name: 'XAML Beautifier', to: 'xaml-beautifier' }
+    ]
+  },
+  {
+    name: 'Minifier',
+    subcategories: [
+      { name: 'JSON Minify', to: 'json-minify' },
+      { name: 'XML Minify', to: 'xml-minify' },
+      { name: 'Minify JS', to: 'minify-js' },
+      { name: 'CSS Minify', to: 'css-minify' },
+      { name: 'SQL Minifier', to: 'sql-minifier' },
+      { name: 'Minify HTML', to: 'minify-html' },
+      { name: 'Lua Minifier', to: 'lua-minifier' },
+      { name: 'Text Minifier', to: 'text-minifier' }
+    ]
+  },
+  {
+    name: 'CSV Tools',
+    subcategories: [
+      { name: 'CSV Viewer', to: 'csv-viewer' },
+      { name: 'CSV to XML/JSON', to: 'csv-to-xml-json' },
+      { name: 'CSV to XML', to: 'csv-to-xml' },
+      { name: 'CSV to JSON', to: 'csv-to-json' },
+      { name: 'CSV to HTML', to: 'csv-to-html' },
+      { name: 'CSV to TSV', to: 'csv-to-tsv' },
+      { name: 'CSV to MULTILINE DATA', to: 'csv-to-multiline-data' },
+      { name: 'CSV to SQL', to: 'csv-to-sql' },
+      { name: 'CSV to Excel', to: 'csv-to-excel' }
+    ]
+  },
+  {
+    name: 'String Utilities',
+    subcategories: [
+      { name: 'Random Word Generator', to: 'random-word-generator' },
+      { name: 'NTLM Hash Generator', to: 'ntlm-hash-generator' },
+      { name: 'Password Generator', to: 'password-generator' },
+      { name: 'String Builder', to: 'string-builder' },
+      { name: 'Number to Word Converter', to: 'number-to-word-converter' },
+      { name: 'Word to Number Converter', to: 'word-to-number-converter' },
+      { name: 'WORD COUNTER', to: 'word-counter' },
+      { name: 'Word Repeater', to: 'word-repeater' },
+      { name: 'Reverse String', to: 'reverse-string' },
+      { name: 'String to Hex Converter', to: 'string-to-hex-converter' },
+      { name: 'Hex to String Converter', to: 'hex-to-string-converter' },
+      { name: 'String to Binary Converter', to: 'string-to-binary-converter' },
+      { name: 'Binary to String Converter', to: 'binary-to-string-converter' },
+      { name: 'Case Converter', to: 'case-converter' },
+      { name: 'Delimited Text Extractor', to: 'delimited-text-extractor' },
+      { name: 'Remove Accents', to: 'remove-accents' },
+      { name: 'Remove Duplicate Lines', to: 'remove-duplicate-lines' },
+      { name: 'Remove Empty Lines', to: 'remove-empty-lines' },
+      { name: 'Remove Extra Spaces', to: 'remove-extra-spaces' },
+      { name: 'Remove Whitespace', to: 'remove-whitespace' },
+      { name: 'Remove Line Breaks', to: 'remove-line-breaks' },
+      { name: 'Remove Lines Containing', to: 'remove-lines-containing' },
+      { name: 'Sort Text Lines', to: 'sort-text-lines' },
+      { name: 'Word Sorter', to: 'word-sorter' },
+      { name: 'Word Frequency Counter', to: 'word-frequency-counter' },
+      { name: 'Text Repeater', to: 'text-repeater' },
+      { name: 'Remove Punctuation', to: 'remove-punctuation' }
+    ]
+  },
+  {
+    name: 'Syntax Highlighting',
+    subcategories: [
+      { name: 'JSON Syntax Highlighting', to: 'json-syntax-highlighting' },
+      { name: 'XML Highlighter', to: 'xml-highlighter' },
+      { name: 'XML Pretty Print', to: 'xml-pretty-print' },
+      { name: 'HTML Pretty Print', to: 'html-pretty-print' },
+      { name: 'JS Pretty Print', to: 'js-pretty-print' },
+      { name: 'Code Highlighter', to: 'code-highlighter' }
+    ]
+  },
+  {
+    name: 'Compress / Decompress',
+    subcategories: [
+      { name: 'GZip Decompress Online', to: 'gzip-decompress-online' },
+      { name: 'Zlib Decompress Online', to: 'zlib-decompress-online' }
+    ]
+  },
+  {
+    name: 'Validators',
+    subcategories: [
+      { name: 'CSS Validator', to: 'css-validator' },
+      { name: 'JavaScript Validator', to: 'javascript-validator' },
+      { name: 'JSON Validator', to: 'json-validator' },
+      { name: 'JSON5 Validator', to: 'json5-validator' },
+      { name: 'XML Validator', to: 'xml-validator' },
+      { name: 'Credit Card Validator', to: 'credit-card-validator' },
+      { name: 'API Test', to: 'api-test' },
+      { name: 'YAML Validator', to: 'yaml-validator' }
+    ]
+  },
+  {
+    name: 'Number Utilities',
+    subcategories: [
+      { name: 'All Numbers Converter', to: 'all-numbers-converter' },
+      { name: 'Decimal to Binary', to: 'decimal-to-binary' },
+      { name: 'Decimal to Octal', to: 'decimal-to-octal' },
+      { name: 'Binary to Decimal', to: 'binary-to-decimal' },
+      { name: 'Binary to Hex', to: 'binary-to-hex' },
+      { name: 'Binary to Octal', to: 'binary-to-octal' },
+      { name: 'Hex to Decimal', to: 'hex-to-decimal' },
+      { name: 'Hex to Binary', to: 'hex-to-binary' },
+      { name: 'Hex to Octal', to: 'hex-to-octal' },
+      { name: 'Octal toDecimal', to: 'octal-to-decimal' },
+      { name: 'Octal to Binary', to: 'octal-to-binary' },
+      { name: 'Octal to Hex', to: 'octal-to-hex' },
+      { name: 'Binary to Text', to: 'binary-to-text' },
+      { name: 'Text to Binary', to: 'text-to-binary' },
+      { name: 'ASCII to Text', to: 'ascii-to-text' },
+      { name: 'Char to ASCII', to: 'char-to-ascii' },
+      { name: 'Reverse Hex', to: 'reverse-hex' }
+    ]
+  },
+  {
+    name: 'Bitwise Tools',
+    subcategories: [
+      { name: 'Bitwise Calculator', to: 'bitwise-calculator' },
+      { name: 'XOR Calculator', to: 'xor-calculator' },
+      { name: 'AND Calculator', to: 'and-calculator' },
+      { name: 'NAND Calculator', to: 'nand-calculator' },
+      { name: 'OR Calculator', to: 'or-calculator' },
+      { name: 'NOR Calculator', to: 'nor-calculator' },
+      { name: 'XNOR Calculator', to: 'xnor-calculator' }
+    ]
+  },
+  {
+    name: 'IP Tools',
+    subcategories: [
+      { name: 'Hex to IP', to: 'hex-to-ip' },
+      { name: 'IP to Hex', to: 'ip-to-hex' },
+      { name: 'Binary to IP', to: 'binary-to-ip' },
+      { name: 'IP to Binary', to: 'ip-to-binary' },
+      { name: 'Decimal to IP', to: 'decimal-to-ip' },
+      { name: 'IP to Decimal', to: 'ip-to-decimal' },
+      { name: 'Octal to IP', to: 'octal-to-ip' },
+      { name: 'IP to Octal', to: 'ip-to-octal' },
+      { name: 'IPV6 to Binary', to: 'ipv6-to-binary' }
+    ]
+  },
+  {
+    name: 'Other Tools',
+    subcategories: [
+      { name: 'Lorem-Ipsum', to: 'lorem-ipsum' },
+      { name: 'Sharelink Generator', to: 'sharelink-generator' },
+      { name: 'Hostname to IP', to: 'hostname-to-ip' },
+      { name: 'IP to Hostname', to: 'ip-to-hostname' },
+      { name: 'Phone to IP Address', to: 'phone-to-ip-address' },
+      { name: 'IP Address to Phone', to: 'ip-address-to-phone' },
+      { name: 'DNS Lookup', to: 'dns-lookup' },
+      { name: 'MX Lookup', to: 'mx-lookup' },
+      { name: 'Nameserver Lookup', to: 'nameserver-lookup' },
+      { name: 'Website to IP Address', to: 'website-to-ip-address' },
+      { name: 'Open Port Checker', to: 'open-port-checker' },
+      { name: 'Webcam Test', to: 'webcam-test' }
+    ]
+  },
+  {
+    name: 'Random Tools',
+    subcategories: [
+      { name: 'Random IP Address', to: 'random-ip-address' },
+      { name: 'Random Time Generator', to: 'random-time-generator' },
+      { name: 'Random UUID Generator', to: 'random-uuid-generator' },
+      { name: 'Random JSON Generator', to: 'random-json-generator' },
+      { name: 'Random XML Generator', to: 'random-xml-generator' },
+      { name: 'Random Data from Regex', to: 'random-data-from-regex' },
+      { name: 'Random CSV Generator', to: 'random-csv-generator' },
+      { name: 'Random Number Generator', to: 'random-number-generator' },
+      { name: 'Random Integer Generator', to: 'random-integer-generator' },
+      { name: 'Random Prime Generator', to: 'random-prime-generator' },
+      { name: 'Random Date Generator', to: 'random-date-generator' },
+      { name: 'Random Bitmap Generator', to: 'random-bitmap-generator' },
+      { name: 'Random Name Picker', to: 'random-name-picker' },
+      { name: 'Text Lines shuffler', to: 'text-lines-shuffler' },
+      { name: 'MAC Address Generator', to: 'mac-address-generator' },
+      { name: 'Random Hex Generator', to: 'random-hex-generator' },
+      { name: 'Random TSV Generator', to: 'random-tsv-generator' },
+      { name: 'Random String Generator', to: 'random-string-generator' },
+      { name: 'Random Fraction Generator', to: 'random-fraction-generator' },
+      { name: 'Random Integer Range Generator', to: 'random-integer-range-generator' },
+      { name: 'Random Binary Generator', to: 'random-binary-generator' },
+      { name: 'Random Byte Generator', to: 'random-byte-generator' },
+      { name: 'Random Decimal Generator', to: 'random-decimal-generator' },
+      { name: 'Random Alphanumeric Generator', to: 'random-alphanumeric-generator' }
+    ]
+  },
   // ... (the rest categories like Converters, JSON Converters, XML Converters, HTML Converters, YAML Converters, Utility, Chart Tools, Viewers, Programming Editors, Parsers, CSS Tools, Escape Unescape, CryptoGraphy Tools, Beautifiers, etc. remain unchanged from your list — just ensure no duplicates)
 ];
 
@@ -714,33 +1153,33 @@ export const category = [
 //       { name: 'More Image Tools', to: 'more-image-tools' }
 //     ]
 //   },
-//   {
-//     name: 'Converters',
-//     subcategories: [
-//       { name: 'Image to Base64', to: 'image-to-base64' },
-//       { name: 'Base64 to Image', to: 'base64-to-image' },
-//       { name: 'Date Calculator', to: 'date-calculator' },
-//       { name: 'EXCEL to HTML', to: 'excel-to-html' },
-//       { name: 'EXCEL to XML', to: 'excel-to-xml' },
-//       { name: 'EXCEL to JSON', to: 'excel-to-json' },
-//       { name: 'OPML to JSON', to: 'opml-to-json' },
-//       { name: 'Word to HTML', to: 'word-to-html' },
-//       { name: 'Online Tableizer', to: 'online-tableizer' }
-//     ]
-//   },
-//   {
-//     name: 'JSON Converters',
-//     subcategories: [
-//       { name: 'JSON to JAVA', to: 'json-to-java' },
-//       { name: 'JSON to XML', to: 'json-to-xml' },
-//       { name: 'JSON to YAML', to: 'json-to-yaml' },
-//       { name: 'JSON to CSV', to: 'json-to-csv' },
-//       { name: 'JSON to TSV', to: 'json-to-tsv' },
-//       { name: 'JSON to Text', to: 'json-to-text' },
-//       { name: 'JSON to Excel', to: 'json-to-excel' },
-//       { name: 'JSON to HTML', to: 'json-to-html' }
-//     ]
-//   },
+// {
+//   name: 'Converters',
+//   subcategories: [
+//     { name: 'Image to Base64', to: 'image-to-base64' },
+//     { name: 'Base64 to Image', to: 'base64-to-image' },
+//     { name: 'Date Calculator', to: 'date-calculator' },
+//     { name: 'EXCEL to HTML', to: 'excel-to-html' },
+//     { name: 'EXCEL to XML', to: 'excel-to-xml' },
+//     { name: 'EXCEL to JSON', to: 'excel-to-json' },
+//     { name: 'OPML to JSON', to: 'opml-to-json' },
+//     { name: 'Word to HTML', to: 'word-to-html' },
+//     { name: 'Online Tableizer', to: 'online-tableizer' }
+//   ]
+// }
+// {
+//   name: 'JSON Converters',
+//   subcategories: [
+//     { name: 'JSON to JAVA', to: 'json-to-java' },
+//     { name: 'JSON to XML', to: 'json-to-xml' },
+//     { name: 'JSON to YAML', to: 'json-to-yaml' },
+//     { name: 'JSON to CSV', to: 'json-to-csv' },
+//     { name: 'JSON to TSV', to: 'json-to-tsv' },
+//     { name: 'JSON to Text', to: 'json-to-text' },
+//     { name: 'JSON to Excel', to: 'json-to-excel' },
+//     { name: 'JSON to HTML', to: 'json-to-html' }
+//   ]
+// }
 //   {
 //     name: 'XML Converters',
 //     subcategories: [
