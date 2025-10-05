@@ -1,71 +1,107 @@
-"use client";
 
+"use client"
+
+import { useState } from "react"
+import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
+import { Button } from "@/components/ui/button"
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarInset,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarProvider,
-    SidebarSeparator,
-    SidebarTrigger,
-} from "@/components/ui/sidebar";
+    FileText,
+    Code,
+    Image,
+    File,
+    Settings,
+    Download,
+    Upload,
+    Palette
+} from "lucide-react"
 
 export function Converter() {
-    return (
-        <SidebarProvider>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-                <div className="flex gap-4 md:gap-6">
-                    <Sidebar className="md:sticky md:top-20 lg:top-24 max-h-[calc(100vh-5rem-2rem)] lg:max-h-[calc(100vh-6rem-2rem)] overflow-hidden">
-                        <div className="flex flex-col h-auto max-h-[inherit]">
-                            <SidebarHeader>
-                                <span className="text-sm font-medium">Tools</span>
-                            </SidebarHeader>
-                            <SidebarSeparator />
-                            <div className="flex-1 min-h-0 overflow-auto">
-                                <SidebarContent>
-                                    <SidebarGroup>
-                                        <SidebarGroupLabel>Converters</SidebarGroupLabel>
-                                        <SidebarGroupContent>
-                                            <SidebarMenu>
-                                                <SidebarMenuItem>
-                                                    <SidebarMenuButton>JSON Formatter</SidebarMenuButton>
-                                                </SidebarMenuItem>
-                                                <SidebarMenuItem>
-                                                    <SidebarMenuButton>Base64 Encoder</SidebarMenuButton>
-                                                </SidebarMenuItem>
-                                                <SidebarMenuItem>
-                                                    <SidebarMenuButton>Color Picker</SidebarMenuButton>
-                                                </SidebarMenuItem>
-                                            </SidebarMenu>
-                                        </SidebarGroupContent>
-                                    </SidebarGroup>
-                                </SidebarContent>
-                            </div>
-                            <SidebarFooter />
-                        </div>
-                    </Sidebar>
-                    {/* Optional rail for desktop resize/hover toggle */}
-                    
+    const [selectedConverter, setSelectedConverter] = useState("text")
 
-                    <SidebarInset className="min-w-0 flex-1">
-                        <section className="p-4">
-                            <div className="md:hidden mb-4 flex items-center gap-2">
-                                <SidebarTrigger />
-                                <span className="text-sm text-muted-foreground">Open tools</span>
+    const converterOptions: SidebarOption[] = [
+        {
+            id: "text",
+            label: "Text Converter",
+            icon: FileText,
+            description: "Convert text formats"
+        },
+        {
+            id: "code",
+            label: "Code Converter",
+            icon: Code,
+            description: "Convert between programming languages"
+        },
+        {
+            id: "image",
+            label: "Image Converter",
+            icon: Image,
+            description: "Convert image formats"
+        },
+        {
+            id: "file",
+            label: "File Converter",
+            icon: File,
+            description: "Convert file formats"
+        }
+    ]
+
+    const footerOptions: SidebarOption[] = [
+        {
+            id: "settings",
+            label: "Settings",
+            icon: Settings
+        }
+    ]
+
+    const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
+
+    return (
+        <ReusableSidebar
+            title="Converter Tools"
+            icon={Palette}
+            options={converterOptions}
+            selectedOption={selectedConverter}
+            onOptionSelect={setSelectedConverter}
+            footerOptions={footerOptions}
+        >
+            <SidebarContentWrapper selectedOption={selectedOption}>
+                <div className=" mx-auto">
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold mb-2">
+                            {selectedOption?.label}
+                        </h2>
+                        <p className="text-muted-foreground">
+                            {selectedOption?.description}
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-sm font-medium mb-2 block">Input</label>
+                                <input className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center" type="text">
+                              
+                                </input>
                             </div>
-                            <h1 className="text-lg font-semibold">Converter</h1>
-                            <p className="text-sm text-muted-foreground">Select a tool from the sidebar.</p>
-                        </section>
-                    </SidebarInset>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-sm font-medium mb-2 block">Output</label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                                    <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                                    <p className="text-sm text-gray-500">Converted files will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 flex gap-2">
+                        <Button>Convert</Button>
+                        <Button variant="outline">Clear</Button>
+                    </div>
                 </div>
-            </div>
-        </SidebarProvider>
+            </SidebarContentWrapper>
+        </ReusableSidebar>
     );
 }
