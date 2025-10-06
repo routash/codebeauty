@@ -364,7 +364,7 @@ export const constants = {
 };
 export const category = [
   {
-    name: 'Color Converters',
+    name: 'Color Converters',href: '/color-converters',
     subcategories: [
       { name: 'HEX to Pantone Converter', to: 'hextopantone' },
       { name: 'RGB to Pantone Converter', to: 'rgbtopantone' },
@@ -389,7 +389,7 @@ export const category = [
     ]
   },
   {
-    name: 'Unit Converter',
+    name: 'Unit Converter',href: '/unit-converter',
     subcategories: [
       { name: 'Length Converter', to: 'length-converter' },
       { name: 'Weight Converter', to: 'weight-converter' },
@@ -401,7 +401,7 @@ export const category = [
     ]
   },
   {
-    name: 'SQL Converters',
+    name: 'SQL Converters',href: '/sql-converters',
     subcategories: [
       { name: 'SQL to CSV Converter', to: 'sql-to-csv' },
       { name: 'SQL to JSON Converter', to: 'sql-to-json' },
@@ -411,7 +411,7 @@ export const category = [
     ]
   },
   {
-    name: 'Encode & Decode',
+    name: 'Encode & Decode',href: '/encode-&-decode',
     subcategories: [
       { name: 'Base32 Encode', to: 'base32-encode' },
       { name: 'Base32 Decode', to: 'base32-decode' },
@@ -435,7 +435,7 @@ export const category = [
     ]
   },
   {
-    name: 'Base64 Tools',
+    name: 'Base64 Tools',href: '/base64-tools',
     subcategories: [
       { name: 'Image to Base64', to: 'image-to-base64' },
       { name: 'Base64 to Image', to: 'base64-to-image' },
@@ -460,7 +460,7 @@ export const category = [
     ]
   },
   {
-    name: 'Image Tools',
+    name: 'Image Tools',href: '/image-tools',
     subcategories: [
       { name: 'JPG to PNG', to: 'jpg-to-png' },
       { name: 'BMP to PNG', to: 'bmp-to-png' },
@@ -471,7 +471,7 @@ export const category = [
     ]
   },
   {
-    name: 'Converters',
+    name: 'Converters',href: '/converters',
     subcategories: [
 
       { name: 'Base64 to Image', to: 'base64-to-image' },
@@ -485,7 +485,7 @@ export const category = [
     ]
   },
   {
-    name: 'JSON Converters',
+    name: 'JSON Converters',href: '/json-converters',
     subcategories: [
       { name: 'JSON to JAVA', to: 'json-to-java' },
       { name: 'JSON to XML', to: 'json-to-xml' },
@@ -498,7 +498,7 @@ export const category = [
     ]
   },
   {
-    name: 'XML Converters',
+    name: 'XML Converters',href: '/xml-converters',
     subcategories: [
       { name: 'XML Converter', to: 'xml-converter' },
       { name: 'XML to JSON', to: 'xml-to-json' },
@@ -513,7 +513,7 @@ export const category = [
     ]
   },
   {
-    name: 'HTML Converters',
+    name: 'HTML Converters',href: '/html-converters',
     subcategories: [
       { name: 'HTML Stripper', to: 'html-stripper' },
       { name: 'HTML Table Generator', to: 'html-table-generator' },
@@ -538,7 +538,7 @@ export const category = [
     ]
   },
   {
-    name: 'YAML Converters',
+    name: 'YAML Converters',href: '/yaml-converters',
     subcategories: [
       { name: 'YAML Converter', to: 'yaml-converter' },
       { name: 'YAML to XML', to: 'yaml-to-xml' },
@@ -548,7 +548,7 @@ export const category = [
     ]
   },
   {
-    name: 'Utility',
+    name: 'Utility',href: '/utility',
     subcategories: [
       { name: 'Send Snap Message', to: 'send-snap-message' },
       { name: 'Responsive Website Tester', to: 'responsive-website-tester' },
@@ -572,7 +572,7 @@ export const category = [
     ]
   },
   {
-    name: 'Chart Tools',
+    name: 'Chart Tools',href: '/chart-tools',
     subcategories: [
       { name: 'Line Graph Maker', to: 'line-graph-maker' },
       { name: 'Bar Graph Maker', to: 'bar-graph-maker' },
@@ -582,7 +582,7 @@ export const category = [
     ]
   },
   {
-    name: 'Viewers',
+    name: 'Viewers',href: '/viewers',
     subcategories: [
       { name: 'JSON Viewer', to: 'json-viewer' },
       { name: 'XML Viewer', to: 'xml-viewer' },
@@ -599,7 +599,7 @@ export const category = [
     ]
   },
   {
-    name: 'Programming Editors',
+    name: 'Programming Editors',href: '/programming-editors',
     subcategories: [
       { name: 'XML Editor', to: 'xml-editor' },
       { name: 'JSON Editor', to: 'json-editor' },
@@ -613,7 +613,7 @@ export const category = [
     ]
   },
   {
-    name: 'Parsers',
+    name: 'Parsers',href: '/parsers',
     subcategories: [
       { name: 'URL Parser', to: 'url-parser' },
       { name: 'JSON Parser', to: 'json-parser' },
@@ -622,7 +622,7 @@ export const category = [
     ]
   },
   {
-    name: 'CSS Tools',
+    name: 'CSS Tools',href: '/css-tools',
     subcategories: [
       { name: 'CSS Beautifier', to: 'css-beautifier' },
       { name: 'CSS to LESS', to: 'css-to-less' },
@@ -652,7 +652,7 @@ export const category = [
     ]
   },
   {
-    name: 'Escape Unescape',
+    name: 'Escape Unescape',href: '/escape-unescape',
     subcategories: [
       { name: 'HTML Escape Unescape', to: 'html-escape-unescape' },
       { name: 'XML Escape Unescape', to: 'xml-escape-unescape' },
@@ -666,7 +666,7 @@ export const category = [
     ]
   },
   {
-    name: 'CryptoGraphy Tools',
+    name: 'CryptoGraphy Tools',href: '/cryptography-tools',
     subcategories: [
       { name: 'Encryption-Decryption', to: 'encryption-decryption' },
       { name: 'HMAC Generator', to: 'hmac-generator' },
@@ -696,7 +696,7 @@ export const category = [
     ]
   },
   {
-    name: 'Beautifiers',
+    name: 'Beautifiers',href: '/beautifiers',
     subcategories: [
       { name: 'JSON Beautifier', to: 'json-beautifier' },
       { name: 'CSS Beautifier', to: 'css-beautifier' },
@@ -726,7 +726,7 @@ export const category = [
     ]
   },
   {
-    name: 'Minifier',
+    name: 'Minifier',href: '/minifier',
     subcategories: [
       { name: 'JSON Minify', to: 'json-minify' },
       { name: 'XML Minify', to: 'xml-minify' },
@@ -739,7 +739,7 @@ export const category = [
     ]
   },
   {
-    name: 'CSV Tools',
+    name: 'CSV Tools',href: '/csv-tools',
     subcategories: [
       { name: 'CSV Viewer', to: 'csv-viewer' },
       { name: 'CSV to XML/JSON', to: 'csv-to-xml-json' },
@@ -753,7 +753,7 @@ export const category = [
     ]
   },
   {
-    name: 'String Utilities',
+    name: 'String Utilities',href: '/string-utilities',
     subcategories: [
       { name: 'Random Word Generator', to: 'random-word-generator' },
       { name: 'NTLM Hash Generator', to: 'ntlm-hash-generator' },
@@ -785,7 +785,7 @@ export const category = [
     ]
   },
   {
-    name: 'Syntax Highlighting',
+    name: 'Syntax Highlighting',href: '/syntax-highlighting',
     subcategories: [
       { name: 'JSON Syntax Highlighting', to: 'json-syntax-highlighting' },
       { name: 'XML Highlighter', to: 'xml-highlighter' },
@@ -796,14 +796,14 @@ export const category = [
     ]
   },
   {
-    name: 'Compress / Decompress',
+    name: 'Compress / Decompress',href: '/compress-decompress',
     subcategories: [
       { name: 'GZip Decompress Online', to: 'gzip-decompress-online' },
       { name: 'Zlib Decompress Online', to: 'zlib-decompress-online' }
     ]
   },
   {
-    name: 'Validators',
+    name: 'Validators',href: '/validators',
     subcategories: [
       { name: 'CSS Validator', to: 'css-validator' },
       { name: 'JavaScript Validator', to: 'javascript-validator' },
@@ -816,7 +816,7 @@ export const category = [
     ]
   },
   {
-    name: 'Number Utilities',
+    name: 'Number Utilities',href: '/number-utilities',
     subcategories: [
       { name: 'All Numbers Converter', to: 'all-numbers-converter' },
       { name: 'Decimal to Binary', to: 'decimal-to-binary' },
@@ -838,7 +838,7 @@ export const category = [
     ]
   },
   {
-    name: 'Bitwise Tools',
+    name: 'Bitwise Tools',href: '/bitwise-tools',
     subcategories: [
       { name: 'Bitwise Calculator', to: 'bitwise-calculator' },
       { name: 'XOR Calculator', to: 'xor-calculator' },
@@ -850,7 +850,7 @@ export const category = [
     ]
   },
   {
-    name: 'IP Tools',
+    name: 'IP Tools',href: '/ip-tools',
     subcategories: [
       { name: 'Hex to IP', to: 'hex-to-ip' },
       { name: 'IP to Hex', to: 'ip-to-hex' },
@@ -864,7 +864,7 @@ export const category = [
     ]
   },
   {
-    name: 'Other Tools',
+    name: 'Other Tools',href: '/other-tools',
     subcategories: [
       { name: 'Lorem-Ipsum', to: 'lorem-ipsum' },
       { name: 'Sharelink Generator', to: 'sharelink-generator' },
@@ -881,7 +881,7 @@ export const category = [
     ]
   },
   {
-    name: 'Random Tools',
+    name: 'Random Tools',href: '/random-tools',
     subcategories: [
       { name: 'Random IP Address', to: 'random-ip-address' },
       { name: 'Random Time Generator', to: 'random-time-generator' },

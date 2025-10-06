@@ -20,11 +20,9 @@ export function Navbar() {
     { name: "XML Formatter", href: "/xml-formatter" },
     { name: "Calculators", href: "/calculators" },
     { name: "JSON Beautifier", href: "/json-beautifier" },
-    { name: "Recent Links", href: "/recent-links" },
-    { name: "Sitemap", href: "/sitemap" },
     { name: "Blog", href: "/blog" }
   ];
-
+ 
   return (
     <header
       className={`top-0 left-0 right-0 z-50 transition-all duration-500 ${

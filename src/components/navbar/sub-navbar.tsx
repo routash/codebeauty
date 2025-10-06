@@ -41,7 +41,10 @@ export function SubNavbar() {
                             {category.map((item) => (
                                 <NavigationMenuItem key={item.name}>
                                     <NavigationMenuTrigger className="rounded-xl">
+                                        {/* {item.name} */}
+                                        <Link href={item.href || ""}>
                                         {item.name}
+                                        </Link>
                                     </NavigationMenuTrigger>
                                     <NavigationMenuContent className="rounded-2xl border border-purple-100/50 shadow-2xl shadow-purple-100/50">
                                         <div className={`${item.subcategories.length >= 7 ? 'w-[28rem]' : 'w-64'} py-2`}>

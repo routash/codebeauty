@@ -1,5 +1,4 @@
-// app/blog/page.tsx
-export default function BlogPage() {
+export default function ulogPage() {
   return (
     <main style={{ padding: 20 }}>
       <h1>Blog</h1>

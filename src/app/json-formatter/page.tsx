@@ -1,9 +1,8 @@
-export default function JsonFormatterPage() {
+export default function jsonformatterPage() {
   return (
     <main style={{ padding: 20 }}>
-      <h1>JSON Formatter</h1>
+      <h1>json formatter</h1>
       <p>/json-formatter</p>
     </main>
   );
 }
-

@@ -1,5 +1,8 @@
-import { Converter } from "@/components/sections/converter";
-
-export default function ConverterPage() {
-    return <Converter />;
+export default function convertersPage() {
+  return (
+    <main style={{ padding: 20 }}>
+      <h1>converters</h1>
+      <p>/converters</p>
+    </main>
+  );
 }
