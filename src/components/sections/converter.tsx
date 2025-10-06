@@ -14,9 +14,11 @@ import {
     Upload,
     Palette
 } from "lucide-react"
+import { base64ToImage } from "@/utils/utils"
 
 export function Converter() {
-    const [selectedConverter, setSelectedConverter] = useState("text")
+    const [selectedConverter, setSelectedConverter] = useState("")
+    const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
         {
@@ -55,6 +57,11 @@ export function Converter() {
 
     const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
+    const handlestrtobase64 = () => {
+        setImg(base64ToImage(selectedConverter))
+       
+    }
+    console.log(img)
     return (
         <ReusableSidebar
             title="Converter Tools"
@@ -79,9 +86,7 @@ export function Converter() {
                         <div className="space-y-4">
                             <div>
                                 <label className="text-sm font-medium mb-2 block">Input</label>
-                                <input className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center" type="text">
-                              
-                                </input>
+                                <textarea value={selectedConverter} onChange={(e) => setSelectedConverter(e.target.value)} className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full" rows={5} />
                             </div>
                         </div>
 
@@ -89,15 +94,22 @@ export function Converter() {
                             <div>
                                 <label className="text-sm font-medium mb-2 block">Output</label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                    <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                                    <p className="text-sm text-gray-500">Converted files will appear here</p>
+                                    {img ? (
+                                        <>
+                                            <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                                            <p className="text-sm text-gray-500">Converted files will appear here</p>
+                                        </>
+                                    ) : (
+                                        <Image src={img} width={50} height={50} alt="Converted Image" />
+                                    )}
                                 </div>
+
                             </div>
                         </div>
                     </div>
 
                     <div className="mt-6 flex gap-2">
-                        <Button>Convert</Button>
+                        <Button onClick={handlestrtobase64} >Convert</Button>
                         <Button variant="outline">Clear</Button>
                     </div>
                 </div>
