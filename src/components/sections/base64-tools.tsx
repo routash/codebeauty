@@ -16,64 +16,131 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function Base64Tools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
+      
+    {
     id: "image-to-base64",
     label: "Image to Base64",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert any image (JPG, PNG, etc.) into a Base64 encoded string."
   },
   {
     id: "base64-to-image",
     label: "Base64 to Image",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Decode Base64 string back into an image file."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "png-to-base64",
+    label: "PNG to Base64",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert PNG images into Base64 encoded format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "jpg-to-base64",
+    label: "JPG to Base64",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert JPG or JPEG images into Base64 encoded format."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "json-to-base64",
+    label: "JSON to Base64",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert JSON data into Base64 encoded string."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "xml-to-base64",
+    label: "XML to Base64",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Convert XML data into Base64 encoded string."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "yaml-to-base64",
+    label: "YAML to Base64",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert YAML content into Base64 encoded format."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "base64-to-json",
+    label: "Base64 to JSON",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Decode Base64 encoded text into JSON format."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "base64-to-xml",
+    label: "Base64 to XML",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Decode Base64 encoded data into XML content."
+  },
+  {
+    id: "base64-to-yaml",
+    label: "Base64 to YAML",
+    icon: FileText,
+    description: "Decode Base64 encoded string into readable YAML format."
+  },
+  {
+    id: "csv-to-base64",
+    label: "CSV to Base64",
+    icon: FileText,
+    description: "Convert CSV data files into Base64 encoded format."
+  },
+  {
+    id: "base64-to-csv",
+    label: "Base64 to CSV",
+    icon: FileText,
+    description: "Decode Base64 encoded text back into CSV data."
+  },
+  {
+    id: "tsv-to-base64",
+    label: "TSV to Base64",
+    icon: FileText,
+    description: "Convert TSV (tab-separated) data into Base64 encoded format."
+  },
+  {
+    id: "base64-to-tsv",
+    label: "Base64 to TSV",
+    icon: FileText,
+    description: "Decode Base64 encoded string into TSV (tab-separated) format."
+  },
+  {
+    id: "binary-to-base64",
+    label: "Binary to Base64",
+    icon: FileText,
+    description: "Convert binary data or files into Base64 encoded format."
+  },
+  {
+    id: "base64-to-binary",
+    label: "Base64 to Binary",
+    icon: FileText,
+    description: "Decode Base64 string back into binary data."
+  },
+  {
+    id: "hex-to-base64",
+    label: "Hex to Base64",
+    icon: FileText,
+    description: "Convert hexadecimal text or values into Base64 encoded format."
+  },
+  {
+    id: "base64-to-hex",
+    label: "Base64 to Hex",
+    icon: FileText,
+    description: "Decode Base64 encoded data into hexadecimal format."
+  },
+  {
+    id: "octal-to-base64",
+    label: "Octal to Base64",
+    icon: FileText,
+    description: "Convert octal numbers or text into Base64 encoded format."
+  },
+  {
+    id: "more-base64-tools",
+    label: "More Base64 Tools",
+    icon: FileText,
+    description: "Explore more tools for Base64 encoding and decoding operations."
   }
     ]
 

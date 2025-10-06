@@ -16,64 +16,125 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function HtmlConverters() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+     {
+    id: "html-stripper",
+    label: "HTML Stripper",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Remove all HTML tags from content to get plain text."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "html-table-generator",
+    label: "HTML Table Generator",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Create HTML tables from structured data or text inputs."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "html-to-csv",
+    label: "HTML to CSV Converter",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert HTML tables into CSV format for spreadsheets."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "html-to-tsv",
+    label: "HTML to TSV Converter",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert HTML tables into TSV (tab-separated values) format."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "html-to-php",
+    label: "HTML to PHP Converter",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert HTML code into PHP echo statements or templates."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "html-to-json",
+    label: "HTML to JSON",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Transform HTML table data into JSON format."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "html-to-xml",
+    label: "HTML to XML",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert HTML content into well-formed XML documents."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "html-to-yaml",
+    label: "HTML to YAML",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Convert HTML structured data into readable YAML format."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "html-to-text",
+    label: "HTML to Text",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Extract plain text from HTML content."
+  },
+  {
+    id: "text-to-html-entities",
+    label: "Text to HTML Entities",
+    icon: FileText,
+    description: "Convert special characters in text into HTML entities."
+  },
+  {
+    id: "html-entities-to-text",
+    label: "HTML Entities to Text",
+    icon: FileText,
+    description: "Decode HTML entities back into readable text."
+  },
+  {
+    id: "html-to-markdown",
+    label: "HTML to Markdown",
+    icon: FileText,
+    description: "Convert HTML content into Markdown format for documentation."
+  },
+  {
+    id: "markdown-to-html",
+    label: "Markdown to HTML",
+    icon: FileText,
+    description: "Convert Markdown text into HTML content."
+  },
+  {
+    id: "pug-to-html",
+    label: "PUG to HTML Converter",
+    icon: FileText,
+    description: "Convert PUG (formerly Jade) templates into HTML code."
+  },
+  {
+    id: "html-to-pug",
+    label: "HTML to PUG Converter",
+    icon: FileText,
+    description: "Transform HTML code into PUG (Jade) template syntax."
+  },
+  {
+    id: "jade-to-html",
+    label: "JADE to HTML Converter",
+    icon: FileText,
+    description: "Convert JADE templates into standard HTML code."
+  },
+  {
+    id: "html-to-jade",
+    label: "HTML to JADE Converter",
+    icon: FileText,
+    description: "Transform HTML content into JADE template syntax."
+  },
+  {
+    id: "html-to-bbcode",
+    label: "HTML to BBCode Converter",
+    icon: FileText,
+    description: "Convert HTML formatting into BBCode for forums and posts."
+  },
+  {
+    id: "bbcode-to-html",
+    label: "BBCode to HTML Converter",
+    icon: FileText,
+    description: "Convert BBCode content back into HTML format."
   }
     ]
 

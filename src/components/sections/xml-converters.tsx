@@ -16,64 +16,71 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function XmlConverters() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+     {
+    id: "xml-converter",
+    label: "XML Converter",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "All-in-one XML conversion tool to transform XML data into various formats."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "xml-to-json",
+    label: "XML to JSON",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert XML documents into structured JSON format for web and API use."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "xml-to-yaml",
+    label: "XML to YAML",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert XML content into clean and readable YAML format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "xml-to-csv",
+    label: "XML to CSV",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Transform XML data into tabular CSV format for spreadsheets."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "xml-to-tsv",
+    label: "XML to TSV",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert XML data into TSV (tab-separated values) format."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "xml-to-text",
+    label: "XML to Text",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Flatten XML data into simple plain text for easy reading."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "xml-xsl-transform",
+    label: "XML-XSL Transform",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Apply XSL transformations to XML documents for custom formatting."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "xml-to-html",
+    label: "XML to HTML",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Convert XML data into formatted HTML tables or web-ready structure."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "xml-to-excel",
+    label: "XML to Excel",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Export XML data directly into Excel (.xlsx) spreadsheets."
+  },
+  {
+    id: "xml-to-java",
+    label: "XML to JAVA",
+    icon: FileText,
+    description: "Generate Java classes from XML data with fields and types mapped."
   }
     ]
 

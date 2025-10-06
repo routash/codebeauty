@@ -16,64 +16,125 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function EncodeDecode() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+  {
+    id: "base32-encode",
+    label: "Base32 Encode",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Encode text or data into Base32 format."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "base32-decode",
+    label: "Base32 Decode",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Decode Base32 encoded text back to its original form."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "base58-encode",
+    label: "Base58 Encode",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Encode text or data into Base58 format (commonly used in crypto)."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "base58-decode",
+    label: "Base58 Decode",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Decode Base58 encoded text into readable data."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "base64-encode",
+    label: "Base64 Encode",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert text or binary data into Base64 encoding."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "base64-decode",
+    label: "Base64 Decode",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Decode Base64 encoded strings to plain text or data."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "url-encode",
+    label: "URL Encode Online",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Encode URLs by converting special characters into safe web format."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "url-decode",
+    label: "URL Decode Online",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Decode encoded URLs back to their normal readable format."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "json-url-encode",
+    label: "JSON URL Encode",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Encode JSON objects into URL-safe encoded format."
+  },
+  {
+    id: "json-url-decode",
+    label: "JSON URL Decode",
+    icon: FileText,
+    description: "Decode URL-encoded JSON strings into readable JSON data."
+  },
+  {
+    id: "html-encode",
+    label: "HTML Encode",
+    icon: FileText,
+    description: "Convert HTML special characters into safe encoded entities."
+  },
+  {
+    id: "html-decode",
+    label: "HTML Decode",
+    icon: FileText,
+    description: "Decode HTML entities back into readable HTML characters."
+  },
+  {
+    id: "xml-url-encode",
+    label: "XML URL Encoding",
+    icon: FileText,
+    description: "Encode XML content into a URL-safe format."
+  },
+  {
+    id: "xml-url-decode",
+    label: "XML URL Decoding",
+    icon: FileText,
+    description: "Decode URL-encoded XML back to its original format."
+  },
+  {
+    id: "utf8-converter",
+    label: "UTF8 Converter",
+    icon: FileText,
+    description: "Convert text into UTF-8 encoded format for universal compatibility."
+  },
+  {
+    id: "utf8-decode",
+    label: "UTF8 Decode",
+    icon: FileText,
+    description: "Decode UTF-8 encoded text back into readable form."
+  },
+  {
+    id: "hex-to-utf8",
+    label: "Hex to UTF8",
+    icon: FileText,
+    description: "Convert hexadecimal text values into UTF-8 characters."
+  },
+  {
+    id: "json-decode-online",
+    label: "JSON Decode Online",
+    icon: FileText,
+    description: "Decode JSON strings into formatted and readable structure."
+  },
+  {
+    id: "json-encode-online",
+    label: "JSON Encode Online",
+    icon: FileText,
+    description: "Convert data or objects into properly formatted JSON."
   }
     ]
 

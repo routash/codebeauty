@@ -16,64 +16,155 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function RandomTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+       {
+    id: "random-ip-address",
+    label: "Random IP Address",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Generate random IPv4 or IPv6 addresses."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "random-time-generator",
+    label: "Random Time Generator",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Generate random timestamps or time values."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "random-uuid-generator",
+    label: "Random UUID Generator",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Generate random UUIDs for unique identifiers."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "random-json-generator",
+    label: "Random JSON Generator",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Create random JSON objects for testing or mock data."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "random-xml-generator",
+    label: "Random XML Generator",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Generate random XML data structures."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "random-data-from-regex",
+    label: "Random Data from Regex",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Generate random data matching a given regex pattern."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "random-csv-generator",
+    label: "Random CSV Generator",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Create random CSV files with test data."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "random-number-generator",
+    label: "Random Number Generator",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Generate random numbers for testing or calculations."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "random-integer-generator",
+    label: "Random Integer Generator",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Generate random integers within a specified range."
+  },
+  {
+    id: "random-prime-generator",
+    label: "Random Prime Generator",
+    icon: FileText,
+    description: "Generate random prime numbers for mathematical use."
+  },
+  {
+    id: "random-date-generator",
+    label: "Random Date Generator",
+    icon: FileText,
+    description: "Generate random dates within a specified range."
+  },
+  {
+    id: "random-bitmap-generator",
+    label: "Random Bitmap Generator",
+    icon: FileText,
+    description: "Create random bitmap images or pixel data."
+  },
+  {
+    id: "random-name-picker",
+    label: "Random Name Picker",
+    icon: FileText,
+    description: "Select random names from a list or dataset."
+  },
+  {
+    id: "text-lines-shuffler",
+    label: "Text Lines Shuffler",
+    icon: FileText,
+    description: "Randomly shuffle lines of text."
+  },
+  {
+    id: "mac-address-generator",
+    label: "MAC Address Generator",
+    icon: FileText,
+    description: "Generate random MAC addresses."
+  },
+  {
+    id: "random-hex-generator",
+    label: "Random Hex Generator",
+    icon: FileText,
+    description: "Generate random hexadecimal numbers or strings."
+  },
+  {
+    id: "random-tsv-generator",
+    label: "Random TSV Generator",
+    icon: FileText,
+    description: "Create random TSV files for testing or mock data."
+  },
+  {
+    id: "random-string-generator",
+    label: "Random String Generator",
+    icon: FileText,
+    description: "Generate random alphanumeric or custom strings."
+  },
+  {
+    id: "random-fraction-generator",
+    label: "Random Fraction Generator",
+    icon: FileText,
+    description: "Generate random fractional numbers."
+  },
+  {
+    id: "random-integer-range-generator",
+    label: "Random Integer Range Generator",
+    icon: FileText,
+    description: "Generate random integers within a user-defined range."
+  },
+  {
+    id: "random-binary-generator",
+    label: "Random Binary Generator",
+    icon: FileText,
+    description: "Generate random binary numbers (0s and 1s)."
+  },
+  {
+    id: "random-byte-generator",
+    label: "Random Byte Generator",
+    icon: FileText,
+    description: "Generate random bytes for testing or binary operations."
+  },
+  {
+    id: "random-decimal-generator",
+    label: "Random Decimal Generator",
+    icon: FileText,
+    description: "Generate random decimal numbers."
+  },
+  {
+    id: "random-alphanumeric-generator",
+    label: "Random Alphanumeric Generator",
+    icon: FileText,
+    description: "Generate random alphanumeric strings or codes."
   }
     ]
 

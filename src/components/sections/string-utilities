@@ -1,0 +1,264 @@
+
+"use client"
+
+import { useState } from "react"
+import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
+import { Button } from "@/components/ui/button"
+import {
+    FileText,
+    Code,
+    Image,
+    File,
+    Settings,
+    Download,
+    Upload,
+    Palette
+} from "lucide-react"
+import { base64ToImage } from "@/utils/utils"
+
+export function StringUtilities() {
+    const [selectedConverter, setSelectedConverter] = useState("")
+    const [img, setImg] = useState('')
+
+    const converterOptions: SidebarOption[] = [
+      
+        {
+    id: "upside-down-text",
+    label: "Upside Down Text",
+    icon: FileText,
+    description: "Convert normal text into upside-down characters for fun or styling."
+  },
+  {
+    id: "random-word-generator",
+    label: "Random Word Generator",
+    icon: FileText,
+    description: "Generate random words or phrases for testing or creative use."
+  },
+  {
+    id: "ntlm-hash-generator",
+    label: "NTLM Hash Generator",
+    icon: FileText,
+    description: "Generate NTLM hashes from text for authentication purposes."
+  },
+  {
+    id: "password-generator",
+    label: "Password Generator",
+    icon: FileText,
+    description: "Create strong, random passwords for security purposes."
+  },
+  {
+    id: "string-builder",
+    label: "String Builder",
+    icon: FileText,
+    description: "Construct or concatenate multiple strings efficiently."
+  },
+  {
+    id: "number-to-word-converter",
+    label: "Number to Word Converter",
+    icon: FileText,
+    description: "Convert numeric values into their word equivalents."
+  },
+  {
+    id: "word-to-number-converter",
+    label: "Word to Number Converter",
+    icon: FileText,
+    description: "Convert words representing numbers into numeric values."
+  },
+  {
+    id: "word-counter",
+    label: "WORD COUNTER",
+    icon: FileText,
+    description: "Count the number of words, characters, and lines in text."
+  },
+  {
+    id: "word-repeater",
+    label: "Word Repeater",
+    icon: FileText,
+    description: "Repeat words or phrases multiple times in text."
+  },
+  {
+    id: "reverse-string",
+    label: "Reverse String",
+    icon: FileText,
+    description: "Reverse the order of characters in a text string."
+  },
+  {
+    id: "string-to-hex-converter",
+    label: "String to Hex Converter",
+    icon: FileText,
+    description: "Convert text into hexadecimal representation."
+  },
+  {
+    id: "hex-to-string-converter",
+    label: "Hex to String Converter",
+    icon: FileText,
+    description: "Convert hexadecimal data back into readable text."
+  },
+  {
+    id: "string-to-binary-converter",
+    label: "String to Binary Converter",
+    icon: FileText,
+    description: "Convert text into binary (0s and 1s) format."
+  },
+  {
+    id: "binary-to-string-converter",
+    label: "Binary to String Converter",
+    icon: FileText,
+    description: "Convert binary data into readable text."
+  },
+  {
+    id: "case-converter",
+    label: "Case Converter",
+    icon: FileText,
+    description: "Convert text to uppercase, lowercase, or title case."
+  },
+  {
+    id: "delimited-text-extractor",
+    label: "Delimited Text Extractor",
+    icon: FileText,
+    description: "Extract specific fields or columns from delimited text."
+  },
+  {
+    id: "remove-accents",
+    label: "Remove Accents",
+    icon: FileText,
+    description: "Remove diacritics and accented characters from text."
+  },
+  {
+    id: "remove-duplicate-lines",
+    label: "Remove Duplicate Lines",
+    icon: FileText,
+    description: "Eliminate duplicate lines from text."
+  },
+  {
+    id: "remove-empty-lines",
+    label: "Remove Empty Lines",
+    icon: FileText,
+    description: "Delete all empty or blank lines from text."
+  },
+  {
+    id: "remove-extra-spaces",
+    label: "Remove Extra Spaces",
+    icon: FileText,
+    description: "Trim extra spaces between words or sentences."
+  },
+  {
+    id: "remove-whitespace",
+    label: "Remove Whitespace",
+    icon: FileText,
+    description: "Remove all whitespace characters from text."
+  },
+  {
+    id: "remove-line-breaks",
+    label: "Remove Line Breaks",
+    icon: FileText,
+    description: "Convert multiline text into a single line by removing line breaks."
+  },
+  {
+    id: "remove-lines-containing",
+    label: "Remove Lines Containing",
+    icon: FileText,
+    description: "Remove lines that contain a specific keyword or pattern."
+  },
+  {
+    id: "sort-text-lines",
+    label: "Sort Text Lines",
+    icon: FileText,
+    description: "Sort lines of text alphabetically or numerically."
+  },
+  {
+    id: "word-sorter",
+    label: "Word Sorter",
+    icon: FileText,
+    description: "Sort words within text alphabetically."
+  },
+  {
+    id: "word-frequency-counter",
+    label: "Word Frequency Counter",
+    icon: FileText,
+    description: "Count the occurrence frequency of each word in text."
+  },
+  {
+    id: "text-repeater",
+    label: "Text Repeater",
+    icon: FileText,
+    description: "Repeat entire text or selected portions multiple times."
+  },
+  {
+    id: "remove-punctuation",
+    label: "Remove Punctuation",
+    icon: FileText,
+    description: "Strip punctuation marks from text for cleaner content."
+  }
+    ]
+
+    const footerOptions: SidebarOption[] = [
+        {
+            id: "settings",
+            label: "Settings",
+            icon: Settings
+        }
+    ]
+
+    const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
+
+    const handlestrtobase64 = () => {
+        setImg(base64ToImage(selectedConverter))
+       
+    }
+    console.log(img)
+    return (
+        <ReusableSidebar
+            title="Converter Tools"
+            icon={Palette}
+            options={converterOptions}
+            selectedOption={selectedConverter}
+            onOptionSelect={setSelectedConverter}
+            footerOptions={footerOptions}
+        >
+            <SidebarContentWrapper selectedOption={selectedOption}>
+                <div className=" mx-auto">
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold mb-2">
+                            {selectedOption?.label}
+                        </h2>
+                        <p className="text-muted-foreground">
+                            {selectedOption?.description}
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-sm font-medium mb-2 block">Input</label>
+                                <textarea value={selectedConverter} onChange={(e) => setSelectedConverter(e.target.value)} className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full" rows={5} />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-sm font-medium mb-2 block">Output</label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                                    {img ? (
+                                        <>
+                                            <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                                            <p className="text-sm text-gray-500">Converted files will appear here</p>
+                                        </>
+                                    ) : (
+                                        <Image src={img} width={50} height={50} alt="Converted Image" />
+                                    )}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 flex gap-2">
+                        <Button onClick={handlestrtobase64} >Convert</Button>
+                        <Button variant="outline">Clear</Button>
+                    </div>
+                </div>
+            </SidebarContentWrapper>
+        </ReusableSidebar>
+    );
+}

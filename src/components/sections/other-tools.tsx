@@ -16,64 +16,83 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function OtherTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+       {
+    id: "lorem-ipsum",
+    label: "Lorem-Ipsum",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Generate placeholder text for design or content purposes."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "sharelink-generator",
+    label: "Sharelink Generator",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Create shareable links for files or web content."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "hostname-to-ip",
+    label: "Hostname to IP",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Resolve a hostname to its corresponding IP address."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "ip-to-hostname",
+    label: "IP to Hostname",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Find the hostname associated with a given IP address."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "phone-to-ip-address",
+    label: "Phone to IP Address",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Retrieve the IP address associated with a phone number."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "ip-address-to-phone",
+    label: "IP Address to Phone",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Find the phone number linked to a given IP address."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "dns-lookup",
+    label: "DNS Lookup",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Perform a DNS lookup to retrieve domain records."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "mx-lookup",
+    label: "MX Lookup",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Check the mail exchange (MX) records of a domain."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "nameserver-lookup",
+    label: "Nameserver Lookup",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Retrieve the nameservers associated with a domain."
+  },
+  {
+    id: "website-to-ip-address",
+    label: "Website to IP Address",
+    icon: FileText,
+    description: "Resolve a website URL to its IP address."
+  },
+  {
+    id: "open-port-checker",
+    label: "Open Port Checker",
+    icon: FileText,
+    description: "Check if a specific port on your IP or server is open."
+  },
+  {
+    id: "webcam-test",
+    label: "Webcam Test",
+    icon: FileText,
+    description: "Test your webcam functionality directly online."
   }
     ]
 

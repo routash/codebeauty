@@ -16,64 +16,35 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function Parsers() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
+      
       {
-    id: "image-to-base64",
-    label: "Image to Base64",
+    id: "url-parser",
+    label: "URL Parser",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Parse and analyze URLs into components like protocol, domain, path, and query parameters."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "json-parser",
+    label: "JSON Parser",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Parse JSON strings into structured objects for easy inspection and manipulation."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "xml-parser",
+    label: "XML Parser",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Parse XML documents into readable and structured format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "yaml-parser",
+    label: "YAML Parser",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
-  },
-  {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
-    icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
-  },
-  {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
-    icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
-  },
-  {
-    id: "opml-to-json",
-    label: "OPML to JSON",
-    icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Parse YAML content into structured objects for processing or display."
   }
     ]
 

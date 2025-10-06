@@ -16,64 +16,83 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function Viewers() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+     {
+    id: "json-viewer",
+    label: "JSON Viewer",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "View and explore JSON data in a formatted, readable structure."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "xml-viewer",
+    label: "XML Viewer",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Visualize XML documents with proper indentation and structure."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "yaml-viewer",
+    label: "YAML Viewer",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Display YAML content in a clear and structured format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "mxml-viewer",
+    label: "MXML Viewer",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "View MXML (Flex XML) files in a readable and organized layout."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "html-viewer",
+    label: "HTML Viewer",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Preview HTML code with proper formatting and structure."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "javascript-viewer",
+    label: "JavaScript Viewer",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Display JavaScript code with syntax highlighting for readability."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "rss-viewer",
+    label: "RSS Viewer",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Visualize RSS feeds in a readable and structured layout."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "source-code-viewer",
+    label: "SOURCE CODE Viewer",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "View source code files in a clean, syntax-highlighted format."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "opml-viewer",
+    label: "OPML Viewer",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Display OPML files in a structured outline format."
+  },
+  {
+    id: "csv-viewer",
+    label: "CSV Viewer",
+    icon: FileText,
+    description: "Visualize CSV data in a readable tabular format."
+  },
+  {
+    id: "bbcode-viewer",
+    label: "BBCode Viewer",
+    icon: FileText,
+    description: "Render and view BBCode content in formatted style."
+  },
+  {
+    id: "markdown-viewer",
+    label: "Markdown Viewer",
+    icon: FileText,
+    description: "Preview Markdown text with proper formatting and style."
   }
     ]
 

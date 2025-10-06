@@ -16,64 +16,47 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function ImageTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+   {
+    id: "jpg-to-png",
+    label: "JPG to PNG",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert JPG or JPEG images into high-quality PNG format."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "bmp-to-png",
+    label: "BMP to PNG",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert BMP (Bitmap) images into PNG format for better compatibility."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "png-to-jpg",
+    label: "PNG to JPG",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert PNG images into compressed JPG format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "gif-splitter",
+    label: "GIF Splitter",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Split animated GIFs into individual image frames."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "gif-viewer",
+    label: "GIF Viewer",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Preview and analyze GIF animations frame by frame."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "more-image-tools",
+    label: "More Image Tools",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
-  },
-  {
-    id: "opml-to-json",
-    label: "OPML to JSON",
-    icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Explore more tools for image conversion, compression, and analysis."
   }
     ]
 

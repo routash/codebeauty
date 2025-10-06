@@ -16,64 +16,161 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function CssTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+       {
+    id: "css-beautifier",
+    label: "CSS Beautifier",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Format and beautify CSS code for better readability."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "css-to-less",
+    label: "CSS to LESS",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert standard CSS code into LESS syntax."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "css-to-scss",
+    label: "CSS to SCSS",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Transform CSS code into SCSS syntax for Sass preprocessor."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "css-to-sass",
+    label: "CSS to SASS",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert CSS code into indented SASS syntax."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "css-to-stylus",
+    label: "CSS to Stylus",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert CSS into Stylus preprocessor format."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "stylus-compiler",
+    label: "Stylus Compiler",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Compile Stylus code into standard CSS."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "stylus-to-css",
+    label: "Stylus to CSS",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert Stylus files directly into CSS code."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "stylus-to-less",
+    label: "Stylus to LESS",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Convert Stylus code into LESS format."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "stylus-to-scss",
+    label: "Stylus to SCSS",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Transform Stylus code into SCSS syntax."
+  },
+  {
+    id: "stylus-to-sass",
+    label: "Stylus to SASS",
+    icon: FileText,
+    description: "Convert Stylus files into indented SASS syntax."
+  },
+  {
+    id: "less-compiler",
+    label: "LESS Compiler",
+    icon: FileText,
+    description: "Compile LESS code into standard CSS."
+  },
+  {
+    id: "less-to-css",
+    label: "LESS to CSS",
+    icon: FileText,
+    description: "Convert LESS files directly into CSS."
+  },
+  {
+    id: "less-to-stylus",
+    label: "LESS to Stylus",
+    icon: FileText,
+    description: "Transform LESS code into Stylus syntax."
+  },
+  {
+    id: "less-to-scss",
+    label: "LESS to SCSS",
+    icon: FileText,
+    description: "Convert LESS files into SCSS format."
+  },
+  {
+    id: "less-to-sass",
+    label: "LESS to SASS",
+    icon: FileText,
+    description: "Transform LESS code into indented SASS syntax."
+  },
+  {
+    id: "scss-compiler",
+    label: "SCSS Compiler",
+    icon: FileText,
+    description: "Compile SCSS code into standard CSS."
+  },
+  {
+    id: "scss-to-css",
+    label: "SCSS to CSS",
+    icon: FileText,
+    description: "Convert SCSS files directly into CSS."
+  },
+  {
+    id: "scss-to-stylus",
+    label: "SCSS to Stylus",
+    icon: FileText,
+    description: "Transform SCSS code into Stylus syntax."
+  },
+  {
+    id: "scss-to-less",
+    label: "SCSS to LESS",
+    icon: FileText,
+    description: "Convert SCSS files into LESS format."
+  },
+  {
+    id: "scss-to-sass",
+    label: "SCSS to SASS",
+    icon: FileText,
+    description: "Transform SCSS code into indented SASS syntax."
+  },
+  {
+    id: "sass-compiler",
+    label: "SASS Compiler",
+    icon: FileText,
+    description: "Compile SASS code into standard CSS."
+  },
+  {
+    id: "sass-to-css",
+    label: "SASS to CSS",
+    icon: FileText,
+    description: "Convert SASS files directly into CSS."
+  },
+  {
+    id: "sass-to-stylus",
+    label: "SASS to Stylus",
+    icon: FileText,
+    description: "Transform SASS code into Stylus syntax."
+  },
+  {
+    id: "sass-to-scss",
+    label: "SASS to SCSS",
+    icon: FileText,
+    description: "Convert SASS files into SCSS syntax."
+  },
+  {
+    id: "sass-to-less",
+    label: "SASS to LESS",
+    icon: FileText,
+    description: "Transform SASS code into LESS format."
   }
     ]
 

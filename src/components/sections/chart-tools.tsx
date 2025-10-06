@@ -16,64 +16,41 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function ChartTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
+      
       {
-    id: "image-to-base64",
-    label: "Image to Base64",
+    id: "line-graph-maker",
+    label: "Line Graph Maker",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Create interactive line graphs to visualize trends over time."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "bar-graph-maker",
+    label: "Bar Graph Maker",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Generate bar charts to compare data across categories visually."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "pie-chart-maker",
+    label: "Pie Chart Maker",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Build pie charts to represent proportional data as slices."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "doughnut-chart-maker",
+    label: "Doughnut Chart Maker",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Create doughnut charts for circular data representation with a hollow center."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "scatter-plot-maker",
+    label: "Scatter Plot Maker",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
-  },
-  {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
-    icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
-  },
-  {
-    id: "opml-to-json",
-    label: "OPML to JSON",
-    icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Plot data points on X and Y axes to visualize correlations and distributions."
   }
     ]
 

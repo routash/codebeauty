@@ -16,64 +16,130 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function ColorConverter() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+       {
+    id: "hex-to-pantone",
+    label: "HEX to Pantone Converter",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert HEX color codes to closest Pantone colors."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "rgb-to-pantone",
+    label: "RGB to Pantone Converter",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert RGB values into their matching Pantone shades."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "hsv-to-pantone",
+    label: "HSV to Pantone Converter",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Find the Pantone color that matches your HSV color value."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "cmyk-to-pantone",
+    label: "CMYK to Pantone Converter",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert CMYK color values to the nearest Pantone color."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "cmyk-to-hex",
+    label: "CMYK to HEX Converter",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert CMYK color values into HEX color codes."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "cmyk-to-rgb",
+    label: "CMYK to RGB Converter",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Convert CMYK color model values to RGB format."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "cmyk-to-hsv",
+    label: "CMYK to HSV Converter",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert CMYK color values into HSV (Hue, Saturation, Value) format."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "hsv-to-hex",
+    label: "HSV to HEX Converter",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Convert HSV color values to HEX color codes."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "hsv-to-rgb",
+    label: "HSV to RGB Converter",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Convert HSV color values to RGB format easily."
+  },
+  {
+    id: "hsv-to-cmyk",
+    label: "HSV to CMYK Converter",
+    icon: FileText,
+    description: "Transform HSV color model values into CMYK format."
+  },
+  {
+    id: "hex-to-hsv",
+    label: "HEX to HSV Converter",
+    icon: FileText,
+    description: "Convert HEX color codes into HSV values."
+  },
+  {
+    id: "rgb-to-hex",
+    label: "RGB to HEX Converter",
+    icon: FileText,
+    description: "Convert RGB color values into HEX color codes."
+  },
+  {
+    id: "rgb-to-hsv",
+    label: "RGB to HSV Converter",
+    icon: FileText,
+    description: "Convert RGB color values into HSV color space."
+  },
+  {
+    id: "rgb-to-cmyk",
+    label: "RGB to CMYK Converter",
+    icon: FileText,
+    description: "Convert RGB color values into CMYK format."
+  },
+  {
+    id: "hex-to-rgb",
+    label: "HEX to RGB Converter",
+    icon: FileText,
+    description: "Convert HEX color codes into RGB values."
+  },
+  {
+    id: "hex-to-cmyk",
+    label: "HEX to CMYK Converter",
+    icon: FileText,
+    description: "Convert HEX color codes into CMYK format."
+  },
+  {
+    id: "pantone-to-hex",
+    label: "Pantone to HEX Converter",
+    icon: FileText,
+    description: "Convert Pantone colors into HEX codes."
+  },
+  {
+    id: "pantone-to-rgb",
+    label: "Pantone to RGB Converter",
+    icon: FileText,
+    description: "Convert Pantone colors into RGB values."
+  },
+  {
+    id: "pantone-to-cmyk",
+    label: "Pantone to CMYK Converter",
+    icon: FileText,
+    description: "Convert Pantone colors into CMYK format."
+  },
+  {
+    id: "pantone-to-hsv",
+    label: "Pantone to HSV Converter",
+    icon: FileText,
+    description: "Convert Pantone colors into HSV (Hue, Saturation, Value) values."
   }
     ]
 

@@ -16,64 +16,58 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function Validators() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+     {
+    id: "css-validator",
+    label: "CSS Validator",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Validate CSS code for syntax errors and compatibility issues."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "javascript-validator",
+    label: "JavaScript Validator",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Check JavaScript code for syntax errors and coding issues."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "json-validator",
+    label: "JSON Validator",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Validate JSON data for proper syntax and formatting."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "json5-validator",
+    label: "JSON5 Validator",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Validate JSON5 files for syntax correctness and structure."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "xml-validator",
+    label: "XML Validator",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Check XML files for syntax errors and well-formedness."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "credit-card-validator",
+    label: "Credit Card Validator",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Validate credit card numbers using standard algorithms."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "api-test",
+    label: "API Test",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Test APIs by sending requests and inspecting responses."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "yaml-validator",
+    label: "YAML Validator",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Validate YAML files for syntax and formatting errors."
   }
     ]
 

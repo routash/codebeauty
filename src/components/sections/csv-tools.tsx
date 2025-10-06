@@ -16,64 +16,65 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function CsvTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+         {
+    id: "csv-viewer",
+    label: "CSV Viewer",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "View CSV data in a readable tabular format."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "csv-to-xml-json",
+    label: "CSV to XML/JSON",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert CSV files into both XML and JSON formats."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "csv-to-xml",
+    label: "CSV to XML",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Transform CSV data into structured XML format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "csv-to-json",
+    label: "CSV to JSON",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert CSV data into JSON objects for easy processing."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "csv-to-html",
+    label: "CSV to HTML",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert CSV data into an HTML table format."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "csv-to-tsv",
+    label: "CSV to TSV",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Transform CSV files into TSV (tab-separated values) format."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "csv-to-multiline-data",
+    label: "CSV to MULTILINE DATA",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert CSV rows into multiline text or data format."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "csv-to-sql",
+    label: "CSV to SQL",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Generate SQL insert statements from CSV data."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "csv-to-excel",
+    label: "CSV to Excel",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Convert CSV files into Excel (.xlsx) format."
   }
     ]
 

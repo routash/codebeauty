@@ -16,64 +16,52 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function UnitConverter() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+  {
+    id: "length-converter",
+    label: "Length Converter",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert between meters, kilometers, miles, inches, and other length units."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "weight-converter",
+    label: "Weight Converter",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert between grams, kilograms, pounds, and other weight units."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "volume-converter",
+    label: "Volume Converter",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert between liters, milliliters, gallons, and other volume units."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "area-converter",
+    label: "Area Converter",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert between square meters, square feet, acres, and other area units."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "time-converter",
+    label: "Time Converter",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert between seconds, minutes, hours, days, and other time units."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "unix-timestamp-converter",
+    label: "Unix Timestamp Converter",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Convert Unix timestamps to readable date formats and vice versa."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "more-unit-tools",
+    label: "More Unit Tools",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Explore more unit conversion tools for temperature, pressure, and speed."
   }
     ]
 

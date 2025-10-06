@@ -16,64 +16,41 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function YamlConverters() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+     {
+    id: "yaml-converter",
+    label: "YAML Converter",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "All-in-one YAML conversion tool to transform YAML data into various formats."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "yaml-to-xml",
+    label: "YAML to XML",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert YAML content into well-structured XML format."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "yaml-to-json",
+    label: "YAML to JSON",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Transform YAML data into JSON format for web and API use."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "yaml-to-csv",
+    label: "YAML to CSV",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert YAML structured data into CSV format for spreadsheets."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "yaml-to-excel",
+    label: "YAML to Excel",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
-  },
-  {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
-    icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
-  },
-  {
-    id: "opml-to-json",
-    label: "OPML to JSON",
-    icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Export YAML data directly into Excel (.xlsx) spreadsheets."
   }
     ]
 

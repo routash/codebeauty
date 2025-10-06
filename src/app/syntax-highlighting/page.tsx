@@ -1,8 +1,7 @@
+import { SyntaxHighlighting } from "@/components/sections/syntax-highlighting";
+
 export default function syntaxhighlightingPage() {
   return (
-    <main style={{ padding: 20 }}>
-      <h1>syntax highlighting</h1>
-      <p>/syntax-highlighting</p>
-    </main>
+    <SyntaxHighlighting />
   );
 }

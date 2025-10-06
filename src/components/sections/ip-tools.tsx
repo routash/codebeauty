@@ -16,64 +16,65 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function IPTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+     {
+    id: "hex-to-ip",
+    label: "Hex to IP",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert hexadecimal values into IPv4 addresses."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "ip-to-hex",
+    label: "IP to Hex",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert IPv4 addresses into hexadecimal format."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "binary-to-ip",
+    label: "Binary to IP",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert binary numbers into IPv4 addresses."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "ip-to-binary",
+    label: "IP to Binary",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert IPv4 addresses into binary format."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "decimal-to-ip",
+    label: "Decimal to IP",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert decimal numbers into IPv4 addresses."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "ip-to-decimal",
+    label: "IP to Decimal",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Convert IPv4 addresses into decimal numbers."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "octal-to-ip",
+    label: "Octal to IP",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert octal numbers into IPv4 addresses."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "ip-to-octal",
+    label: "IP to Octal",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Convert IPv4 addresses into octal numbers."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "ipv6-to-binary",
+    label: "IPV6 to Binary",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Convert IPv6 addresses into binary format."
   }
     ]
 

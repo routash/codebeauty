@@ -16,64 +16,59 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function Minifier() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+       {
+    id: "json-minify",
+    label: "JSON Minify",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Remove whitespace and line breaks from JSON to produce compact output."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "xml-minify",
+    label: "XML Minify",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Minify XML files by removing unnecessary spaces and line breaks."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "js-minify",
+    label: "Minify JS",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Compress JavaScript code by removing whitespace, comments, and newlines."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "css-minify",
+    label: "CSS Minify",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Minify CSS code to reduce file size and improve loading speed."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "sql-minifier",
+    label: "SQL Minifier",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Compress SQL queries by removing extra spaces and line breaks."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "html-minify",
+    label: "Minify HTML",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Minify HTML code for faster page load and smaller file size."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "lua-minifier",
+    label: "Lua Minifier",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Minify Lua scripts by removing unnecessary whitespace and comments."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "text-minifier",
+    label: "Text Minifier",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Compress plain text by removing unnecessary spaces and line breaks."
   }
     ]
 

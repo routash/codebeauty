@@ -16,64 +16,53 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function BitwiseTools() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+       {
+    id: "bitwise-calculator",
+    label: "Bitwise Calculator",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Perform general bitwise operations on binary numbers."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "xor-calculator",
+    label: "XOR Calculator",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Calculate the XOR (exclusive OR) of two binary numbers."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "and-calculator",
+    label: "AND Calculator",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Calculate the AND of two binary numbers."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "nand-calculator",
+    label: "NAND Calculator",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Calculate the NAND (NOT AND) of two binary numbers."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "or-calculator",
+    label: "OR Calculator",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Calculate the OR of two binary numbers."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "nor-calculator",
+    label: "NOR Calculator",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Calculate the NOR (NOT OR) of two binary numbers."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "xnor-calculator",
+    label: "XNOR Calculator",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Calculate the XNOR (NOT XOR) of two binary numbers."
   }
     ]
 

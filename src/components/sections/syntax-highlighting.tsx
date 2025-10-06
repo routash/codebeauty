@@ -16,65 +16,49 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function SyntaxHighlighting() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+        {
+    id: "json-syntax-highlighting",
+    label: "JSON Syntax Highlighting",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Highlight JSON code syntax for better readability and clarity."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "xml-highlighter",
+    label: "XML Highlighter",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Highlight XML code syntax for easy inspection and editing."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "xml-pretty-print",
+    label: "XML Pretty Print",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Format XML files with proper indentation for readability."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "html-pretty-print",
+    label: "HTML Pretty Print",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Beautify HTML code with proper formatting and indentation."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "js-pretty-print",
+    label: "JS Pretty Print",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Format JavaScript code for better readability and structure."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "code-highlighter",
+    label: "Code Highlighter",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
-  },
-  {
-    id: "opml-to-json",
-    label: "OPML to JSON",
-    icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
-  },
-  {
-    id: "word-to-html",
-    label: "Word to HTML",
-    icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Highlight code syntax in multiple programming languages."
   }
+
     ]
 
     const footerOptions: SidebarOption[] = [

@@ -16,64 +16,113 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function NumberUtilities() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+        {
+    id: "all-numbers-converter",
+    label: "All Numbers Converter",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert numbers between decimal, binary, octal, and hexadecimal."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "decimal-to-binary",
+    label: "Decimal to Binary",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Convert decimal numbers into binary format."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "decimal-to-octal",
+    label: "Decimal to Octal",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert decimal numbers into octal format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "binary-to-decimal",
+    label: "Binary to Decimal",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert binary numbers into decimal format."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "binary-to-hex",
+    label: "Binary to Hex",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert binary numbers into hexadecimal format."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "binary-to-octal",
+    label: "Binary to Octal",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Convert binary numbers into octal format."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "hex-to-decimal",
+    label: "Hex to Decimal",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Convert hexadecimal numbers into decimal format."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "hex-to-binary",
+    label: "Hex to Binary",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Convert hexadecimal numbers into binary format."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "hex-to-octal",
+    label: "Hex to Octal",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Convert hexadecimal numbers into octal format."
+  },
+  {
+    id: "octal-to-decimal",
+    label: "Octal to Decimal",
+    icon: FileText,
+    description: "Convert octal numbers into decimal format."
+  },
+  {
+    id: "octal-to-binary",
+    label: "Octal to Binary",
+    icon: FileText,
+    description: "Convert octal numbers into binary format."
+  },
+  {
+    id: "octal-to-hex",
+    label: "Octal to Hex",
+    icon: FileText,
+    description: "Convert octal numbers into hexadecimal format."
+  },
+  {
+    id: "binary-to-text",
+    label: "Binary to Text",
+    icon: FileText,
+    description: "Convert binary data into readable text."
+  },
+  {
+    id: "text-to-binary",
+    label: "Text to Binary",
+    icon: FileText,
+    description: "Convert text characters into binary representation."
+  },
+  {
+    id: "ascii-to-text",
+    label: "ASCII to Text",
+    icon: FileText,
+    description: "Convert ASCII codes into readable text characters."
+  },
+  {
+    id: "char-to-ascii",
+    label: "Char to ASCII",
+    icon: FileText,
+    description: "Convert characters into their corresponding ASCII codes."
+  },
+  {
+    id: "reverse-hex",
+    label: "Reverse Hex",
+    icon: FileText,
+    description: "Reverse hexadecimal strings or byte order."
   }
     ]
 

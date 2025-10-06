@@ -16,64 +16,65 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function EscapeUnescape() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
+      
       {
-    id: "image-to-base64",
-    label: "Image to Base64",
+    id: "html-escape-unescape",
+    label: "HTML Escape Unescape",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Encode or decode special HTML characters to/from entities."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "xml-escape-unescape",
+    label: "XML Escape Unescape",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Escape or unescape special characters in XML documents."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "java-escape-unescape",
+    label: "Java Escape Unescape",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Escape or unescape Java strings with proper syntax."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "csharp-escape-unescape",
+    label: "C# Escape Unescape",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Escape or unescape C# strings for safe code usage."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "javascript-escape-unescape",
+    label: "Javascript Escape Unescape",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Encode or decode JavaScript strings with special characters."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "csv-escape-unescape",
+    label: "CSV Escape Unescape",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Escape or unescape special characters in CSV files."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "sql-escape-unescape",
+    label: "SQL Escape Unescape",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Escape or unescape SQL strings to prevent syntax issues."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "json-escape-unescape",
+    label: "JSON Escape Unescape",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Escape or unescape JSON strings safely for data transfer."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "un-google-link",
+    label: "Un-Google Link",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Convert Google redirect links into direct URLs."
   }
     ]
 

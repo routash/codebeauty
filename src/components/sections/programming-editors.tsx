@@ -16,64 +16,65 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function ProgrammingEditors() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
+      
       {
-    id: "image-to-base64",
-    label: "Image to Base64",
+    id: "xml-editor",
+    label: "XML Editor",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Edit XML documents with syntax highlighting and structured formatting."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "json-editor",
+    label: "JSON Editor",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Edit and manipulate JSON data in a structured and readable format."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "real-time-html-editor",
+    label: "Real Time HTML Editor",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Edit HTML code with live preview to see changes instantly."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "yaml-editor",
+    label: "YAML Editor",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Edit YAML files with proper indentation and structure support."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "online-editor",
+    label: "ONLINE Editor",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "A generic online editor for code or text with basic formatting tools."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "java-editor",
+    label: "JAVA Editor",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Write and edit Java code with syntax highlighting and formatting."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "csharp-editor",
+    label: "C# Editor",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Edit C# (C-Sharp) code with proper syntax highlighting."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "actionscript-editor",
+    label: "Actionscript Editor",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Edit ActionScript code for Flash or AIR projects."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "markdown-editor",
+    label: "Markdown Editor",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Write and preview Markdown content in real-time."
   }
     ]
 

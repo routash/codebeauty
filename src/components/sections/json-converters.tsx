@@ -16,64 +16,59 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function JsonConverters() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+    {
+    id: "json-to-java",
+    label: "JSON to JAVA",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Convert JSON data into Java class objects with fields and data types."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "json-to-xml",
+    label: "JSON to XML",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Transform JSON objects into structured XML format."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "json-to-yaml",
+    label: "JSON to YAML",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Convert JSON data into clean and human-readable YAML format."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "json-to-csv",
+    label: "JSON to CSV",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Convert JSON arrays or objects into tabular CSV data."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "json-to-tsv",
+    label: "JSON to TSV",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Convert JSON data into TSV (tab-separated values) format."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "json-to-text",
+    label: "JSON to Text",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Flatten and convert JSON content into simple plain text format."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "json-to-excel",
+    label: "JSON to Excel",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Export JSON data into Excel (.xlsx) spreadsheet format."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "json-to-html",
+    label: "JSON to HTML",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
-  },
-  {
-    id: "online-tableizer",
-    label: "Online Tableizer",
-    icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Convert JSON objects into formatted HTML tables for web use."
   }
     ]
 

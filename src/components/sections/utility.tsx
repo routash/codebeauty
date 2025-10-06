@@ -16,64 +16,125 @@ import {
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
 
-export function Converter() {
+export function Utility() {
     const [selectedConverter, setSelectedConverter] = useState("")
     const [img, setImg] = useState('')
 
     const converterOptions: SidebarOption[] = [
-      {
-    id: "image-to-base64",
-    label: "Image to Base64",
+      
+    {
+    id: "send-snap-message",
+    label: "Send Snap Message",
     icon: FileText,
-    description: "Convert any image file (JPG, PNG, etc.) into a Base64 encoded string."
+    description: "Compose and send quick snap-style messages or notifications."
   },
   {
-    id: "base64-to-image",
-    label: "Base64 to Image",
+    id: "responsive-website-tester",
+    label: "Responsive Website Tester",
     icon: FileText,
-    description: "Decode a Base64 string back into a downloadable image file."
+    description: "Preview and test a website across different device screen sizes."
   },
   {
-    id: "date-calculator",
-    label: "Date Calculator",
+    id: "credit-card-validator",
+    label: "Credit Card Validator",
     icon: FileText,
-    description: "Calculate the difference between dates or add/subtract days easily."
+    description: "Validate credit card numbers using Luhn algorithm and format checks."
   },
   {
-    id: "excel-to-html",
-    label: "EXCEL to HTML",
+    id: "credit-card-fake-number-generator",
+    label: "Credit Card Fake Number Generator",
     icon: FileText,
-    description: "Convert Excel (.xlsx or .xls) spreadsheets into clean HTML tables."
+    description: "Generate test/fake credit card numbers for development and testing."
   },
   {
-    id: "excel-to-xml",
-    label: "EXCEL to XML",
+    id: "xpath-tester",
+    label: "XPath Tester",
     icon: FileText,
-    description: "Transform Excel data into well-structured XML format."
+    description: "Run and validate XPath queries against XML/HTML documents."
   },
   {
-    id: "excel-to-json",
-    label: "EXCEL to JSON",
+    id: "jsonpath-tester",
+    label: "JSON Path Tester",
     icon: FileText,
-    description: "Convert Excel sheets into JSON format for web and API use."
+    description: "Test JSONPath expressions against JSON data and inspect results."
   },
   {
-    id: "opml-to-json",
-    label: "OPML to JSON",
+    id: "json-minifier",
+    label: "JSON Minifier",
     icon: FileText,
-    description: "Convert OPML (Outline Processor Markup Language) files into JSON format."
+    description: "Remove whitespace from JSON to produce compact/minified output."
   },
   {
-    id: "word-to-html",
-    label: "Word to HTML",
+    id: "file-difference",
+    label: "File Difference",
     icon: FileText,
-    description: "Convert Microsoft Word documents into web-friendly HTML format."
+    description: "Compare two files and highlight line-by-line differences."
   },
   {
-    id: "online-tableizer",
-    label: "Online Tableizer",
+    id: "json-diff",
+    label: "JSON Diff",
     icon: FileText,
-    description: "Easily convert spreadsheet data into HTML tables for websites."
+    description: "Show structural and value differences between two JSON objects."
+  },
+  {
+    id: "xml-diff",
+    label: "XML Diff",
+    icon: FileText,
+    description: "Compare two XML files and highlight element/attribute differences."
+  },
+  {
+    id: "broken-link-checker",
+    label: "Broken Link Checker",
+    icon: FileText,
+    description: "Scan a website to find broken or unreachable links (HTTP errors)."
+  },
+  {
+    id: "json-deserialize-online",
+    label: "JSON Deserialize Online",
+    icon: FileText,
+    description: "Deserialize JSON strings into language-native objects for inspection."
+  },
+  {
+    id: "json-serialize-online",
+    label: "JSON Serialize Online",
+    icon: FileText,
+    description: "Serialize objects or data structures into JSON strings."
+  },
+  {
+    id: "json-stringify-online",
+    label: "JSON Stringify Online",
+    icon: FileText,
+    description: "Stringify JSON with options for spacing, sorting, and escaping."
+  },
+  {
+    id: "xml-stringify-online",
+    label: "XML Stringify Online",
+    icon: FileText,
+    description: "Serialize objects/structures into well-formed XML strings."
+  },
+  {
+    id: "string-to-json-online",
+    label: "String to JSON Online",
+    icon: FileText,
+    description: "Convert plain or structured text into valid JSON format."
+  },
+  {
+    id: "javascript-obfuscator",
+    label: "JavaScript Obfuscator",
+    icon: FileText,
+    description: "Obfuscate JavaScript code to make source harder to read and reuse."
+  },
+  {
+    id: "curl-to-php",
+    label: "Curl to PHP",
+    icon: FileText,
+    description: "Convert a curl command into equivalent PHP code (cURL extension)."
+  },
+  {
+    id: "crontab-format",
+    label: "Crontab Format",
+    icon: FileText,
+    description: "Validate or build cron expressions and show human-readable schedule."
   }
     ]
 
