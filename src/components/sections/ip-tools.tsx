@@ -1,150 +1,149 @@
-
 "use client"
 
 import { useState } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
-import {
-    FileText,
-    Code,
-    Image,
-    File,
-    Settings,
-    Download,
-    Upload,
-    Palette
-} from "lucide-react"
-import { base64ToImage } from "@/utils/utils"
+import { FileText, Settings, Palette } from "lucide-react"
+
+// --- IP Conversion Utilities ---
+const ipConverters = {
+  "hex-to-ip": (input: string) => {
+    if (!/^[\da-fA-F]{8}$/.test(input)) return "Invalid hex"
+    return input.match(/.{2}/g)!.map(b => parseInt(b, 16)).join(".")
+  },
+  "ip-to-hex": (input: string) => {
+    const parts = input.split(".").map(p => parseInt(p))
+    if (parts.some(p => isNaN(p) || p < 0 || p > 255)) return "Invalid IP"
+    return parts.map(p => p.toString(16).padStart(2, "0")).join("")
+  },
+  "binary-to-ip": (input: string) => {
+    const parts = input.split(".").map(b => parseInt(b, 2))
+    if (parts.some(p => isNaN(p) || p < 0 || p > 255)) return "Invalid binary IP"
+    return parts.join(".")
+  },
+  "ip-to-binary": (input: string) => {
+    const parts = input.split(".").map(p => parseInt(p))
+    if (parts.some(p => isNaN(p) || p < 0 || p > 255)) return "Invalid IP"
+    return parts.map(p => p.toString(2).padStart(8, "0")).join(".")
+  },
+  "decimal-to-ip": (input: string) => {
+    const dec = parseInt(input)
+    if (isNaN(dec) || dec < 0 || dec > 4294967295) return "Invalid decimal"
+    return [
+      (dec >> 24) & 255,
+      (dec >> 16) & 255,
+      (dec >> 8) & 255,
+      dec & 255
+    ].join(".")
+  },
+  "ip-to-decimal": (input: string) => {
+    const parts = input.split(".").map(p => parseInt(p))
+    if (parts.length !== 4 || parts.some(p => isNaN(p) || p < 0 || p > 255)) return "Invalid IP"
+    return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0
+  },
+  "octal-to-ip": (input: string) => {
+    const dec = parseInt(input, 8)
+    if (isNaN(dec)) return "Invalid octal"
+    return ipConverters["decimal-to-ip"](dec.toString())
+  },
+  "ip-to-octal": (input: string) => {
+    const dec = ipConverters["ip-to-decimal"](input)
+    if (typeof dec === "string") return dec
+    return Number(dec).toString(8)
+  },
+  "ipv6-to-binary": (input: string) => {
+    // Expand IPv6 shorthand
+    const full = input.split("::").reduce((acc, part, idx) => {
+      const left = idx === 0 ? part.split(":") : acc[0].split(":").concat(part.split(":"))
+      const missing = 8 - left.length
+      const zeros = Array(missing).fill("0")
+      return [left.concat(zeros)]
+    }, [""])[0]
+    if (full.length !== 8) return "Invalid IPv6"
+    return full.map(h => parseInt(h, 16).toString(2).padStart(16, "0")).join(":")
+  }
+}
 
 export function IPTools() {
-    const [selectedConverter, setSelectedConverter] = useState("")
-    const [img, setImg] = useState('')
+  const [selectedConverter, setSelectedConverter] = useState("")
+  const [input, setInput] = useState("")
+  const [output, setOutput] = useState("")
 
-    const converterOptions: SidebarOption[] = [
-      
-     {
-    id: "hex-to-ip",
-    label: "Hex to IP",
+  const converterOptions: SidebarOption[] = Object.keys(ipConverters).map(id => ({
+    id,
+    label: id.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
     icon: FileText,
-    description: "Convert hexadecimal values into IPv4 addresses."
-  },
-  {
-    id: "ip-to-hex",
-    label: "IP to Hex",
-    icon: FileText,
-    description: "Convert IPv4 addresses into hexadecimal format."
-  },
-  {
-    id: "binary-to-ip",
-    label: "Binary to IP",
-    icon: FileText,
-    description: "Convert binary numbers into IPv4 addresses."
-  },
-  {
-    id: "ip-to-binary",
-    label: "IP to Binary",
-    icon: FileText,
-    description: "Convert IPv4 addresses into binary format."
-  },
-  {
-    id: "decimal-to-ip",
-    label: "Decimal to IP",
-    icon: FileText,
-    description: "Convert decimal numbers into IPv4 addresses."
-  },
-  {
-    id: "ip-to-decimal",
-    label: "IP to Decimal",
-    icon: FileText,
-    description: "Convert IPv4 addresses into decimal numbers."
-  },
-  {
-    id: "octal-to-ip",
-    label: "Octal to IP",
-    icon: FileText,
-    description: "Convert octal numbers into IPv4 addresses."
-  },
-  {
-    id: "ip-to-octal",
-    label: "IP to Octal",
-    icon: FileText,
-    description: "Convert IPv4 addresses into octal numbers."
-  },
-  {
-    id: "ipv6-to-binary",
-    label: "IPV6 to Binary",
-    icon: FileText,
-    description: "Convert IPv6 addresses into binary format."
-  }
-    ]
+    description: `Perform ${id.replace(/-/g, " ")} operation`
+  }))
 
-    const footerOptions: SidebarOption[] = [
-        {
-            id: "settings",
-            label: "Settings",
-            icon: Settings
-        }
-    ]
+  const footerOptions: SidebarOption[] = [
+    { id: "settings", label: "Settings", icon: Settings }
+  ]
 
-    const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
+  const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
-    const handlestrtobase64 = () => {
-        setImg(base64ToImage(selectedConverter))
-       
+  const handleConvert = () => {
+    const func = ipConverters[selectedConverter as keyof typeof ipConverters]
+    if (func) {
+      try {
+        setOutput(func(input))
+      } catch {
+        setOutput("Error performing conversion")
+      }
+    } else {
+      setOutput("Select a valid converter")
     }
-    console.log(img)
-    return (
-        <ReusableSidebar
-            title="Converter Tools"
-            icon={Palette}
-            options={converterOptions}
-            selectedOption={selectedConverter}
-            onOptionSelect={setSelectedConverter}
-            footerOptions={footerOptions}
-        >
-            <SidebarContentWrapper selectedOption={selectedOption}>
-                <div className=" mx-auto">
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold mb-2">
-                            {selectedOption?.label}
-                        </h2>
-                        <p className="text-muted-foreground">
-                            {selectedOption?.description}
-                        </p>
-                    </div>
+  }
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium mb-2 block">Input</label>
-                                <textarea value={selectedConverter} onChange={(e) => setSelectedConverter(e.target.value)} className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full" rows={5} />
-                            </div>
-                        </div>
+  const handleClear = () => {
+    setInput("")
+    setOutput("")
+  }
 
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium mb-2 block">Output</label>
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                    {img ? (
-                                        <>
-                                            <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                                            <p className="text-sm text-gray-500">Converted files will appear here</p>
-                                        </>
-                                    ) : (
-                                        <Image src={img} width={50} height={50} alt="Converted Image" />
-                                    )}
-                                </div>
+  return (
+    <ReusableSidebar
+      title="IP Utilities"
+      icon={Palette}
+      options={converterOptions}
+      selectedOption={selectedConverter}
+      onOptionSelect={setSelectedConverter}
+      footerOptions={footerOptions}
+    >
+      <SidebarContentWrapper selectedOption={selectedOption}>
+        <div className="mx-auto">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold mb-2">{selectedOption?.label}</h2>
+            <p className="text-muted-foreground">{selectedOption?.description}</p>
+          </div>
 
-                            </div>
-                        </div>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Input</label>
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full"
+                rows={6}
+              />
+            </div>
 
-                    <div className="mt-6 flex gap-2">
-                        <Button onClick={handlestrtobase64} >Convert</Button>
-                        <Button variant="outline">Clear</Button>
-                    </div>
-                </div>
-            </SidebarContentWrapper>
-        </ReusableSidebar>
-    );
+            <div>
+              <label className="text-sm font-medium mb-2 block">Output</label>
+              <textarea
+                value={output}
+                readOnly
+                className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full bg-gray-50"
+                rows={6}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 flex gap-2">
+            <Button onClick={handleConvert}>Convert</Button>
+            <Button variant="outline" onClick={handleClear}>Clear</Button>
+          </div>
+        </div>
+      </SidebarContentWrapper>
+    </ReusableSidebar>
+  )
 }
