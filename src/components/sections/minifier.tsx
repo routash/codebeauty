@@ -1,144 +1,132 @@
-
 "use client"
 
 import { useState } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
-import {
-    FileText,
-    Code,
-    Image,
-    File,
-    Settings,
-    Download,
-    Upload,
-    Palette
-} from "lucide-react"
-import { base64ToImage } from "@/utils/utils"
+import { FileText, Settings, Palette } from "lucide-react"
+import sqlFormatter from "sql-formatter"
 
 export function Minifier() {
-    const [selectedConverter, setSelectedConverter] = useState("")
-    const [img, setImg] = useState('')
+  const [selectedTool, setSelectedTool] = useState<string>("")
+  const [inputText, setInputText] = useState<string>("")
+  const [outputText, setOutputText] = useState<string>("")
 
-    const converterOptions: SidebarOption[] = [
-      
-       {
-    id: "json-minify",
-    label: "JSON Minify",
-    icon: FileText,
-    description: "Remove whitespace and line breaks from JSON to produce compact output."
-  },
-  {
-    id: "xml-minify",
-    label: "XML Minify",
-    icon: FileText,
-    description: "Minify XML files by removing unnecessary spaces and line breaks."
-  },
-  {
-    id: "js-minify",
-    label: "Minify JS",
-    icon: FileText,
-    description: "Compress JavaScript code by removing whitespace, comments, and newlines."
-  },
-  {
-    id: "css-minify",
-    label: "CSS Minify",
-    icon: FileText,
-    description: "Minify CSS code to reduce file size and improve loading speed."
-  },
-  {
-    id: "sql-minifier",
-    label: "SQL Minifier",
-    icon: FileText,
-    description: "Compress SQL queries by removing extra spaces and line breaks."
-  },
-  {
-    id: "html-minify",
-    label: "Minify HTML",
-    icon: FileText,
-    description: "Minify HTML code for faster page load and smaller file size."
-  },
-  {
-    id: "lua-minifier",
-    label: "Lua Minifier",
-    icon: FileText,
-    description: "Minify Lua scripts by removing unnecessary whitespace and comments."
-  },
-  {
-    id: "text-minifier",
-    label: "Text Minifier",
-    icon: FileText,
-    description: "Compress plain text by removing unnecessary spaces and line breaks."
-  }
-    ]
+  const converterOptions: SidebarOption[] = [
+    { id: "json-minify", label: "JSON Minify", icon: FileText, description: "Compact JSON data by removing whitespace and line breaks." },
+    { id: "xml-minify", label: "XML Minify", icon: FileText, description: "Minify XML files by removing unnecessary spaces." },
+    { id: "js-minify", label: "JS Minify", icon: FileText, description: "Compress JavaScript code." },
+    { id: "css-minify", label: "CSS Minify", icon: FileText, description: "Minify CSS code safely." },
+    { id: "sql-minifier", label: "SQL Minifier", icon: FileText, description: "Minify SQL queries." },
+    { id: "html-minify", label: "HTML Minify", icon: FileText, description: "Minify HTML files for faster load times." },
+    { id: "lua-minifier", label: "Lua Minifier", icon: FileText, description: "Remove unnecessary whitespace from Lua scripts." },
+    { id: "text-minifier", label: "Text Minifier", icon: FileText, description: "Minify plain text content." }
+  ]
 
-    const footerOptions: SidebarOption[] = [
-        {
-            id: "settings",
-            label: "Settings",
-            icon: Settings
+  const footerOptions: SidebarOption[] = [{ id: "settings", label: "Settings", icon: Settings }]
+  const selectedOption = converterOptions.find(opt => opt.id === selectedTool)
+
+  const handleMinify = async () => {
+    try {
+      let result = inputText
+
+      switch (selectedTool) {
+        case "json-minify":
+          result = JSON.stringify(JSON.parse(inputText))
+          break
+
+        case "xml-minify":
+          result = inputText.replace(/\s*(<[^>]+>)\s*/g, "$1")
+          break
+
+        case "js-minify": {
+          const terser = await import("terser")
+          const minified = await terser.minify(inputText)
+          result = minified.code || ""
+          break
         }
-    ]
 
-    const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
+        case "css-minify": {
+          const CleanCSS = (await import("clean-css")).default
+          result = new CleanCSS().minify(inputText).styles
+          break
+        }
 
-    const handlestrtobase64 = () => {
-        setImg(base64ToImage(selectedConverter))
-       
+        case "sql-minifier":
+          result = sqlFormatter.format(inputText, { language: "sql" }).replace(/\s+/g, " ")
+          break
+
+        case "html-minify": {
+          const { minify } = await import("html-minifier-terser")
+          result = await minify(inputText, {
+            collapseWhitespace: true,
+            removeComments: true,
+            minifyCSS: true,
+            minifyJS: true,
+          })
+          break
+        }
+
+        case "lua-minifier":
+        case "text-minifier":
+          result = inputText.replace(/\s+/g, " ").trim()
+          break
+      }
+
+      setOutputText(result)
+    } catch (err) {
+      setOutputText("Error: " + (err as Error).message)
     }
-    console.log(img)
-    return (
-        <ReusableSidebar
-            title="Converter Tools"
-            icon={Palette}
-            options={converterOptions}
-            selectedOption={selectedConverter}
-            onOptionSelect={setSelectedConverter}
-            footerOptions={footerOptions}
-        >
-            <SidebarContentWrapper selectedOption={selectedOption}>
-                <div className=" mx-auto">
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold mb-2">
-                            {selectedOption?.label}
-                        </h2>
-                        <p className="text-muted-foreground">
-                            {selectedOption?.description}
-                        </p>
-                    </div>
+  }
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium mb-2 block">Input</label>
-                                <textarea value={selectedConverter} onChange={(e) => setSelectedConverter(e.target.value)} className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full" rows={5} />
-                            </div>
-                        </div>
+  const handleClear = () => {
+    setInputText("")
+    setOutputText("")
+  }
 
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium mb-2 block">Output</label>
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                    {img ? (
-                                        <>
-                                            <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                                            <p className="text-sm text-gray-500">Converted files will appear here</p>
-                                        </>
-                                    ) : (
-                                        <Image src={img} width={50} height={50} alt="Converted Image" />
-                                    )}
-                                </div>
+  return (
+    <ReusableSidebar
+      title="Minifier Tools"
+      icon={Palette}
+      options={converterOptions}
+      selectedOption={selectedTool}
+      onOptionSelect={setSelectedTool}
+      footerOptions={footerOptions}
+    >
+      <SidebarContentWrapper selectedOption={selectedOption}>
+        <div className="mx-auto">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold mb-2">{selectedOption?.label}</h2>
+            <p className="text-muted-foreground">{selectedOption?.description}</p>
+          </div>
 
-                            </div>
-                        </div>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <label className="text-sm font-medium mb-2 block">Input</label>
+              <textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full"
+                rows={10}
+              />
+            </div>
 
-                    <div className="mt-6 flex gap-2">
-                        <Button onClick={handlestrtobase64} >Convert</Button>
-                        <Button variant="outline">Clear</Button>
-                    </div>
-                </div>
-            </SidebarContentWrapper>
-        </ReusableSidebar>
-    );
+            <div className="space-y-4">
+              <label className="text-sm font-medium mb-2 block">Output</label>
+              <textarea
+                value={outputText}
+                readOnly
+                className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full bg-gray-50"
+                rows={10}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 flex gap-2">
+            <Button onClick={handleMinify}>Minify</Button>
+            <Button variant="outline" onClick={handleClear}>Clear</Button>
+          </div>
+        </div>
+      </SidebarContentWrapper>
+    </ReusableSidebar>
+  )
 }

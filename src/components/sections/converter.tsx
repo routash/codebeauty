@@ -10,67 +10,54 @@ import { Button } from "@/components/ui/button"
 import {
   FileText,
   Code,
-  Image,
-  File,
-  Settings,
-  Download,
+  Calendar,
+  FileSpreadsheet,
+  FileJson,
+  FileCode,
+  FileType,
   Upload,
-  Palette,
-  RefreshCw,
   Copy,
+  RefreshCw,
+  Table,
 } from "lucide-react"
 import { base64ToImage, imageFileToBase64 } from "@/utils/utils"
+import * as XLSX from "xlsx"
+import mammoth from "mammoth"
 
 export function Converter() {
-  const [selectedConverter, setSelectedConverter] = useState<string>("Base64")
+  const [selectedConverter, setSelectedConverter] = useState<string>("imageToBase64")
   const [input, setInput] = useState<string>("")
   const [output, setOutput] = useState<string>("")
+  const [date1, setDate1] = useState<string>("")
+  const [date2, setDate2] = useState<string>("")
 
   const converterOptions: SidebarOption[] = [
-    {
-      id: "Base64",
-      label: "Base64 To Image",
-      icon: FileText,
-      description: "Convert Base64 string to image format",
-    },
-    {
-      id: "code",
-      label: "Image to Base64",
-      icon: Code,
-      description: "Convert images to Base64 string format",
-    },
-    {
-      id: "image",
-      label: "Image Converter",
-      icon: Image,
-      description: "Convert image formats (JPG → PNG etc.)",
-    },
-    {
-      id: "file",
-      label: "File Converter",
-      icon: File,
-      description: "Convert files between different formats",
-    },
+    { id: "imageToBase64", label: "Image → Base64", icon: Code, description: "Convert image to Base64" },
+    { id: "base64ToImage", label: "Base64 → Image", icon: FileText, description: "Convert Base64 to image" },
+    { id: "dateCalc", label: "Date Calculator", icon: Calendar, description: "Calculate difference between two dates" },
+    { id: "excelToHtml", label: "Excel → HTML", icon: FileSpreadsheet, description: "Convert Excel file to HTML" },
+    { id: "excelToXml", label: "Excel → XML", icon: FileType, description: "Convert Excel file to XML" },
+    { id: "excelToJson", label: "Excel → JSON", icon: FileJson, description: "Convert Excel file to JSON" },
+    { id: "opmlToJson", label: "OPML → JSON", icon: FileCode, description: "Convert OPML XML to JSON" },
+    { id: "wordToHtml", label: "Word → HTML", icon: FileText, description: "Convert DOCX to HTML" },
+    { id: "tableizer", label: "Online Tableizer", icon: Table, description: "Convert Excel/CSV to HTML Table" },
   ]
 
-  const footerOptions: SidebarOption[] = [
-    {
-      id: "settings",
-      label: "Settings",
-      icon: Settings,
-    },
-  ]
+  const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
-  const selectedOption = converterOptions.find(
-    (opt) => opt.id === selectedConverter
-  )
+  const handleClear = () => {
+    setInput("")
+    setOutput("")
+    setDate1("")
+    setDate2("")
+  }
 
   // ✅ Base64 → Image
   const handleBase64ToImage = () => {
     try {
       const url = base64ToImage(input)
       setOutput(url)
-    } catch (err) {
+    } catch {
       alert("Invalid Base64 string!")
     }
   }
@@ -83,143 +70,197 @@ export function Converter() {
     setOutput(base64)
   }
 
-  const handleCopy = async () => {
-    if (!output) return
-    await navigator.clipboard.writeText(output)
-    alert("Copied to clipboard!")
+  // ✅ Date Calculator
+  const handleDateDiff = () => {
+    if (!date1 || !date2) return
+    const d1 = new Date(date1)
+    const d2 = new Date(date2)
+    const diff = Math.abs(d2.getTime() - d1.getTime())
+    const days = Math.floor(diff / (1000 * 3600 * 24))
+    setOutput(`${days} day(s) difference`)
   }
 
-  const handleClear = () => {
-    setInput("")
-    setOutput("")
+  // ✅ Excel Conversions
+  const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: string) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const data = await file.arrayBuffer()
+    const workbook = XLSX.read(data, { type: "array" })
+    const sheet = workbook.Sheets[workbook.SheetNames[0]]
+
+    let result = ""
+    if (type === "json") result = JSON.stringify(XLSX.utils.sheet_to_json(sheet), null, 2)
+    else if (type === "html") result = XLSX.utils.sheet_to_html(sheet)
+    else if (type === "xml") result = XLSX.utils.sheet_to_xml?.(sheet) || "<xml>Conversion not supported</xml>"
+
+    setOutput(result)
+  }
+
+  // ✅ OPML → JSON
+  const handleOpmlToJson = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const text = await file.text()
+    const parser = new DOMParser()
+    const xml = parser.parseFromString(text, "text/xml")
+    const json: any = {}
+    const parseNode = (node: any) => {
+      const obj: any = { name: node.nodeName, children: [] }
+      if (node.attributes) {
+        obj.attributes = {}
+        for (const attr of node.attributes) {
+          obj.attributes[attr.name] = attr.value
+        }
+      }
+      for (const child of node.childNodes) {
+        if (child.nodeType === 1) obj.children.push(parseNode(child))
+      }
+      return obj
+    }
+    json.root = parseNode(xml.documentElement)
+    setOutput(JSON.stringify(json, null, 2))
+  }
+
+  // ✅ Word → HTML
+  const handleWordToHtml = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const arrayBuffer = await file.arrayBuffer()
+    const { value } = await mammoth.convertToHtml({ arrayBuffer })
+    setOutput(value)
+  }
+
+  // ✅ Online Tableizer (CSV → HTML Table)
+  const handleTableizer = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const text = await file.text()
+    const rows = text.split("\n").map(row => row.split(","))
+    const html = `<table border="1" style="border-collapse:collapse;">${rows
+      .map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`)
+      .join("")}</table>`
+    setOutput(html)
   }
 
   return (
     <ReusableSidebar
       title="Converter Tools"
-      icon={Palette}
+      icon={FileType}
       options={converterOptions}
       selectedOption={selectedConverter}
       onOptionSelect={setSelectedConverter}
-      footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>
-        <div className="mx-auto">
-          {/* Header */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">
-              {selectedOption?.label || "Select Converter"}
-            </h2>
-            <p className="text-muted-foreground">
-              {selectedOption?.description}
-            </p>
-          </div>
+        <div className="mx-auto w-full max-w-4xl">
+          <h2 className="text-2xl font-bold mb-2">{selectedOption?.label}</h2>
+          <p className="text-muted-foreground mb-6">{selectedOption?.description}</p>
 
-          {/* ================= BASE64 → IMAGE ================= */}
-          {selectedConverter === "Base64" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Enter Base64 String
-                </label>
-                <textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Paste Base64 string here"
-                  className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-[400px]"
-                />
+          {/* Base64 → Image */}
+          {selectedConverter === "base64ToImage" && (
+            <>
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Paste Base64 string here"
+                className="border p-3 w-full h-60 rounded"
+              />
+              <div className="mt-3 flex gap-2">
+                <Button onClick={handleBase64ToImage}>Convert</Button>
+                <Button onClick={handleClear} variant="outline">Clear</Button>
               </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Converted Image
-                </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center min-h-[400px] flex items-center justify-center">
-                  {output ? (
-                    <img
-                      src={output}
-                      alt="Converted"
-                      className="max-h-80 object-contain mx-auto"
-                    />
-                  ) : (
-                    <>
-                      <Download className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                      <p className="text-sm text-gray-500">
-                        Converted image will appear here
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+              {output && <img src={output} alt="Converted" className="mt-4 max-h-80 mx-auto" />}
+            </>
           )}
 
-          {/* ================= IMAGE → BASE64 ================= */}
-          {selectedConverter === "code" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Upload Image
-                </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                  <p className="text-sm text-gray-500 mb-3">
-                    Select an image to convert
-                  </p>
-                  <input type="file" accept="image/*" onChange={handleImageToBase64} />
-                </div>
-              </div>
+          {/* Image → Base64 */}
+          {selectedConverter === "imageToBase64" && (
+            <>
+              <input type="file" accept="image/*" onChange={handleImageToBase64} />
+              {output && (
+                <>
+                  <textarea readOnly value={output} className="border p-3 w-full h-60 rounded mt-3" />
+                  <Button
+                    className="mt-2"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(output)
+                      alert("Copied to clipboard!")
+                    }}
+                  >
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </Button>
+                </>
+              )}
+            </>
+          )}
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Base64 Output
-                </label>
-                <textarea
-                  readOnly
-                  value={output}
-                  placeholder="Base64 string will appear here"
-                  className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-[400px]"
+          {/* Date Calculator */}
+          {selectedConverter === "dateCalc" && (
+            <>
+              <div className="flex gap-3">
+                <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="border p-2 rounded" />
+                <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="border p-2 rounded" />
+                <Button onClick={handleDateDiff}><RefreshCw className="mr-2 h-4 w-4" /> Calculate</Button>
+              </div>
+              {output && <p className="mt-4 text-lg font-medium">{output}</p>}
+            </>
+          )}
+
+          {/* Excel → HTML/XML/JSON */}
+          {(selectedConverter === "excelToHtml" ||
+            selectedConverter === "excelToXml" ||
+            selectedConverter === "excelToJson") && (
+              <>
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={(e) =>
+                    handleExcelUpload(
+                      e,
+                      selectedConverter.replace("excelTo", "").toLowerCase()
+                    )
+                  }
                 />
                 {output && (
-                  <Button onClick={handleCopy} className="mt-3 flex items-center gap-2">
-                    <Copy size={16} /> Copy
-                  </Button>
+                  <textarea readOnly value={output} className="border p-3 w-full h-60 rounded mt-3" />
                 )}
-              </div>
-            </div>
-          )}
-
-          {/* ================= IMAGE CONVERTER (Placeholder) ================= */}
-          {selectedConverter === "image" && (
-            <div className="text-center border-2 border-dashed border-gray-300 rounded-lg p-12">
-              <p className="text-lg font-medium mb-2">Image Converter Coming Soon 🚧</p>
-              <p className="text-sm text-gray-500">
-                This section will support JPG ↔ PNG conversions.
-              </p>
-            </div>
-          )}
-
-          {/* ================= FILE CONVERTER (Placeholder) ================= */}
-          {selectedConverter === "file" && (
-            <div className="text-center border-2 border-dashed border-gray-300 rounded-lg p-12">
-              <p className="text-lg font-medium mb-2">File Converter Coming Soon 📁</p>
-              <p className="text-sm text-gray-500">
-                This section will allow DOCX ↔ PDF or TXT conversions.
-              </p>
-            </div>
-          )}
-
-          {/* ================= Buttons ================= */}
-          <div className="mt-6 flex gap-2">
-            {selectedConverter === "Base64" && (
-              <Button onClick={handleBase64ToImage}>
-                <RefreshCw className="mr-2 h-4 w-4" /> Convert
-              </Button>
+              </>
             )}
-            <Button onClick={handleClear} variant="outline">
-              Clear
-            </Button>
-          </div>
+
+          {/* OPML → JSON */}
+          {selectedConverter === "opmlToJson" && (
+            <>
+              <input type="file" accept=".opml,.xml" onChange={handleOpmlToJson} />
+              {output && (
+                <textarea readOnly value={output} className="border p-3 w-full h-60 rounded mt-3" />
+              )}
+            </>
+          )}
+
+          {/* Word → HTML */}
+          {selectedConverter === "wordToHtml" && (
+            <>
+              <input type="file" accept=".docx" onChange={handleWordToHtml} />
+              {output && (
+                <div
+                  className="border p-3 rounded mt-3"
+                  dangerouslySetInnerHTML={{ __html: output }}
+                />
+              )}
+            </>
+          )}
+
+          {/* Online Tableizer */}
+          {selectedConverter === "tableizer" && (
+            <>
+              <input type="file" accept=".csv" onChange={handleTableizer} />
+              {output && (
+                <div
+                  className="border p-3 rounded mt-3 overflow-auto"
+                  dangerouslySetInnerHTML={{ __html: output }}
+                />
+              )}
+            </>
+          )}
         </div>
       </SidebarContentWrapper>
     </ReusableSidebar>
