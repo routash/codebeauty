@@ -64,3 +64,13 @@ export async function imageFileToBase64(file: File): Promise<string> {
   });
 }
 
+
+
+// utils/htmlStripper.ts
+export function stripHTML(html: string): string {
+  if (!html) return "";
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  return tempDiv.textContent || tempDiv.innerText || "";
+}
+

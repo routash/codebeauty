@@ -323,7 +323,7 @@ export const constants = {
     { title: 'Excel Viewer', variant: 'default' },
     { title: 'Paraphrasing tool', variant: 'default' },
     { title: 'Word to HTML', variant: 'default' },
-    { title: 'CSV to Excel', variant: 'primary' },
+    { title: 'CSV to Excel', variant: 'default' },
     { title: 'Sharelink Generator', variant: 'default' },
   ],
   developmentTools: [
