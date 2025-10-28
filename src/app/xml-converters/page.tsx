@@ -1,7 +1,5 @@
-import { XmlConverters } from "@/components/sections/xml-converters";
+import XmlConverters from "@/components/sections/xml-converters";
 
-export default function xmlconvertersPage() {
-  return (
-    <XmlConverters />
-  );
+export default function Page() {
+  return <XmlConverters />;
 }

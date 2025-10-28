@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import {
@@ -67,125 +67,345 @@ export function ColorConverter() {
     { id: "settings", label: "Settings", icon: Settings }
   ]
 
+  // Automatic reset when converter changes
+  useEffect(() => {
+    setInputValue("")
+    setOutput("")
+  }, [selectedConverter])
+
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
+  const handleConverterChange = (id: string) => {
+    setSelectedConverter(id)
+    // Input and output will auto-clear via useEffect
+  }
+
   const handleConvert = () => {
-    try {
-      let result = ""
-      const val = inputValue.trim()
+  try {
+    let result = ""
+    const val = inputValue.trim()
 
-      switch (selectedConverter) {
-        case "hex-to-pantone": {
-          const pantone = findNearestPantoneFromHex(val)
-          result = `${pantone.name} (${pantone.hex})`
+    switch (selectedConverter) {
+      // Pantone conversions
+      case "hex-to-pantone": {
+        if (!val.match(/^#?[0-9A-Fa-f]{6}$/)) {
+          result = "Invalid HEX format. Use: #FF5733 or FF5733"
           break
         }
-        case "rgb-to-pantone": {
-          const [r, g, b] = val.split(",").map(Number)
-          const pantone = findNearestPantoneFromRgb({ r, g, b })
-          result = `${pantone.name} (${pantone.hex})`
+        const pantone = findNearestPantoneFromHex(val)
+        result = `${pantone.name} (${pantone.hex})`
+        break
+      }
+      
+      case "rgb-to-pantone": {
+        const cleaned = val.replace(/[RGBrgb:\s]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid RGB format. Use: 255,87,51"
           break
         }
-        case "hsv-to-pantone": {
-          const [h, s, v] = val.split(",").map(Number)
-          const rgb = hsvToRgb({ h, s, v })
-          const pantone = findNearestPantoneFromRgb(rgb)
-          result = `${pantone.name} (${pantone.hex})`
+        
+        const [r, g, b] = parts.map(Number)
+        
+        if ([r, g, b].some(isNaN)) {
+          result = "Invalid RGB format. Use: 255,87,51"
           break
         }
-        case "cmyk-to-pantone": {
-          const [c, m, y, k] = val.split(",").map(Number)
-          const rgb = cmykToRgb({ c, m, y, k })
-          const pantone = findNearestPantoneFromRgb(rgb)
-          result = `${pantone.name} (${pantone.hex})`
+        
+        const pantone = findNearestPantoneFromRgb({ r, g, b })
+        result = `${pantone.name} (${pantone.hex})`
+        break
+      }
+      
+      case "hsv-to-pantone": {
+        const cleaned = val.replace(/[HSVhsv:\s%°]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid HSV format. Use: 0,100,100"
           break
         }
-
-        case "cmyk-to-hex": {
-          const [c, m, y, k] = val.split(",").map(Number)
-          result = cmykToHex({ c, m, y, k })
+        
+        const [h, s, v] = parts.map(Number)
+        
+        if ([h, s, v].some(isNaN)) {
+          result = "Invalid HSV format. Use: 0,100,100"
           break
         }
-        case "cmyk-to-rgb": {
-          const [c, m, y, k] = val.split(",").map(Number)
-          result = JSON.stringify(cmykToRgb({ c, m, y, k }))
+        
+        const rgb = hsvToRgb({ h, s, v })
+        const pantone = findNearestPantoneFromRgb(rgb)
+        result = `${pantone.name} (${pantone.hex})`
+        break
+      }
+      
+      case "cmyk-to-pantone": {
+        const cleaned = val.replace(/[CMYKcmyk:\s%]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 4) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
           break
         }
-        case "cmyk-to-hsv": {
-          const [c, m, y, k] = val.split(",").map(Number)
-          result = JSON.stringify(cmykToHsv({ c, m, y, k }))
+        
+        const [c, m, y, k] = parts.map(Number)
+        
+        if ([c, m, y, k].some(isNaN)) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
           break
         }
-        case "hsv-to-hex": {
-          const [h, s, v] = val.split(",").map(Number)
-          result = hsvToHex({ h, s, v })
-          break
-        }
-        case "hsv-to-rgb": {
-          const [h, s, v] = val.split(",").map(Number)
-          result = JSON.stringify(hsvToRgb({ h, s, v }))
-          break
-        }
-        case "hsv-to-cmyk": {
-          const [h, s, v] = val.split(",").map(Number)
-          result = JSON.stringify(hsvToCmyk({ h, s, v }))
-          break
-        }
-        case "hex-to-hsv": {
-          result = JSON.stringify(hexToHsv(val))
-          break
-        }
-        case "rgb-to-hex": {
-          const [r, g, b] = val.split(",").map(Number)
-          result = rgbToHex({ r, g, b })
-          break
-        }
-        case "rgb-to-hsv": {
-          const [r, g, b] = val.split(",").map(Number)
-          result = JSON.stringify(rgbToHsv({ r, g, b }))
-          break
-        }
-        case "rgb-to-cmyk": {
-          const [r, g, b] = val.split(",").map(Number)
-          result = JSON.stringify(rgbToCmyk({ r, g, b }))
-          break
-        }
-        case "hex-to-rgb": {
-          result = JSON.stringify(hexToRgb(val))
-          break
-        }
-        case "hex-to-cmyk": {
-          result = JSON.stringify(hexToCmyk(val))
-          break
-        }
-        case "pantone-to-hex": {
-          result = pantoneToHex(val) ?? "Not found"
-          break
-        }
-        case "pantone-to-rgb": {
-          const rgb = pantoneToRgb(val)
-          result = rgb ? JSON.stringify(rgb) : "Not found"
-          break
-        }
-        case "pantone-to-cmyk": {
-          const cmyk = pantoneToCmyk(val)
-          result = cmyk ? JSON.stringify(cmyk) : "Not found"
-          break
-        }
-        case "pantone-to-hsv": {
-          const hsv = pantoneToHsv(val)
-          result = hsv ? JSON.stringify(hsv) : "Not found"
-          break
-        }
-        default:
-          result = "Select a converter and provide valid input."
+        
+        const rgb = cmykToRgb({ c, m, y, k })
+        const pantone = findNearestPantoneFromRgb(rgb)
+        result = `${pantone.name} (${pantone.hex})`
+        break
       }
 
-      setOutput(result)
-    } catch (err) {
-      setOutput("Error: Invalid input format.")
+      // CMYK conversions
+      case "cmyk-to-hex": {
+        const cleaned = val.replace(/[CMYKcmyk:\s%]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 4) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
+          break
+        }
+        
+        const [c, m, y, k] = parts.map(Number)
+        
+        if ([c, m, y, k].some(isNaN)) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
+          break
+        }
+        
+        result = cmykToHex({ c, m, y, k })
+        break
+      }
+      
+      case "cmyk-to-rgb": {
+        const cleaned = val.replace(/[CMYKcmyk:\s%]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 4) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
+          break
+        }
+        
+        const [c, m, y, k] = parts.map(Number)
+        
+        if ([c, m, y, k].some(isNaN)) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
+          break
+        }
+        
+        result = JSON.stringify(cmykToRgb({ c, m, y, k }))
+        break
+      }
+      
+      case "cmyk-to-hsv": {
+        const cleaned = val.replace(/[CMYKcmyk:\s%]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 4) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
+          break
+        }
+        
+        const [c, m, y, k] = parts.map(Number)
+        
+        if ([c, m, y, k].some(isNaN)) {
+          result = "Invalid CMYK format. Use: 0,100,100,0"
+          break
+        }
+        
+        result = JSON.stringify(cmykToHsv({ c, m, y, k }))
+        break
+      }
+
+      // HSV conversions
+      case "hsv-to-hex": {
+        const cleaned = val.replace(/[HSVhsv:\s%°]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid HSV format. Use: 0,100,100"
+          break
+        }
+        
+        const [h, s, v] = parts.map(Number)
+        
+        if ([h, s, v].some(isNaN)) {
+          result = "Invalid HSV format. Use: 0,100,100"
+          break
+        }
+        
+        result = hsvToHex({ h, s, v })
+        break
+      }
+      
+      case "hsv-to-rgb": {
+        const cleaned = val.replace(/[HSVhsv:\s%°]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid HSV format. Use: 0,100,100"
+          break
+        }
+        
+        const [h, s, v] = parts.map(Number)
+        
+        if ([h, s, v].some(isNaN)) {
+          result = "Invalid HSV format. Use: 0,100,100"
+          break
+        }
+        
+        result = JSON.stringify(hsvToRgb({ h, s, v }))
+        break
+      }
+      
+      case "hsv-to-cmyk": {
+        const cleaned = val.replace(/[HSVhsv:\s%°]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid HSV format. Use: 0,100,100"
+          break
+        }
+        
+        const [h, s, v] = parts.map(Number)
+        
+        if ([h, s, v].some(isNaN)) {
+          result = "Invalid HSV format. Use: 0,100,100"
+          break
+        }
+        
+        result = JSON.stringify(hsvToCmyk({ h, s, v }))
+        break
+      }
+
+      // HEX conversions
+      case "hex-to-hsv": {
+        if (!val.match(/^#?[0-9A-Fa-f]{6}$/)) {
+          result = "Invalid HEX format. Use: #FF5733 or FF5733"
+          break
+        }
+        result = JSON.stringify(hexToHsv(val))
+        break
+      }
+      
+      case "hex-to-rgb": {
+        if (!val.match(/^#?[0-9A-Fa-f]{6}$/)) {
+          result = "Invalid HEX format. Use: #FF5733 or FF5733"
+          break
+        }
+        result = JSON.stringify(hexToRgb(val))
+        break
+      }
+      
+      case "hex-to-cmyk": {
+        if (!val.match(/^#?[0-9A-Fa-f]{6}$/)) {
+          result = "Invalid HEX format. Use: #FF5733 or FF5733"
+          break
+        }
+        result = JSON.stringify(hexToCmyk(val))
+        break
+      }
+
+      // RGB conversions
+      case "rgb-to-hex": {
+        const cleaned = val.replace(/[RGBrgb:\s]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid RGB format. Use: 255,87,51"
+          break
+        }
+        
+        const [r, g, b] = parts.map(Number)
+        
+        if ([r, g, b].some(isNaN)) {
+          result = "Invalid RGB format. Use: 255,87,51"
+          break
+        }
+        
+        result = rgbToHex({ r, g, b })
+        break
+      }
+      
+      case "rgb-to-hsv": {
+        const cleaned = val.replace(/[RGBrgb:\s]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid RGB format. Use: 255,87,51"
+          break
+        }
+        
+        const [r, g, b] = parts.map(Number)
+        
+        if ([r, g, b].some(isNaN)) {
+          result = "Invalid RGB format. Use: 255,87,51"
+          break
+        }
+        
+        result = JSON.stringify(rgbToHsv({ r, g, b }))
+        break
+      }
+      
+      case "rgb-to-cmyk": {
+        const cleaned = val.replace(/[RGBrgb:\s]/g, '').trim()
+        const parts = cleaned.split(",")
+        
+        if (parts.length !== 3) {
+          result = "Invalid RGB format. Use: 255,87,51"
+          break
+        }
+        
+        const [r, g, b] = parts.map(Number)
+        
+        if ([r, g, b].some(isNaN)) {
+          result = "Invalid RGB format. Use: 255,87,51"
+          break
+        }
+        
+        result = JSON.stringify(rgbToCmyk({ r, g, b }))
+        break
+      }
+
+      // Pantone to other formats
+      case "pantone-to-hex": {
+        result = pantoneToHex(val) ?? "Not found"
+        break
+      }
+      
+      case "pantone-to-rgb": {
+        const rgb = pantoneToRgb(val)
+        result = rgb ? JSON.stringify(rgb) : "Not found"
+        break
+      }
+      
+      case "pantone-to-cmyk": {
+        const cmyk = pantoneToCmyk(val)
+        result = cmyk ? JSON.stringify(cmyk) : "Not found"
+        break
+      }
+      
+      case "pantone-to-hsv": {
+        const hsv = pantoneToHsv(val)
+        result = hsv ? JSON.stringify(hsv) : "Not found"
+        break
+      }
+      
+      default:
+        result = "Select a converter and provide valid input."
     }
+
+    setOutput(result)
+  } catch (err) {
+    setOutput("Error: Invalid input format.")
   }
+}
 
   const handleClear = () => {
     setInputValue("")
@@ -198,7 +418,7 @@ export function ColorConverter() {
       icon={Palette}
       options={converterOptions}
       selectedOption={selectedConverter}
-      onOptionSelect={setSelectedConverter}
+      onOptionSelect={handleConverterChange}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>

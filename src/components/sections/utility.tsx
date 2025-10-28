@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -148,10 +147,21 @@ export function Utility() {
 
     const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
+    // Clear inputs when converter changes
+    const handleConverterChange = (converterId: string) => {
+        setSelectedConverter(converterId)
+        setImg("")
+    }
+
     const handlestrtobase64 = () => {
         setImg(base64ToImage(selectedConverter))
-       
     }
+
+    const handleClear = () => {
+        setSelectedConverter("")
+        setImg("")
+    }
+
     console.log(img)
     return (
         <ReusableSidebar
@@ -159,7 +169,7 @@ export function Utility() {
             icon={Palette}
             options={converterOptions}
             selectedOption={selectedConverter}
-            onOptionSelect={setSelectedConverter}
+            onOptionSelect={handleConverterChange}
             footerOptions={footerOptions}
         >
             <SidebarContentWrapper selectedOption={selectedOption}>
@@ -201,7 +211,7 @@ export function Utility() {
 
                     <div className="mt-6 flex gap-2">
                         <Button onClick={handlestrtobase64} >Convert</Button>
-                        <Button variant="outline">Clear</Button>
+                        <Button variant="outline" onClick={handleClear}>Clear</Button>
                     </div>
                 </div>
             </SidebarContentWrapper>

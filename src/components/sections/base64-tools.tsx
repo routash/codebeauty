@@ -72,24 +72,89 @@ export function Base64Tools() {
       // 📷 Image Upload -> Base64
       if (selectedConverter.includes("image-to-base64") && file) {
         const reader = new FileReader()
-        reader.onload = () => setOutputValue(reader.result as string)
+        reader.onload = () => {
+          setOutputValue(reader.result as string)
+          setFile(null) // Clear file input after conversion
+        }
         reader.readAsDataURL(file)
       }
       // 🖼 Base64 -> Image
       else if (selectedConverter === "base64-to-image") {
         setOutputValue(inputValue)
+        setInputValue("") // Clear input after conversion
+      }
+      // 🔢 Binary to Base64
+      else if (selectedConverter === "binary-to-base64") {
+        const binaryStr = inputValue.replace(/\s/g, '')
+        const bytes = binaryStr.match(/.{1,8}/g) || []
+        const text = bytes.map(bin => String.fromCharCode(parseInt(bin, 2))).join('')
+        setOutputValue(btoa(text))
+        setInputValue("")
+      }
+      // 🔢 Base64 to Binary
+      else if (selectedConverter === "base64-to-binary") {
+        const decoded = atob(inputValue)
+        const binary = decoded.split('').map(char => 
+          char.charCodeAt(0).toString(2).padStart(8, '0')
+        ).join(' ')
+        setOutputValue(binary)
+        setInputValue("")
+      }
+      // 🔢 Hex to Base64
+      else if (selectedConverter === "hex-to-base64") {
+        const hex = inputValue.replace(/\s/g, '')
+        const bytes = hex.match(/.{1,2}/g) || []
+        const text = bytes.map(byte => String.fromCharCode(parseInt(byte, 16))).join('')
+        setOutputValue(btoa(text))
+        setInputValue("")
+      }
+      // 🔢 Base64 to Hex
+      else if (selectedConverter === "base64-to-hex") {
+        const decoded = atob(inputValue)
+        const hex = decoded.split('').map(char => 
+          char.charCodeAt(0).toString(16).padStart(2, '0')
+        ).join(' ')
+        setOutputValue(hex.toUpperCase())
+        setInputValue("")
+      }
+      // 🔢 Octal to Base64
+      else if (selectedConverter === "octal-to-base64") {
+        const octal = inputValue.replace(/\s/g, '')
+        const bytes = octal.match(/.{1,3}/g) || []
+        const text = bytes.map(oct => String.fromCharCode(parseInt(oct, 8))).join('')
+        setOutputValue(btoa(text))
+        setInputValue("")
+      }
+      // 🔢 Base64 to Octal
+      else if (selectedConverter === "base64-to-octal") {
+        const decoded = atob(inputValue)
+        const octal = decoded.split('').map(char => 
+          char.charCodeAt(0).toString(8).padStart(3, '0')
+        ).join(' ')
+        setOutputValue(octal)
+        setInputValue("")
       }
       // 🧾 Text, HTML, JSON, etc. -> Base64
       else if (selectedConverter.includes("to-base64")) {
         setOutputValue(btoa(unescape(encodeURIComponent(inputValue))))
+        setInputValue("") // Clear input after conversion
       }
       // 🔡 Base64 -> Text, HTML, JSON, etc.
       else if (selectedConverter.includes("base64-to")) {
         setOutputValue(decodeURIComponent(escape(atob(inputValue))))
+        setInputValue("") // Clear input after conversion
       }
     } catch (err) {
       setOutputValue("⚠️ Conversion failed. Invalid format or data.")
     }
+  }
+
+  // Handle option change - clear everything when switching converters
+  const handleOptionChange = (optionId: string) => {
+    setSelectedConverter(optionId)
+    setInputValue("")
+    setOutputValue("")
+    setFile(null)
   }
 
   // 🧹 Clear All
@@ -117,7 +182,7 @@ export function Base64Tools() {
       icon={Palette}
       options={converterOptions}
       selectedOption={selectedConverter}
-      onOptionSelect={setSelectedConverter}
+      onOptionSelect={handleOptionChange}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>
@@ -137,6 +202,7 @@ export function Base64Tools() {
                     type="file"
                     accept="image/*"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    value=""
                   />
                 </div>
               ) : (
@@ -190,3 +256,5 @@ export function Base64Tools() {
     </ReusableSidebar>
   )
 }
+
+export default Base64Tools

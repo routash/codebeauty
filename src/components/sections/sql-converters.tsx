@@ -127,6 +127,13 @@ export function SqlConverter() {
 
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
+  // Handle converter change with auto-clear
+  const handleConverterChange = (converterId: string) => {
+    setSelectedConverter(converterId)
+    setInputValue("")
+    setOutput("")
+  }
+
   const handleConvert = () => {
     if (!selectedConverter) {
       setOutput("Please select a converter from the sidebar.")
@@ -147,7 +154,7 @@ export function SqlConverter() {
       icon={Palette}
       options={converterOptions}
       selectedOption={selectedConverter}
-      onOptionSelect={setSelectedConverter}
+      onOptionSelect={handleConverterChange}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>

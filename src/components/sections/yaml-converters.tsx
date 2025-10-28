@@ -62,6 +62,13 @@ export function YamlConverters() {
 
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
+  // Clear inputs when converter changes
+  const handleConverterChange = (converterId: string) => {
+    setSelectedConverter(converterId)
+    setInputValue("")
+    setOutput("")
+  }
+
   const handleConvert = () => {
     if (!selectedConverter || !inputValue) {
       setOutput("⚠️ Please select a converter and enter YAML input.")
@@ -120,7 +127,7 @@ export function YamlConverters() {
       icon={Palette}
       options={converterOptions}
       selectedOption={selectedConverter}
-      onOptionSelect={setSelectedConverter}
+      onOptionSelect={handleConverterChange}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>

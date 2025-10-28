@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import { FileText, Settings, Palette, Download } from "lucide-react"
@@ -23,6 +23,12 @@ export function JsonConverters() {
   ]
 
   const footerOptions: SidebarOption[] = [{ id: "settings", label: "Settings", icon: Settings }]
+
+  // Auto-clear when converter changes
+  useEffect(() => {
+    setInputText("")
+    setOutputText("")
+  }, [selectedConverter])
 
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 

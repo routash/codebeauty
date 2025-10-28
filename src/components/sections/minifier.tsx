@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import { FileText, Settings, Palette } from "lucide-react"
-import sqlFormatter from "sql-formatter"
+// import sqlFormatter from "sql-formatter"
 
 export function Minifier() {
   const [selectedTool, setSelectedTool] = useState<string>("")
@@ -45,26 +45,26 @@ export function Minifier() {
           break
         }
 
-        case "css-minify": {
-          const CleanCSS = (await import("clean-css")).default
-          result = new CleanCSS().minify(inputText).styles
-          break
-        }
+        // case "css-minify": {
+        //   const CleanCSS = (await import("clean-css")).default
+        //   result = new CleanCSS().minify(inputText).styles
+        //   break
+        // }
 
-        case "sql-minifier":
-          result = sqlFormatter.format(inputText, { language: "sql" }).replace(/\s+/g, " ")
-          break
+        // case "sql-minifier":
+        //   result = sqlFormatter.format(inputText, { language: "sql" }).replace(/\s+/g, " ")
+        //   break
 
-        case "html-minify": {
-          const { minify } = await import("html-minifier-terser")
-          result = await minify(inputText, {
-            collapseWhitespace: true,
-            removeComments: true,
-            minifyCSS: true,
-            minifyJS: true,
-          })
-          break
-        }
+        // case "html-minify": {
+        //   const { minify } = await import("html-minifier-terser")
+        //   result = await minify(inputText, {
+        //     collapseWhitespace: true,
+        //     removeComments: true,
+        //     minifyCSS: true,
+        //     minifyJS: true,
+        //   })
+        //   break
+        // }
 
         case "lua-minifier":
         case "text-minifier":

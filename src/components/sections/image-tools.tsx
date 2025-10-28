@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
@@ -28,6 +28,15 @@ export function ImageTools() {
     { id: "settings", label: "Settings", icon: Settings },
   ]
 
+  // Clear input and output when converter changes
+  useEffect(() => {
+    setInputFile(null)
+    setOutputUrl("")
+    // Clear file input field
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+    if (fileInput) fileInput.value = ""
+  }, [selectedConverter])
+
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
   // File upload handler
@@ -52,22 +61,27 @@ export function ImageTools() {
     ctx.drawImage(img, 0, 0)
 
     let mimeType = "image/png"
+    let fileExtension = "png"
 
     switch (selectedConverter) {
       case "jpg-to-png":
       case "bmp-to-png":
       case "gif-to-png":
         mimeType = "image/png"
+        fileExtension = "png"
         break
       case "png-to-jpg":
         mimeType = "image/jpeg"
+        fileExtension = "jpg"
         break
       case "png-to-bmp":
       case "jpg-to-bmp":
         mimeType = "image/bmp"
+        fileExtension = "bmp"
         break
       case "jpg-to-gif":
         mimeType = "image/gif"
+        fileExtension = "gif"
         break
       case "grayscale":
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
@@ -78,12 +92,14 @@ export function ImageTools() {
         }
         ctx.putImageData(imageData, 0, 0)
         mimeType = "image/png"
+        fileExtension = "png"
         break
       case "flip-image":
         ctx.translate(canvas.width, 0)
         ctx.scale(-1, 1)
         ctx.drawImage(img, 0, 0)
         mimeType = "image/png"
+        fileExtension = "png"
         break
       case "pixelate-image":
         const size = 10 // pixel size
@@ -95,9 +111,11 @@ export function ImageTools() {
           }
         }
         mimeType = "image/png"
+        fileExtension = "png"
         break
       default:
         mimeType = "image/png"
+        fileExtension = "png"
     }
 
     const output = canvas.toDataURL(mimeType)
@@ -107,13 +125,23 @@ export function ImageTools() {
   const handleClear = () => {
     setInputFile(null)
     setOutputUrl("")
+    // Clear file input field
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+    if (fileInput) fileInput.value = ""
   }
 
   const handleDownload = () => {
     if (!outputUrl) return
     const a = document.createElement("a")
     a.href = outputUrl
-    a.download = `converted-${selectedConverter}.png`
+    
+    // Get proper file extension based on converter
+    let fileExtension = "png"
+    if (selectedConverter === "png-to-jpg") fileExtension = "jpg"
+    else if (selectedConverter === "png-to-bmp" || selectedConverter === "jpg-to-bmp") fileExtension = "bmp"
+    else if (selectedConverter === "jpg-to-gif") fileExtension = "gif"
+    
+    a.download = `converted-${selectedConverter}.${fileExtension}`
     a.click()
   }
 

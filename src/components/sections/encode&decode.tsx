@@ -40,6 +40,13 @@ export function EncodeDecode() {
 
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter);
 
+  // Handle converter change with auto-clear
+  const handleConverterChange = (converterId: string) => {
+    setSelectedConverter(converterId);
+    setInput("");
+    setOutput("");
+  };
+
   const handleConvert = () => {
     try {
       let result = "";
@@ -48,19 +55,28 @@ export function EncodeDecode() {
           result = base32Encode(input);
           break;
         case "base32-decode":
-          result = base32Decode(input);
+          result = base32Decode(input.toUpperCase().replace(/\s/g, ""));
           break;
         case "base58-encode":
           result = bs58.encode(Buffer.from(input, "utf8"));
           break;
         case "base58-decode":
-          result = Buffer.from(bs58.decode(input)).toString("utf8");
+          // Validate Base58 characters first
+          const base58Regex = /^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz\s]+$/;
+          const cleanInput = input.trim().replace(/\s/g, "");
+          if (!cleanInput) {
+            throw new Error("Input cannot be empty");
+          }
+          if (!base58Regex.test(input)) {
+            throw new Error("Invalid Base58 string. Base58 excludes: 0 (zero), O (capital O), I (capital I), l (lowercase L)");
+          }
+          result = Buffer.from(bs58.decode(cleanInput)).toString("utf8");
           break;
         case "base64-encode":
-          result = btoa(input);
+          result = btoa(unescape(encodeURIComponent(input)));
           break;
         case "base64-decode":
-          result = atob(input);
+          result = decodeURIComponent(escape(atob(input)));
           break;
         case "url-encode":
           result = encodeURIComponent(input);
@@ -69,13 +85,20 @@ export function EncodeDecode() {
           result = decodeURIComponent(input);
           break;
         case "json-url-encode":
-          result = encodeURIComponent(JSON.stringify(JSON.parse(input)));
+          // Try to parse as JSON, if fails treat as plain string
+          try {
+            const parsed = JSON.parse(input);
+            result = encodeURIComponent(JSON.stringify(parsed));
+          } catch {
+            // If not valid JSON, treat as plain string and convert to JSON
+            result = encodeURIComponent(JSON.stringify(input));
+          }
           break;
         case "json-url-decode":
           result = JSON.stringify(JSON.parse(decodeURIComponent(input)), null, 2);
           break;
         case "html-encode":
-          result = input.replace(/[\u00A0-\u9999<>&]/g, i => `&#${i.charCodeAt(0)};`);
+          result = input.replace(/[\u00A0-\u9999<>&"']/g, i => `&#${i.charCodeAt(0)};`);
           break;
         case "html-decode":
           const textarea = document.createElement("textarea");
@@ -89,26 +112,45 @@ export function EncodeDecode() {
           result = decodeURIComponent(input);
           break;
         case "utf8-converter":
-          result = new TextEncoder().encode(input).toString();
+          result = Array.from(new TextEncoder().encode(input)).join(", ");
           break;
         case "utf8-decode":
-          result = new TextDecoder().decode(Uint8Array.from(input.split(","), Number));
+          const bytes = input.split(",").map(s => parseInt(s.trim()));
+          if (bytes.some(isNaN)) {
+            throw new Error("Invalid UTF-8 byte sequence. Use comma-separated numbers.");
+          }
+          result = new TextDecoder().decode(Uint8Array.from(bytes));
           break;
         case "hex-to-utf8":
-          result = Buffer.from(input.replace(/^0x/, ""), "hex").toString("utf8");
+          const hexStr = input.replace(/^0x/, "").replace(/\s/g, "");
+          if (!/^[0-9a-fA-F]*$/.test(hexStr)) {
+            throw new Error("Invalid hex string. Use only 0-9 and a-f characters.");
+          }
+          const hexBytes = [];
+          for (let i = 0; i < hexStr.length; i += 2) {
+            hexBytes.push(parseInt(hexStr.substr(i, 2), 16));
+          }
+          result = new TextDecoder().decode(Uint8Array.from(hexBytes));
           break;
         case "json-decode-online":
           result = JSON.stringify(JSON.parse(input), null, 2);
           break;
         case "json-encode-online":
-          result = JSON.stringify(JSON.parse(input));
+          // Try to parse as JSON, if fails treat as plain string
+          try {
+            const parsed = JSON.parse(input);
+            result = JSON.stringify(parsed);
+          } catch {
+            // If not valid JSON, treat as plain string
+            result = JSON.stringify(input);
+          }
           break;
         default:
           result = "Please select a conversion type.";
       }
       setOutput(result);
-    } catch (error) {
-      setOutput("❌ Error: Invalid input or format");
+    } catch (error: any) {
+      setOutput(`❌ Error: ${error.message || "Invalid input or format"}`);
     }
   };
 
@@ -123,7 +165,7 @@ export function EncodeDecode() {
       icon={Palette}
       options={converterOptions}
       selectedOption={selectedConverter}
-      onOptionSelect={setSelectedConverter}
+      onOptionSelect={handleConverterChange}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>
@@ -133,13 +175,28 @@ export function EncodeDecode() {
             <p className="text-muted-foreground">{selectedOption?.description}</p>
           </div>
 
+         
+
+          {/* Info box for Base58 Decode */}
+          {selectedConverter === "base58-decode" && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+              <p className="font-semibold text-blue-900 mb-1">ℹ️ Base58 Character Set</p>
+              <p className="text-blue-800">
+                Valid: <code className="bg-blue-100 px-1 rounded font-mono">123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</code>
+              </p>
+              <p className="text-blue-800 mt-1">
+                Invalid: <code className="bg-red-100 px-1 rounded font-mono">0 O I l</code> (zero, capital O, capital I, lowercase L)
+              </p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="text-sm font-medium mb-2 block">Input</label>
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-3 w-full h-48"
+                className="border-2 border-dashed border-gray-300 rounded-lg p-3 w-full h-48 font-mono"
                 placeholder="Enter your text or data here"
               />
             </div>
@@ -149,7 +206,7 @@ export function EncodeDecode() {
               <textarea
                 value={output}
                 readOnly
-                className="border-2 border-dashed border-gray-300 rounded-lg p-3 w-full h-48 bg-gray-50"
+                className="border-2 border-dashed border-gray-300 rounded-lg p-3 w-full h-48 bg-gray-50 font-mono"
                 placeholder="Your result will appear here"
               />
             </div>

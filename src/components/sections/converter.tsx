@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   ReusableSidebar,
   SidebarContentWrapper,
@@ -43,6 +43,20 @@ export function Converter() {
     { id: "tableizer", label: "Online Tableizer", icon: Table, description: "Convert Excel/CSV to HTML Table" },
   ]
 
+  // Auto-clear when converter changes
+  useEffect(() => {
+    setInput("")
+    setOutput("")
+    setDate1("")
+    setDate2("")
+    
+    // Clear all file inputs
+    const fileInputs = document.querySelectorAll('input[type="file"]')
+    fileInputs.forEach((input) => {
+      (input as HTMLInputElement).value = ""
+    })
+  }, [selectedConverter])
+
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
   const handleClear = () => {
@@ -50,6 +64,12 @@ export function Converter() {
     setOutput("")
     setDate1("")
     setDate2("")
+    
+    // Clear all file inputs
+    const fileInputs = document.querySelectorAll('input[type="file"]')
+    fileInputs.forEach((input) => {
+      (input as HTMLInputElement).value = ""
+    })
   }
 
   // ✅ Base64 → Image
