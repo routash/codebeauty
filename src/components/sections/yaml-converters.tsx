@@ -1,178 +1,233 @@
 "use client"
 
-import { useState } from "react"
-import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
+import { useState, useEffect } from "react"
+import {
+  ReusableSidebar,
+  SidebarContentWrapper,
+  SidebarOption,
+} from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import {
   FileText,
   Settings,
+  Palette,
   Download,
-  Palette
+  RotateCcw,
 } from "lucide-react"
-import * as YAML from "js-yaml"
-import * as xmljs from "xml-js"
-import * as Papa from "papaparse"
-import * as XLSX from "xlsx"
 
-export function YamlConverters() {
-  const [selectedConverter, setSelectedConverter] = useState("")
-  const [inputValue, setInputValue] = useState("")
-  const [output, setOutput] = useState("")
+// Props interface
+interface YamlConvertersProps {
+  defaultTool?: string
+}
 
+export function YamlConverters({ defaultTool = "" }: YamlConvertersProps) {
+  const [selectedConverter, setSelectedConverter] = useState<string>(defaultTool)
+  const [inputText, setInputText] = useState<string>("")
+  const [outputText, setOutputText] = useState<string>("")
+
+  // Sidebar options
   const converterOptions: SidebarOption[] = [
     {
-      id: "yaml-converter",
-      label: "YAML Converter",
+      id: "yaml-to-json",
+      label: "YAML to JSON",
       icon: FileText,
-      description: "All-in-one YAML conversion tool to transform YAML data into various formats."
+      description: "Convert YAML data into structured JSON format.",
     },
     {
       id: "yaml-to-xml",
       label: "YAML to XML",
       icon: FileText,
-      description: "Convert YAML content into well-structured XML format."
-    },
-    {
-      id: "yaml-to-json",
-      label: "YAML to JSON",
-      icon: FileText,
-      description: "Transform YAML data into JSON format for web and API use."
+      description: "Convert YAML into clean XML structure.",
     },
     {
       id: "yaml-to-csv",
       label: "YAML to CSV",
       icon: FileText,
-      description: "Convert YAML structured data into CSV format for spreadsheets."
+      description: "Convert YAML objects or arrays into CSV format.",
     },
     {
-      id: "yaml-to-excel",
-      label: "YAML to Excel",
+      id: "yaml-to-tsv",
+      label: "YAML to TSV",
       icon: FileText,
-      description: "Export YAML data directly into Excel (.xlsx) spreadsheets."
-    }
+      description: "Convert YAML into tab-separated values format.",
+    },
+    {
+      id: "yaml-to-text",
+      label: "YAML to Text",
+      icon: FileText,
+      description: "Flatten and export YAML content as plain text.",
+    },
+    {
+      id: "yaml-to-html",
+      label: "YAML to HTML",
+      icon: FileText,
+      description: "Convert YAML into structured HTML table format.",
+    },
   ]
 
   const footerOptions: SidebarOption[] = [
-    {
-      id: "settings",
-      label: "Settings",
-      icon: Settings
-    }
+    { id: "settings", label: "Settings", icon: Settings },
   ]
 
-  const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
+  const selectedOption = converterOptions.find(
+    (opt) => opt.id === selectedConverter
+  )
 
-  // Clear inputs when converter changes
-  const handleConverterChange = (converterId: string) => {
-    setSelectedConverter(converterId)
-    setInputValue("")
-    setOutput("")
-  }
+  // Reset text areas when converter changes
+  useEffect(() => {
+    setInputText("")
+    setOutputText("")
+  }, [selectedConverter])
 
-  const handleConvert = () => {
-    if (!selectedConverter || !inputValue) {
-      setOutput("⚠️ Please select a converter and enter YAML input.")
-      return
-    }
-
+  // --- Conversion Logic ---
+  const convertYaml = (yaml: string, type: string): string => {
     try {
-      // Parse YAML input first
-      const yamlData = YAML.load(inputValue)
+      // Simple YAML parser (works for key: value pairs)
+      const lines = yaml.split("\n")
+      const obj: Record<string, any> = {}
+      lines.forEach((line) => {
+        const [key, value] = line.split(":").map((x) => x.trim())
+        if (key) obj[key] = value
+      })
 
-      let result = ""
-      switch (selectedConverter) {
+      switch (type) {
         case "yaml-to-json":
-          result = JSON.stringify(yamlData, null, 2)
-          break
+          return JSON.stringify(obj, null, 2)
 
         case "yaml-to-xml":
-          result = xmljs.json2xml(JSON.stringify(yamlData), { compact: true, spaces: 2 })
-          break
+          return (
+            "<root>" +
+            Object.entries(obj)
+              .map(([k, v]) => `<${k}>${v}</${k}>`)
+              .join("") +
+            "</root>"
+          )
 
-        case "yaml-to-csv":
-          if (Array.isArray(yamlData)) {
-            result = Papa.unparse(yamlData)
-          } else {
-            result = Papa.unparse([yamlData])
-          }
-          break
+        case "yaml-to-csv": {
+          const keys = Object.keys(obj)
+          const values = Object.values(obj)
+          return keys.join(",") + "\n" + values.join(",")
+        }
 
-        case "yaml-to-excel":
-          const ws = XLSX.utils.json_to_sheet(Array.isArray(yamlData) ? yamlData : [yamlData])
-          const wb = XLSX.utils.book_new()
-          XLSX.utils.book_append_sheet(wb, ws, "Sheet1")
-          XLSX.writeFile(wb, "converted.xlsx")
-          result = "✅ Excel file has been downloaded (converted.xlsx)"
-          break
+        case "yaml-to-tsv": {
+          const keys = Object.keys(obj)
+          const values = Object.values(obj)
+          return keys.join("\t") + "\n" + values.join("\t")
+        }
+
+        case "yaml-to-text":
+          return Object.entries(obj)
+            .map(([k, v]) => `${k}: ${v}`)
+            .join("\n")
+
+        case "yaml-to-html":
+          return `<table border="1"><tr>${Object.keys(obj)
+            .map((k) => `<th>${k}</th>`)
+            .join("")}</tr><tr>${Object.values(obj)
+            .map((v) => `<td>${v}</td>`)
+            .join("")}</tr></table>`
 
         default:
-          result = "Select a valid YAML converter option."
-          break
+          return "Unsupported conversion type"
       }
-
-      setOutput(result)
-    } catch (error: any) {
-      setOutput("❌ Conversion failed: " + error.message)
+    } catch (err) {
+      return "❌ Invalid YAML input"
     }
+  }
+
+  // --- Handlers ---
+  const handleConvert = () => {
+    if (!selectedConverter) {
+      alert("Please select a converter from the sidebar.")
+      return
+    }
+    setOutputText(convertYaml(inputText, selectedConverter))
   }
 
   const handleClear = () => {
-    setInputValue("")
-    setOutput("")
+    setInputText("")
+    setOutputText("")
   }
 
+  const handleDownload = () => {
+    if (!outputText) return
+    const blob = new Blob([outputText], { type: "text/plain" })
+    const link = document.createElement("a")
+    link.href = URL.createObjectURL(blob)
+    link.download = `${selectedConverter || "converted"}.txt`
+    link.click()
+  }
+
+  // --- UI ---
   return (
     <ReusableSidebar
       title="YAML Converters"
       icon={Palette}
       options={converterOptions}
       selectedOption={selectedConverter}
-      onOptionSelect={handleConverterChange}
+      onOptionSelect={setSelectedConverter}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>
         <div className="mx-auto">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">{selectedOption?.label}</h2>
-            <p className="text-muted-foreground">{selectedOption?.description}</p>
+            <h2 className="text-2xl font-bold mb-2">
+              {selectedOption?.label || "Select a Converter"}
+            </h2>
+            <p className="text-muted-foreground">
+              {selectedOption?.description ||
+                "Choose a conversion type from the sidebar to begin."}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Input */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Input (YAML)</label>
+            {/* Input Section */}
+            <div className="space-y-4">
+              <label className="text-sm font-medium mb-2 block">
+                Input YAML
+              </label>
               <textarea
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Enter YAML content here..."
-                className="border-2 border-dashed border-gray-300 rounded-lg p-3 w-full font-mono"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                className="border-2 border-dashed border-gray-300 rounded-lg pt-2 px-4 w-full h-full"
                 rows={10}
+                placeholder="Paste your YAML here..."
               />
             </div>
 
-            {/* Output */}
-            <div>
+            {/* Output Section */}
+            <div className="space-y-4">
               <label className="text-sm font-medium mb-2 block">Output</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 h-[260px] overflow-auto bg-gray-50">
-                {output ? (
-                  <pre className="text-sm text-left whitespace-pre-wrap">{output}</pre>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 min-h-[200px] overflow-auto bg-gray-50">
+                {outputText ? (
+                  <pre className="text-sm whitespace-pre-wrap break-words">
+                    {outputText}
+                  </pre>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                    <Download className="h-6 w-6 mb-2" />
-                    <p>Converted output will appear here</p>
-                  </div>
+                  <p className="text-gray-400">
+                    Converted output will appear here
+                  </p>
                 )}
               </div>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="mt-6 flex gap-2">
+          <div className="mt-6 flex flex-wrap gap-3">
             <Button onClick={handleConvert}>Convert</Button>
-            <Button variant="outline" onClick={handleClear}>Clear</Button>
+            <Button variant="outline" onClick={handleClear}>
+              <RotateCcw className="w-4 h-4 mr-1" /> Clear
+            </Button>
+            {outputText && (
+              <Button variant="secondary" onClick={handleDownload}>
+                <Download className="w-4 h-4 mr-1" /> Download
+              </Button>
+            )}
           </div>
         </div>
       </SidebarContentWrapper>
     </ReusableSidebar>
   )
 }
+
+export default YamlConverters

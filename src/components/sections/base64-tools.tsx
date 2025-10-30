@@ -1,24 +1,29 @@
+// components/sections/base64-tools.tsx
 "use client"
 
-import { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import {
-  FileText,
-  Settings,
   Upload,
   Download,
   Palette,
-  Image as ImgIcon
+  Image as ImgIcon,
+  FileText,
+  Settings,
 } from "lucide-react"
 
-export function Base64Tools() {
-  const [selectedConverter, setSelectedConverter] = useState("")
-  const [inputValue, setInputValue] = useState("")
-  const [outputValue, setOutputValue] = useState("")
+type Props = {
+  defaultTool?: string
+}
+
+export function Base64Tools({ defaultTool = "text-to-base64" }: Props) {
+  const [selectedConverter, setSelectedConverter] = useState<string>(defaultTool)
+  const [inputValue, setInputValue] = useState<string>("")
+  const [outputValue, setOutputValue] = useState<string>("")
   const [file, setFile] = useState<File | null>(null)
 
-  // 🧩 All Converter Options
+  // converter options
   const converterOptions: SidebarOption[] = [
     { id: "image-to-base64", label: "Image to Base64", icon: ImgIcon, description: "Convert images into Base64 string." },
     { id: "base64-to-image", label: "Base64 to Image", icon: ImgIcon, description: "Convert Base64 string back to image." },
@@ -64,92 +69,88 @@ export function Base64Tools() {
 
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
-  // 🔁 Convert Handler
+  useEffect(() => {
+    // when defaultTool prop changes from parent, update local selection
+    setSelectedConverter(defaultTool)
+    // clear values when selection changes
+    setInputValue("")
+    setOutputValue("")
+    setFile(null)
+  }, [defaultTool])
+
   const handleConvert = () => {
     if (!selectedConverter) return
 
     try {
-      // 📷 Image Upload -> Base64
-      if (selectedConverter.includes("image-to-base64") && file) {
+      // IMAGE -> BASE64 (FileReader)
+      if (selectedConverter === "image-to-base64" && file) {
         const reader = new FileReader()
         reader.onload = () => {
-          setOutputValue(reader.result as string)
-          setFile(null) // Clear file input after conversion
+          setOutputValue(String(reader.result || ""))
+          // keep file until user clears explicitly (optional)
         }
         reader.readAsDataURL(file)
       }
-      // 🖼 Base64 -> Image
+      // BASE64 -> IMAGE (just set output so <img src=.../> shows)
       else if (selectedConverter === "base64-to-image") {
         setOutputValue(inputValue)
-        setInputValue("") // Clear input after conversion
       }
-      // 🔢 Binary to Base64
+      // BINARY -> BASE64 (expects groups of 8 bits separated or not)
       else if (selectedConverter === "binary-to-base64") {
-        const binaryStr = inputValue.replace(/\s/g, '')
+        const binaryStr = inputValue.replace(/\s/g, "")
         const bytes = binaryStr.match(/.{1,8}/g) || []
-        const text = bytes.map(bin => String.fromCharCode(parseInt(bin, 2))).join('')
+        const text = bytes.map(bin => String.fromCharCode(parseInt(bin, 2))).join("")
         setOutputValue(btoa(text))
-        setInputValue("")
       }
-      // 🔢 Base64 to Binary
+      // BASE64 -> BINARY
       else if (selectedConverter === "base64-to-binary") {
         const decoded = atob(inputValue)
-        const binary = decoded.split('').map(char => 
-          char.charCodeAt(0).toString(2).padStart(8, '0')
-        ).join(' ')
+        const binary = decoded.split("").map(c => c.charCodeAt(0).toString(2).padStart(8, "0")).join(" ")
         setOutputValue(binary)
-        setInputValue("")
       }
-      // 🔢 Hex to Base64
+      // HEX -> BASE64
       else if (selectedConverter === "hex-to-base64") {
-        const hex = inputValue.replace(/\s/g, '')
+        const hex = inputValue.replace(/\s/g, "")
         const bytes = hex.match(/.{1,2}/g) || []
-        const text = bytes.map(byte => String.fromCharCode(parseInt(byte, 16))).join('')
+        const text = bytes.map(byte => String.fromCharCode(parseInt(byte, 16))).join("")
         setOutputValue(btoa(text))
-        setInputValue("")
       }
-      // 🔢 Base64 to Hex
+      // BASE64 -> HEX
       else if (selectedConverter === "base64-to-hex") {
         const decoded = atob(inputValue)
-        const hex = decoded.split('').map(char => 
-          char.charCodeAt(0).toString(16).padStart(2, '0')
-        ).join(' ')
+        const hex = decoded.split("").map(c => c.charCodeAt(0).toString(16).padStart(2, "0")).join(" ")
         setOutputValue(hex.toUpperCase())
-        setInputValue("")
       }
-      // 🔢 Octal to Base64
+      // OCTAL -> BASE64
       else if (selectedConverter === "octal-to-base64") {
-        const octal = inputValue.replace(/\s/g, '')
+        const octal = inputValue.replace(/\s/g, "")
         const bytes = octal.match(/.{1,3}/g) || []
-        const text = bytes.map(oct => String.fromCharCode(parseInt(oct, 8))).join('')
+        const text = bytes.map(o => String.fromCharCode(parseInt(o, 8))).join("")
         setOutputValue(btoa(text))
-        setInputValue("")
       }
-      // 🔢 Base64 to Octal
+      // BASE64 -> OCTAL
       else if (selectedConverter === "base64-to-octal") {
         const decoded = atob(inputValue)
-        const octal = decoded.split('').map(char => 
-          char.charCodeAt(0).toString(8).padStart(3, '0')
-        ).join(' ')
-        setOutputValue(octal)
-        setInputValue("")
+        const oct = decoded.split("").map(c => c.charCodeAt(0).toString(8).padStart(3, "0")).join(" ")
+        setOutputValue(oct)
       }
-      // 🧾 Text, HTML, JSON, etc. -> Base64
+      // Generic: TEXT/JSON/HTML/CSS/JS -> BASE64
       else if (selectedConverter.includes("to-base64")) {
+        // use encodeURIComponent to preserve unicode
         setOutputValue(btoa(unescape(encodeURIComponent(inputValue))))
-        setInputValue("") // Clear input after conversion
       }
-      // 🔡 Base64 -> Text, HTML, JSON, etc.
+      // Generic: BASE64 -> text/html/json...
       else if (selectedConverter.includes("base64-to")) {
         setOutputValue(decodeURIComponent(escape(atob(inputValue))))
-        setInputValue("") // Clear input after conversion
+      } else {
+        setOutputValue("⚠️ Unsupported converter or missing input.")
       }
     } catch (err) {
-      setOutputValue("⚠️ Conversion failed. Invalid format or data.")
+      console.error("Conversion error:", err)
+      setOutputValue("⚠️ Conversion failed. Check input format.")
     }
   }
 
-  // Handle option change - clear everything when switching converters
   const handleOptionChange = (optionId: string) => {
     setSelectedConverter(optionId)
     setInputValue("")
@@ -157,14 +158,12 @@ export function Base64Tools() {
     setFile(null)
   }
 
-  // 🧹 Clear All
   const handleClear = () => {
     setInputValue("")
     setOutputValue("")
     setFile(null)
   }
 
-  // 💾 Download Result
   const handleDownload = () => {
     if (!outputValue) return
     const blob = new Blob([outputValue], { type: "text/plain" })
@@ -188,49 +187,46 @@ export function Base64Tools() {
       <SidebarContentWrapper selectedOption={selectedOption}>
         <div className="mx-auto space-y-6">
           <div>
-            <h2 className="text-2xl font-bold">{selectedOption?.label}</h2>
-            <p className="text-muted-foreground">{selectedOption?.description}</p>
+            <h2 className="text-2xl font-bold">{selectedOption?.label || "Select a tool"}</h2>
+            <p className="text-sm text-muted-foreground">{selectedOption?.description || ""}</p>
           </div>
 
-          {/* Input Section */}
+          {/* Input + Output */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="text-sm font-medium mb-2 block">Input</label>
-              {selectedConverter.includes("image-to-base64") ? (
+              {selectedConverter === "image-to-base64" ? (
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  {/* IMPORTANT: do NOT set `value` on file inputs */}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    value=""
                   />
+                  {file && <p className="mt-2 text-sm">Selected: {file.name}</p>}
                 </div>
               ) : (
                 <textarea
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Enter text or Base64 here..."
+                  placeholder="Enter text, hex, binary or Base64 here..."
                   className="border-2 border-dashed border-gray-300 rounded-lg p-3 w-full"
-                  rows={6}
+                  rows={8}
                 />
               )}
             </div>
 
-            {/* Output Section */}
             <div>
               <label className="text-sm font-medium mb-2 block">Output</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 min-h-[12rem]">
                 {selectedConverter === "base64-to-image" && outputValue ? (
-                  <img
-                    src={outputValue}
-                    alt="Decoded"
-                    className="mx-auto max-h-60 rounded-lg"
-                  />
+                  // show image if result is data URL
+                  <img src={outputValue} alt="Decoded" className="mx-auto max-h-60 rounded-lg" />
                 ) : (
                   <textarea
                     readOnly
                     value={outputValue}
-                    className="border-none bg-transparent resize-none w-full h-48 text-sm"
+                    className="border-none bg-transparent resize-none w-full h-full text-sm"
                   />
                 )}
               </div>
@@ -242,9 +238,7 @@ export function Base64Tools() {
             <Button onClick={handleConvert}>
               <Upload className="h-4 w-4 mr-2" /> Convert
             </Button>
-            <Button variant="outline" onClick={handleClear}>
-              Clear
-            </Button>
+            <Button variant="outline" onClick={handleClear}>Clear</Button>
             {outputValue && (
               <Button variant="secondary" onClick={handleDownload}>
                 <Download className="h-4 w-4 mr-2" /> Download Result

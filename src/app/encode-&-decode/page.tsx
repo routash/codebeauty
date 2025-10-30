@@ -1,7 +1,7 @@
-import { EncodeDecode } from "@/components/sections/encode&decode";
+"use client";
 
-export default function encodedecodePage() {
-  return (
-    <EncodeDecode />
-  );
+import EncodeDecode from "@/components/sections/encode&decode"; // ✅ correct path
+
+export default function EncodeDecodePage() {
+  return <EncodeDecode />;
 }

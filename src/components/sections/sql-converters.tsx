@@ -1,16 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import { FileText, Settings, Download, Palette } from "lucide-react"
 
-// ✅ Conversion logic
 const convertSqlData = (type: string, input: string) => {
   if (!input.trim()) return "Please enter SQL data to convert."
 
   try {
-    // Example input parser: expects simple "table-like" SQL data or CSV-style text
     const lines = input
       .trim()
       .split("\n")
@@ -29,19 +28,19 @@ const convertSqlData = (type: string, input: string) => {
 
     switch (type) {
       case "sql-to-csv":
-        return [headers.join(","), ...rows.map(r => headers.map(h => r[h]).join(","))].join("\n")
+        return [headers.join(","), ...rows.map(r => headers.map(h => r[h] || '').join(","))].join("\n")
 
       case "sql-to-json":
         return JSON.stringify(rows, null, 2)
 
       case "sql-to-xml":
         return (
-          `<rows>\n` +
+          `<?xml version="1.0" encoding="UTF-8"?>\n<rows>\n` +
           rows
             .map(
               r =>
                 `  <row>\n${headers
-                  .map(h => `    <${h}>${r[h]}</${h}>`)
+                  .map(h => `    <${h}>${r[h] || ''}</${h}>`)
                   .join("\n")}\n  </row>`
             )
             .join("\n") +
@@ -53,22 +52,35 @@ const convertSqlData = (type: string, input: string) => {
           .map(
             r =>
               `- ${headers
-                .map(h => `${h}: ${r[h]}`)
+                .map(h => `${h}: "${r[h] || ''}"`)
                 .join("\n  ")}`
           )
           .join("\n")
 
       case "sql-to-html":
-        return `
-<table border="1" style="border-collapse: collapse; width: 100%;">
-  <thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead>
-  <tbody>
-    ${rows
-      .map(r => `<tr>${headers.map(h => `<td>${r[h]}</td>`).join("")}</tr>`)
-      .join("\n")}
-  </tbody>
-</table>
-`.trim()
+        return `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; font-weight: bold; }
+    tr:hover { background-color: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>
+    </thead>
+    <tbody>
+      ${rows
+        .map(r => `<tr>${headers.map(h => `<td>${r[h] || ''}</td>`).join("")}</tr>`)
+        .join("\n      ")}
+    </tbody>
+  </table>
+</body>
+</html>`
 
       default:
         return "Unknown conversion type."
@@ -79,10 +91,22 @@ const convertSqlData = (type: string, input: string) => {
   }
 }
 
-export function SqlConverter() {
-  const [selectedConverter, setSelectedConverter] = useState("")
+interface SqlConverterProps {
+  defaultConverter?: string
+}
+
+export function SqlConverter({ defaultConverter = "" }: SqlConverterProps) {
+  const router = useRouter()
+  const [selectedConverter, setSelectedConverter] = useState(defaultConverter)
   const [inputValue, setInputValue] = useState("")
   const [output, setOutput] = useState("")
+
+  // Update selected converter when URL changes
+  useEffect(() => {
+    if (defaultConverter) {
+      setSelectedConverter(defaultConverter)
+    }
+  }, [defaultConverter])
 
   const converterOptions: SidebarOption[] = [
     {
@@ -127,11 +151,13 @@ export function SqlConverter() {
 
   const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
 
-  // Handle converter change with auto-clear
+  // Handle converter change with auto-clear + URL navigation
   const handleConverterChange = (converterId: string) => {
     setSelectedConverter(converterId)
     setInputValue("")
     setOutput("")
+    // Navigate to the converter URL
+    router.push(`/sql-converters/${converterId}`)
   }
 
   const handleConvert = () => {
@@ -146,6 +172,32 @@ export function SqlConverter() {
   const handleClear = () => {
     setInputValue("")
     setOutput("")
+  }
+
+  const handleDownload = () => {
+    if (!output || output.includes("Please") || output.includes("Error")) {
+      alert("No valid output to download!")
+      return
+    }
+
+    const extensions: { [key: string]: string } = {
+      "sql-to-csv": "csv",
+      "sql-to-json": "json",
+      "sql-to-xml": "xml",
+      "sql-to-yaml": "yaml",
+      "sql-to-html": "html"
+    }
+
+    const ext = extensions[selectedConverter] || "txt"
+    const blob = new Blob([output], { type: "text/plain" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `converted-data.${ext}`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -198,8 +250,27 @@ export function SqlConverter() {
           </div>
 
           <div className="mt-6 flex gap-2">
-            <Button onClick={handleConvert}>Convert</Button>
-            <Button variant="outline" onClick={handleClear}>Clear</Button>
+            <Button 
+              onClick={handleConvert}
+              disabled={!selectedConverter || !inputValue.trim()}
+            >
+              Convert
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleClear}
+              disabled={!inputValue && !output}
+            >
+              Clear
+            </Button>
+            <Button 
+              variant="secondary" 
+              onClick={handleDownload}
+              disabled={!output || output.includes("Please") || output.includes("Error")}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </Button>
           </div>
         </div>
       </SidebarContentWrapper>

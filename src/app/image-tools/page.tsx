@@ -1,7 +1,6 @@
-import { ImageTools } from "@/components/sections/image-tools";
+"use client"
+import { ImageTools } from "@/components/sections/image-tools"
 
-export default function imagetoolsPage() {
-  return (
-    <ImageTools />
-  );
+export default function ImageToolsPage() {
+  return <ImageTools />
 }

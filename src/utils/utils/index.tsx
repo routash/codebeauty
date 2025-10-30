@@ -22,7 +22,7 @@ export function base64ToImage(base64String: string): string {
   const mimeMatch = base64String.match(/^data:(image\/[a-zA-Z+]+);base64,/);
   const mimeType = mimeMatch ? mimeMatch[1] : "image/png";
 
-  // Remove prefix if present
+  // Remove prefix if present  
   let base64Data = base64String.includes(",")
     ? base64String.split(",")[1]
     : base64String;
@@ -74,3 +74,4 @@ export function stripHTML(html: string): string {
   return tempDiv.textContent || tempDiv.innerText || "";
 }
 
+ 

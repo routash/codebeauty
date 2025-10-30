@@ -363,89 +363,89 @@ export const constants = {
   ],
 };
 export const category = [
-  
+
   {
-    name: 'SQL Converters', href: '/sql-converters',
+    name: 'sql-converters', href: '/sql-converters',
     subcategories: [
-      { name: 'SQL to CSV Converter', to: 'SQL-Converters/sql-to-csv' },
-      { name: 'SQL to JSON Converter', to: 'SQL-Converters/sql-to-json' },
-      { name: 'SQL to XML Converter', to: 'SQL-Converters/sql-to-xml' },
-      { name: 'SQL to YAML Converter', to: 'SQL-Converters/sql-to-yaml' },
-      { name: 'SQL to HTML Converter', to: 'SQL-Converters/sql-to-html' }
+      { name: 'SQL to CSV Converter', to: 'sql-converters/sql-to-csv' },
+      { name: 'SQL to JSON Converter', to: 'sql-converters/sql-to-json' },
+      { name: 'SQL to XML Converter', to: 'sql-converters/sql-to-xml' },
+      { name: 'SQL to YAML Converter', to: 'sql-converters/sql-to-yaml' },
+      { name: 'SQL to HTML Converter', to: 'sql-converters/sql-to-html' }
     ]
   },
   {
-    name: 'Encode & Decode', href: '/encode-&-decode',
+    name: 'encode-&-decode', href: '/encode-&-decode',
     subcategories: [
-      { name: 'Base32 Encode', to: 'Encode&-Decode/base32-encode' },
-      { name: 'Base32 Decode', to: 'Encode-&-Decode/base32-decode' },
-      { name: 'Base58 Encode', to: 'Encode-&-Decode/base58-encode' },
-      { name: 'Base58 Decode', to: 'Encode-&-Decode/base58-decode' },
-      { name: 'Base64 Encode', to: 'Encode-&-Decode/base64-encode' },
+      { name: 'Base32 Encode', to: 'encode-&-decode/base32-encode' },
+      { name: 'Base32 Decode', to: 'encode-&-decode/base32-decode' },
+      { name: 'Base58 Encode', to: 'encode-&-decode/base58-encode' },
+      { name: 'Base58 Decode', to: 'encode-&-decode/base58-decode' },
+      { name: 'Base64 Encode', to: 'encode-&-decode/base64-encode' },
       { name: 'Base64 Decode', to: 'vbase64-decode' },
-      { name: 'URL Encode Online', to: 'Encode-&-Decode/url-encode' },
-      { name: 'URL Decode Online', to: 'Encode-&-Decode/url-decode' },
-      { name: 'JSON URL Encode', to: 'Encode-&-Decode/json-url-encode' },
-      { name: 'JSON URL Decode', to: 'Encode-&-Decode/json-url-decode' },
-      { name: 'HTML Encode', to: 'Encode-&-Decode/html-encode' },
-      { name: 'HTML Decode', to: 'Encode-&-Decode/html-decode' },
-      { name: 'XML URL Encoding', to: 'Encode-&-Decode/xml-url-encode' },
-      { name: 'XML URL Decoding', to: 'Encode-&-Decode/xml-url-decode' },
-      { name: 'UTF8 Converter', to: 'Encode-&-Decode/utf8-converter' },
-      { name: 'UTF8 Decode', to: 'Encode-&-Decode/utf8-decode' },
-      { name: 'Hex to UTF8', to: 'Encode-&-Decode/hex-to-utf8' },
-      { name: 'JSON Decode Online', to: 'Encode-&-Decode/json-decode' },
-      { name: 'JSON Encode Online', to: 'Encode-&-Decode/json-encode' }
+      { name: 'URL Encode Online', to: 'encode-&-decode/url-encode' },
+      { name: 'URL Decode Online', to: 'encode-&-decode/url-decode' },
+      { name: 'JSON URL Encode', to: 'encode-&-decode/json-url-encode' },
+      { name: 'JSON URL Decode', to: 'encode-&-decode/json-url-decode' },
+      { name: 'HTML Encode', to: 'encode-&-decode/html-encode' },
+      { name: 'HTML Decode', to: 'encode-&-decode/html-decode' },
+      { name: 'XML URL Encoding', to: 'encode-&-decode/xml-url-encode' },
+      { name: 'XML URL Decoding', to: 'encode-&-decode/xml-url-decode' },
+      { name: 'UTF8 Converter', to: 'encode-&-decode/utf8-converter' },
+      { name: 'UTF8 Decode', to: 'encode-&-decode/utf8-decode' },
+      { name: 'Hex to UTF8', to: 'encode-&-decode/hex-to-utf8' },
+      { name: 'JSON Decode Online', to: 'encode-&-decode/json-decode' },
+      { name: 'JSON Encode Online', to: 'encode-&-decode/json-encode' }
     ]
   },
   {
-    name: 'Base64 Tools', href: '/base64-tools',
+    name: 'base64-tools', href: '/base64-tools',
     subcategories: [
-      { name: 'Image to Base64', to: 'Base64-Tools/image-to-base64' },
-      { name: 'Base64 to Image', to: 'Base64-Tools/base64-to-image' },
-      { name: 'PNG to Base64', to: 'Base64-Tools/png-to-base64' },
-      { name: 'JPG to Base64', to: 'Base64-Tools/jpg-to-base64' },
-      { name: 'JSON to Base64', to: 'Base64-Tools/json-to-base64' },
-      { name: 'XML to Base64', to: 'Base64-Tools/xml-to-base64' },
-      { name: 'YAML to Base64', to: 'Base64-Tools/yaml-to-base64' },
-      { name: 'Base64 to JSON', to: 'Base64-Tools/base64-to-json' },
-      { name: 'Base64 to XML', to: 'Base64-Tools/base64-to-xml' },
-      { name: 'Base64 to YAML', to: 'Base64-Tools/base64-to-yaml' },
-      { name: 'CSV to Base64', to: 'Base64-Tools/csv-to-base64' },
-      { name: 'Base64 to CSV', to: 'Base64-Tools/base64-to-csv' },
-      { name: 'TSV to Base64', to: 'Base64-Tools/tsv-to-base64' },
-      { name: 'Base64 to TSV', to: 'Base64-Tools/base64-to-tsv' },
-      { name: 'Binary to Base64', to: 'Base64-Tools/binary-to-base64' },
-      { name: 'Base64 to Binary', to: 'Base64-Tools/base64-to-binary' },
-      { name: 'Hex to Base64', to: 'Base64-Tools/hex-to-base64' },
-      { name: 'Base64 to Hex', to: 'Base64-Tools/base64-to-hex' },
-      { name: 'Octal to Base64', to: 'Base64-Tools/octal-to-base64' },
-      { name: 'More Base64 Tools', to: 'Base64-Tools/more-base64-tools' }
+      { name: 'Image to Base64', to: 'base64-tools/image-to-base64' },
+      { name: 'Base64 to Image', to: 'base64-tools/base64-to-image' },
+      { name: 'PNG to Base64', to: 'base64-tools/png-to-base64' },
+      { name: 'JPG to Base64', to: 'base64-tools/jpg-to-base64' },
+      { name: 'JSON to Base64', to: 'base64-tools/json-to-base64' },
+      { name: 'XML to Base64', to: 'base64-tools/xml-to-base64' },
+      { name: 'YAML to Base64', to: 'base64-tools/yaml-to-base64' },
+      { name: 'Base64 to JSON', to: 'base64-tools/base64-to-json' },
+      { name: 'Base64 to XML', to: 'base64-tools/base64-to-xml' },
+      { name: 'Base64 to YAML', to: 'base64-tools/base64-to-yaml' },
+      { name: 'CSV to Base64', to: 'base64-tools/csv-to-base64' },
+      { name: 'Base64 to CSV', to: 'base64-tools/base64-to-csv' },
+      { name: 'TSV to Base64', to: 'base64-tools/tsv-to-base64' },
+      { name: 'Base64 to TSV', to: 'base64-tools/base64-to-tsv' },
+      { name: 'Binary to Base64', to: 'base64-tools/binary-to-base64' },
+      { name: 'Base64 to Binary', to: 'base64-tools/base64-to-binary' },
+      { name: 'Hex to Base64', to: 'base64-tools/hex-to-base64' },
+      { name: 'Base64 to Hex', to: 'base64-tools/base64-to-hex' },
+      { name: 'Octal to Base64', to: 'base64-tools/octal-to-base64' },
+      { name: 'More Base64 Tools', to: 'base64-tools/more-base64-tools' }
     ]
   },
   {
-    name: 'Image Tools', href: '/image-tools',
+    name: 'image-tools', href: '/image-tools',
     subcategories: [
-      { name: 'JPG to PNG', to: 'Image-Tools/jpg-to-png' },
-      { name: 'BMP to PNG', to: 'Image-Tools/bmp-to-png' },
-      { name: 'PNG to JPG', to: 'Image-Tools/png-to-jpg' },
-      { name: 'GIF Splitter', to: 'Image-Tools/gif-splitter' },
-      { name: 'GIF Viewer', to: 'Image-Tools/gif-viewer' },
-      { name: 'More Image Tools', to: 'Image-Tools/more-image-tools' }
+      { name: 'JPG to PNG', to: 'image-tools/jpg-to-png' },
+      { name: 'BMP to PNG', to: 'image-tools/bmp-to-png' },
+      { name: 'PNG to JPG', to: 'image-tools/png-to-jpg' },
+      { name: 'GIF Splitter', to: 'image-tools/gif-splitter' },
+      { name: 'GIF Viewer', to: 'image-tools/gif-viewer' },
+      { name: 'More Image Tools', to: 'image-tools/more-image-tools' }
     ]
   },
- 
+
   {
-    name: 'JSON Converters', href: '/json-converters',
+    name: 'json-converters', href: '/json-converters',
     subcategories: [
-      { name: 'JSON to JAVA', to: 'JSON-Converters/json-to-java' },
-      { name: 'JSON to XML', to: 'JSON-Converters/json-to-xml' },
-      { name: 'JSON to YAML', to: 'JSON-Converters/json-to-yaml' },
-      { name: 'JSON to CSV', to: 'JSON-Converters/json-to-csv' },
-      { name: 'JSON to TSV', to: 'JSON-Converters/json-to-tsv' },
-      { name: 'JSON to Text', to: 'JSON-Converters/json-to-text' },
-      { name: 'JSON to Excel', to: 'JSON-Converters/json-to-excel' },
-      { name: 'JSON to HTML', to: 'JSON-Converters/json-to-html' }
+      { name: 'JSON to JAVA', to: 'json-converters/json-to-java' },
+      { name: 'JSON to XML', to: 'json-converters/json-to-xml' },
+      { name: 'JSON to YAML', to: 'json-converters/json-to-yaml' },
+      { name: 'JSON to CSV', to: 'json-converters/json-to-csv' },
+      { name: 'JSON to TSV', to: 'json-converters/json-to-tsv' },
+      { name: 'JSON to Text', to: 'json-converters/json-to-text' },
+      { name: 'JSON to Excel', to: 'json-converters/json-to-excel' },
+      { name: 'JSON to HTML', to: 'json-converters/json-to-html' }
     ]
   },
   {
@@ -489,17 +489,19 @@ export const category = [
     ]
   },
   {
-    name: 'YAML Converters', href: '/yaml-converters',
+    name: 'yaml-converters', href: '/yaml-converters',
     subcategories: [
-      { name: 'YAML Converter', to: 'YAML-Converters/yaml-converter' },
-      { name: 'YAML to XML', to: 'YAML-Converters/yaml-to-xml' },
-      { name: 'YAML to JSON', to: 'YAML-Converters/yaml-to-json' },
-      { name: 'YAML to CSV', to: 'YAML-Converters/yaml-to-csv' },
-      { name: 'YAML to Excel', to: 'YAML-Converters/yaml-to-excel' }
+      { name: 'YAML Converter', to: 'yaml-converters/yaml-converter' },
+      { name: 'YAML to JSON', to: 'yaml-converters/yaml-to-json' },
+      { name: 'YAML to XML', to: 'yaml-converters/yaml-to-xml' },
+      { name: 'YAML to CSV', to: 'yaml-converters/yaml-to-csv' },
+      { name: 'YAML to TSV', to: 'yaml-converters/yaml-to-tsv' },
+      { name: 'YAML to TEXT', to: 'yaml-converters/yaml-to-text' },
+      { name: 'YAML to HTML', to: 'yaml-converters/yaml-to-html' },
     ]
   },
   {
-    name: 'Utility', href: '/utility',
+    name: 'utility', href: '/utility',
     subcategories: [
       { name: 'Send Snap Message', to: 'Utility/send-snap-message' },
       { name: 'Responsive Website Tester', to: 'Utility/responsive-website-tester' },

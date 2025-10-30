@@ -1,196 +1,112 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
-import { FileText, Image as ImageIcon, Settings, Download, Palette, Upload } from "lucide-react"
+import { Upload, Download, Image as ImgIcon, Settings, Palette } from "lucide-react"
 
-export function ImageTools() {
-  const [selectedConverter, setSelectedConverter] = useState("")
+export function ImageTools({ defaultTool = "" }: { defaultTool?: string }) {
+  const [selectedTool, setSelectedTool] = useState(defaultTool)
   const [inputFile, setInputFile] = useState<File | null>(null)
-  const [outputUrl, setOutputUrl] = useState<string>("")
+  const [outputUrl, setOutputUrl] = useState("")
 
-  const converterOptions: SidebarOption[] = [
-    { id: "jpg-to-png", label: "JPG to PNG", icon: FileText, description: "Convert JPG or JPEG images into high-quality PNG format." },
-    { id: "png-to-jpg", label: "PNG to JPG", icon: FileText, description: "Convert PNG images into compressed JPG format." },
-    { id: "bmp-to-png", label: "BMP to PNG", icon: FileText, description: "Convert BMP (Bitmap) images into PNG format." },
-    { id: "png-to-bmp", label: "PNG to BMP", icon: FileText, description: "Convert PNG images into BMP format." },
-    { id: "gif-to-png", label: "GIF to PNG", icon: FileText, description: "Convert GIF images into PNG format." },
-    { id: "jpg-to-gif", label: "JPG to GIF", icon: FileText, description: "Convert JPG images into GIF format." },
-    { id: "grayscale", label: "Grayscale Image", icon: FileText, description: "Convert a colored image to black and white." },
-    { id: "flip-image", label: "Flip Image", icon: FileText, description: "Flip an image horizontally or vertically." },
-    { id: "pixelate-image", label: "Pixelate Image", icon: FileText, description: "Add pixelation effect to the image." },
-    { id: "metadata-viewer", label: "Image Metadata Viewer", icon: FileText, description: "View EXIF data (camera, date, etc.) from your image." },
-  ]
-
-  const footerOptions: SidebarOption[] = [
-    { id: "settings", label: "Settings", icon: Settings },
-  ]
-
-  // Clear input and output when converter changes
   useEffect(() => {
+    setSelectedTool(defaultTool)
+  }, [defaultTool])
+
+  const imageTools: SidebarOption[] = [
+    { id: "jpg-to-png", label: "JPG to PNG", icon: ImgIcon, description: "Convert JPG image to PNG format." },
+    { id: "png-to-jpg", label: "PNG to JPG", icon: ImgIcon, description: "Convert PNG image to JPG format." },
+    { id: "bmp-to-png", label: "BMP to PNG", icon: ImgIcon, description: "Convert BMP image to PNG format." },
+    { id: "gif-splitter", label: "GIF Splitter", icon: ImgIcon, description: "Split GIF into individual frames." },
+    { id: "gif-viewer", label: "GIF Viewer", icon: ImgIcon, description: "View and analyze animated GIFs." },
+  ]
+
+  const footerOptions: SidebarOption[] = [{ id: "settings", label: "Settings", icon: Settings }]
+
+  const selectedOption = imageTools.find((opt) => opt.id === selectedTool)
+
+  const handleToolChange = (optionId: string) => {
+    setSelectedTool(optionId)
     setInputFile(null)
     setOutputUrl("")
-    // Clear file input field
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
-    if (fileInput) fileInput.value = ""
-  }, [selectedConverter])
-
-  const selectedOption = converterOptions.find(opt => opt.id === selectedConverter)
-
-  // File upload handler
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) setInputFile(file)
   }
 
-  // Convert image using <canvas>
-  const handleConvert = async () => {
-    if (!inputFile || !selectedConverter) return alert("Please select a tool and upload an image")
-
-    const img = document.createElement("img")
-    img.src = URL.createObjectURL(inputFile)
-    await new Promise((res) => (img.onload = res))
-
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext("2d")!
-    canvas.width = img.width
-    canvas.height = img.height
-
-    ctx.drawImage(img, 0, 0)
-
-    let mimeType = "image/png"
-    let fileExtension = "png"
-
-    switch (selectedConverter) {
-      case "jpg-to-png":
-      case "bmp-to-png":
-      case "gif-to-png":
-        mimeType = "image/png"
-        fileExtension = "png"
-        break
-      case "png-to-jpg":
-        mimeType = "image/jpeg"
-        fileExtension = "jpg"
-        break
-      case "png-to-bmp":
-      case "jpg-to-bmp":
-        mimeType = "image/bmp"
-        fileExtension = "bmp"
-        break
-      case "jpg-to-gif":
-        mimeType = "image/gif"
-        fileExtension = "gif"
-        break
-      case "grayscale":
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const data = imageData.data
-        for (let i = 0; i < data.length; i += 4) {
-          const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
-          data[i] = data[i + 1] = data[i + 2] = avg
-        }
-        ctx.putImageData(imageData, 0, 0)
-        mimeType = "image/png"
-        fileExtension = "png"
-        break
-      case "flip-image":
-        ctx.translate(canvas.width, 0)
-        ctx.scale(-1, 1)
-        ctx.drawImage(img, 0, 0)
-        mimeType = "image/png"
-        fileExtension = "png"
-        break
-      case "pixelate-image":
-        const size = 10 // pixel size
-        for (let y = 0; y < canvas.height; y += size) {
-          for (let x = 0; x < canvas.width; x += size) {
-            const pixel = ctx.getImageData(x, y, 1, 1).data
-            ctx.fillStyle = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`
-            ctx.fillRect(x, y, size, size)
-          }
-        }
-        mimeType = "image/png"
-        fileExtension = "png"
-        break
-      default:
-        mimeType = "image/png"
-        fileExtension = "png"
+  const handleConvert = () => {
+    if (!inputFile) {
+      alert("Please select a file first.")
+      return
     }
 
-    const output = canvas.toDataURL(mimeType)
-    setOutputUrl(output)
-  }
-
-  const handleClear = () => {
-    setInputFile(null)
-    setOutputUrl("")
-    // Clear file input field
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
-    if (fileInput) fileInput.value = ""
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      setOutputUrl(e.target?.result as string)
+    }
+    reader.readAsDataURL(inputFile)
   }
 
   const handleDownload = () => {
     if (!outputUrl) return
-    const a = document.createElement("a")
-    a.href = outputUrl
-    
-    // Get proper file extension based on converter
-    let fileExtension = "png"
-    if (selectedConverter === "png-to-jpg") fileExtension = "jpg"
-    else if (selectedConverter === "png-to-bmp" || selectedConverter === "jpg-to-bmp") fileExtension = "bmp"
-    else if (selectedConverter === "jpg-to-gif") fileExtension = "gif"
-    
-    a.download = `converted-${selectedConverter}.${fileExtension}`
-    a.click()
+    const link = document.createElement("a")
+    link.href = outputUrl
+    link.download = `${selectedTool || "converted"}.png`
+    link.click()
   }
 
   return (
     <ReusableSidebar
       title="Image Tools"
       icon={Palette}
-      options={converterOptions}
-      selectedOption={selectedConverter}
-      onOptionSelect={setSelectedConverter}
+      options={imageTools}
+      selectedOption={selectedTool}
+      onOptionSelect={handleToolChange}
       footerOptions={footerOptions}
     >
       <SidebarContentWrapper selectedOption={selectedOption}>
-        <div className="mx-auto">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">{selectedOption?.label}</h2>
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold">{selectedOption?.label}</h2>
             <p className="text-muted-foreground">{selectedOption?.description}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
+            <div>
               <label className="text-sm font-medium mb-2 block">Upload Image</label>
-              <input type="file" accept="image/*" onChange={handleFileUpload} className="border p-2 rounded-md w-full" />
-              {inputFile && <p className="text-sm text-gray-500 mt-2">{inputFile.name}</p>}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setInputFile(e.target.files?.[0] || null)}
+                />
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <label className="text-sm font-medium mb-2 block">Output</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center min-h-[200px] flex items-center justify-center">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Preview / Output</label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                 {outputUrl ? (
-                  <div>
-                    <Image src={outputUrl} alt="Output" width={200} height={200} className="rounded-lg mx-auto" />
-                    <Button onClick={handleDownload} className="mt-3">
-                      <Download className="w-4 h-4 mr-2" /> Download
-                    </Button>
-                  </div>
+                  <img src={outputUrl} alt="Converted Preview" className="mx-auto max-h-60 rounded-lg" />
                 ) : (
-                  <p className="text-gray-400 text-sm">Converted image will appear here</p>
+                  <p className="text-muted-foreground">No output yet</p>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="mt-6 flex gap-2">
-            <Button onClick={handleConvert}>Convert</Button>
-            <Button variant="outline" onClick={handleClear}>Clear</Button>
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={handleConvert}>
+              <Upload className="h-4 w-4 mr-2" /> Convert
+            </Button>
+            {outputUrl && (
+              <Button variant="secondary" onClick={handleDownload}>
+                <Download className="h-4 w-4 mr-2" /> Download
+              </Button>
+            )}
           </div>
         </div>
       </SidebarContentWrapper>
     </ReusableSidebar>
   )
 }
+
+export default ImageTools
