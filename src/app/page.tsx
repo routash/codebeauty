@@ -3,16 +3,14 @@ import { DevelTool } from "@/components/sections/develtool";
 import { NewFun } from "@/components/sections/newfun";
 import { Popular } from "@/components/sections/popular";
 import { TrendingTools } from "@/components/sections/trendingTools";
-import Welcome from "@/components/sections/welcome";
-import BackgroundRemover from "@/components/sections/background-remover";
+import { QRGenerator } from "@/components/sections/qrGenerator";
+import {BackgroundRemover} from "@/components/sections/background-remover";
 
 
 export default function Home() {
   return (
     <main className="container mx-auto">
       <SubNavbar />
-      <Welcome />
-      <BackgroundRemover />
       <Popular />
       <NewFun />
       <TrendingTools />
