@@ -35,7 +35,7 @@ export function SubNavbar() {
         }`}
       >
         <nav
-          className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"
+          className="w-full px-3 sm:px-4 lg:px-6 flex justify-center"
           aria-label="Main navigation"
           role="navigation"
         >
@@ -71,7 +71,7 @@ export function SubNavbar() {
                             </Link>
                           </NavigationMenuLink>
                         ))}
-                    </div>
+                      </div>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
