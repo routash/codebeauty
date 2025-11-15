@@ -12,7 +12,7 @@ function JsonFormatterTool() {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Clear output when input changes
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputJson(e.target.value);
     setOutputJson("");
     setError("");
@@ -31,7 +31,7 @@ function JsonFormatterTool() {
       setSuccess("✓ Valid JSON");
       setTimeout(() => setSuccess(""), 3000);
     } catch (e) {
-      const errMsg = e.message;
+      const errMsg = (e as Error).message;
       setError("Invalid JSON: " + errMsg);
       setErrorMessage(errMsg);
       setShowFixModal(true);
@@ -50,9 +50,9 @@ function JsonFormatterTool() {
         let currentObj = '';
         let braceCount = 0;
         
-        for (let line of lines) {
+        for (const line of lines) {
           currentObj += line + '\n';
-          for (let char of line) {
+          for (const char of line) {
             if (char === '{') braceCount++;
             if (char === '}') braceCount--;
           }
@@ -120,8 +120,9 @@ function JsonFormatterTool() {
       setSuccess("✓ JSON Beautified Successfully");
       setTimeout(() => setSuccess(""), 3000);
     } catch (e) {
-      setError("Error: " + e.message);
-      setErrorMessage(e.message);
+      const errMsg = (e as Error).message;
+      setError("Error: " + errMsg);
+      setErrorMessage(errMsg);
       setShowFixModal(true);
     }
   };
@@ -140,8 +141,9 @@ function JsonFormatterTool() {
       setSuccess("✓ JSON Minified Successfully");
       setTimeout(() => setSuccess(""), 3000);
     } catch (e) {
-      setError("Error: " + e.message);
-      setErrorMessage(e.message);
+      const errMsg = (e as Error).message;
+      setError("Error: " + errMsg);
+      setErrorMessage(errMsg);
       setShowFixModal(true);
     }
   };
@@ -173,13 +175,16 @@ function JsonFormatterTool() {
     setSuccess("");
   };
 
-  const uploadFile = (e) => {
+  const uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setInputJson(event.target?.result);
-        setOutputJson("");
+        const result = event.target?.result;
+        if (typeof result === 'string') {
+          setInputJson(result);
+          setOutputJson("");
+        }
       };
       reader.readAsText(file);
     }
@@ -216,7 +221,8 @@ function JsonFormatterTool() {
       setTimeout(() => setSuccess(""), 3000);
       setShowConvertDropdown(false);
     } catch (e) {
-      setError("Error: " + e.message);
+      const errMsg = (e as Error).message;
+      setError("Error: " + errMsg);
     }
   };
 
@@ -235,7 +241,8 @@ function JsonFormatterTool() {
       setTimeout(() => setSuccess(""), 3000);
       setShowConvertDropdown(false);
     } catch (e) {
-      setError("Error: " + e.message);
+      const errMsg = (e as Error).message;
+      setError("Error: " + errMsg);
     }
   };
 
@@ -254,11 +261,12 @@ function JsonFormatterTool() {
       setTimeout(() => setSuccess(""), 3000);
       setShowConvertDropdown(false);
     } catch (e) {
-      setError("Error: " + e.message);
+      const errMsg = (e as Error).message;
+      setError("Error: " + errMsg);
     }
   };
 
-  const jsonToXML = (obj, indent = 0) => {
+  const jsonToXML = (obj: any, indent = 0) => {
     let xml = "";
     const spaces = "  ".repeat(indent);
     if (Array.isArray(obj)) {
@@ -278,7 +286,7 @@ function JsonFormatterTool() {
     return xml;
   };
 
-  const jsonToCSV = (obj) => {
+  const jsonToCSV = (obj: any) => {
     if (Array.isArray(obj)) {
       if (obj.length === 0) return "";
       const headers = Object.keys(obj[0]);
@@ -302,7 +310,7 @@ function JsonFormatterTool() {
     return String(obj);
   };
 
-  const jsonToYAML = (obj, indent = 0) => {
+  const jsonToYAML = (obj: any, indent = 0) => {
     let yaml = "";
     const spaces = "  ".repeat(indent);
     if (Array.isArray(obj)) {
@@ -399,7 +407,7 @@ function JsonFormatterTool() {
                 Validate
               </button>
 
-              <select value={tabSpace} onChange={(e) => setTabSpace(e.target.value)} className="bg-white text-teal-700 py-3 px-4 rounded-lg font-bold text-sm border-2 border-teal-300">
+              <select value={tabSpace} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTabSpace(e.target.value)} className="bg-white text-teal-700 py-3 px-4 rounded-lg font-bold text-sm border-2 border-teal-300">
                 <option value="2">2 Tab Space</option>
                 <option value="4">4 Tab Space</option>
               </select>

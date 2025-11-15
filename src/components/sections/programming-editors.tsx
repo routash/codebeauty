@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import {
     FileText,
     Code,
-    Image,
     File,
     Settings,
     Download,
@@ -15,6 +14,7 @@ import {
     Palette
 } from "lucide-react"
 import { base64ToImage } from "@/utils/utils"
+import Image from "next/image"
 
 export function ProgrammingEditors() {
     const [selectedConverter, setSelectedConverter] = useState("")

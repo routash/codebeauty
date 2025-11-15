@@ -58,7 +58,8 @@ export function RandomTools() {
     const func = randomUtils[selectedConverter as keyof typeof randomUtils]
     if (func) {
       try {
-        setOutput(func())
+        const result = func()
+        setOutput(String(result))
       } catch {
         setOutput("Error generating data")
       }

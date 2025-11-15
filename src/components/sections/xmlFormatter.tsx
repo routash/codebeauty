@@ -9,7 +9,7 @@ export function XmlFormatterPage() {
   const [success, setSuccess] = useState('');
   const fileInputRef = useRef(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputXml(e.target.value);
     setOutputXml('');
     setError('');
@@ -34,8 +34,8 @@ export function XmlFormatterPage() {
         setSuccess('✓ Valid XML');
         setTimeout(() => setSuccess(''), 3000);
       }
-    } catch (e) {
-      setError('Error: ' + e.message);
+    } catch (e: unknown) {
+      setError('Error: ' + (e instanceof Error ? e.message : String(e)));
     }
   };
 
@@ -60,12 +60,12 @@ export function XmlFormatterPage() {
       setOutputXml(formatted);
       setSuccess('✓ XML Formatted Successfully');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (e) {
-      setError('Error: ' + e.message);
+    } catch (e: unknown) {
+      setError('Error: ' + (e instanceof Error ? e.message : String(e)));
     }
   };
 
-  const formatXml = (xml, spaces) => {
+  const formatXml = (xml: string, spaces: number) => {
     const PADDING = ' '.repeat(spaces);
     const reg = /(>)(<)(\/*)/g;
     let pad = 0;
@@ -114,8 +114,8 @@ export function XmlFormatterPage() {
       setOutputXml(minified);
       setSuccess('✓ XML Minified Successfully');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (e) {
-      setError('Error: ' + e.message);
+    } catch (e: unknown) {
+      setError('Error: ' + (e instanceof Error ? e.message : String(e)));
     }
   };
 
@@ -140,16 +140,20 @@ export function XmlFormatterPage() {
       setOutputXml(JSON.stringify(json, null, 2));
       setSuccess('✓ Converted to JSON');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (e) {
-      setError('Error: ' + e.message);
+    } catch (e: unknown) {
+      setError('Error: ' + (e instanceof Error ? e.message : String(e)));
     }
   };
 
-  const xmlToJsonConverter = (xml) => {
-    let result = {};
-    
+  const xmlToJsonConverter = (xml: Element): Record<string, any> | string | null => {
+    if (xml.nodeType === 3) {
+      return xml.nodeValue;
+    }
+
+    const result: Record<string, any> = {};
+
     if (xml.nodeType === 1) {
-      if (xml.attributes.length > 0) {
+      if (xml.attributes && xml.attributes.length > 0) {
         result['@attributes'] = {};
         for (let j = 0; j < xml.attributes.length; j++) {
           const attribute = xml.attributes.item(j);
@@ -158,26 +162,28 @@ export function XmlFormatterPage() {
           }
         }
       }
-    } else if (xml.nodeType === 3) {
-      return xml.nodeValue;
     }
-    
+
     if (xml.hasChildNodes()) {
       for (let i = 0; i < xml.childNodes.length; i++) {
         const item = xml.childNodes.item(i);
         if (!item) continue;
-        
-        const tagName = item.nodeName;
-        const converted = xmlToJsonConverter(item);
-        
-        if (typeof result[tagName] === 'undefined') {
-          result[tagName] = converted;
-        } else {
-          if (!Array.isArray(result[tagName])) {
-            const old = result[tagName];
-            result[tagName] = [old];
+
+        if (item.nodeType === 1) {
+          const tagName = item.nodeName;
+          const converted = xmlToJsonConverter(item as Element);
+
+          if (typeof result[tagName] === 'undefined') {
+            result[tagName] = converted;
+          } else {
+            if (!Array.isArray(result[tagName])) {
+              const old = result[tagName];
+              result[tagName] = [old];
+            }
+            result[tagName].push(converted);
           }
-          result[tagName].push(converted);
+        } else if (item.nodeType === 3 && item.nodeValue && item.nodeValue.trim()) {
+          return item.nodeValue.trim();
         }
       }
     }
@@ -205,27 +211,27 @@ export function XmlFormatterPage() {
       setOutputXml(tree);
       setSuccess('✓ XML Tree Generated');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (e) {
-      setError('Error: ' + e.message);
+    } catch (e: unknown) {
+      setError('Error: ' + (e instanceof Error ? e.message : String(e)));
     }
   };
 
-  const buildXmlTree = (node, level) => {
+  const buildXmlTree = (node: Element, level: number): string => {
     const indent = '  '.repeat(level);
     let tree = '';
-    
+
     if (node.nodeType === 1) {
       tree += `${indent}├─ <${node.nodeName}>\n`;
       for (let i = 0; i < node.childNodes.length; i++) {
         const child = node.childNodes[i];
         if (child.nodeType === 1) {
-          tree += buildXmlTree(child, level + 1);
+          tree += buildXmlTree(child as Element, level + 1);
         } else if (child.nodeType === 3 && child.nodeValue && child.nodeValue.trim()) {
           tree += `${indent}  └─ "${child.nodeValue.trim()}"\n`;
         }
       }
     }
-    
+
     return tree;
   };
 
@@ -256,7 +262,7 @@ export function XmlFormatterPage() {
     setSuccess('');
   };
 
-  const uploadFile = (e) => {
+  const uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -334,7 +340,7 @@ export function XmlFormatterPage() {
                 className="hidden"
               />
               <button
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => (fileInputRef.current as any)?.click()}
                 className="bg-white hover:bg-gray-100 text-teal-700 py-3 px-4 rounded-lg font-bold text-sm border-2 border-teal-300"
               >
                 Upload Data

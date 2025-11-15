@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
 import { Button } from "@/components/ui/button"
 import { FileText, Settings, Palette } from "lucide-react"
-import jsBeautify from "js-beautify"
+
 import prettier from "prettier/standalone"
 import parserBabel from "prettier/parser-babel"
 import parserHtml from "prettier/parser-html"
@@ -12,6 +12,8 @@ import parserPostcss from "prettier/parser-postcss"
 import parserMarkdown from "prettier/parser-markdown"
 import parserYaml from "prettier/parser-yaml"
 import parserAngular from "prettier/parser-angular"
+
+import { format as sqlFormat } from "sql-formatter"   // ✅ FIXED SQL IMPORT
 
 export function Beautifiers() {
   const [selectedOptionId, setSelectedOptionId] = useState("")
@@ -34,16 +36,17 @@ export function Beautifiers() {
 
   const handleConvert = async () => {
     if (!inputText.trim()) return
+
     try {
       let formatted = ""
 
-      switch (selectedOptionId) {
+            switch (selectedOptionId) {
         case "json-beautifier":
           formatted = JSON.stringify(JSON.parse(inputText), null, 2)
           break
 
         case "css-beautifier":
-          formatted = prettier.format(inputText, {
+          formatted = await prettier.format(inputText, {
             parser: "css",
             plugins: [parserPostcss],
           })
@@ -51,14 +54,14 @@ export function Beautifiers() {
 
         case "xml-beautifier":
         case "html-beautifier":
-          formatted = prettier.format(inputText, {
+          formatted = await prettier.format(inputText, {
             parser: "html",
             plugins: [parserHtml],
           })
           break
 
         case "javascript-beautifier":
-          formatted = prettier.format(inputText, {
+          formatted = await prettier.format(inputText, {
             parser: "babel",
             plugins: [parserBabel],
             semi: true,
@@ -67,24 +70,21 @@ export function Beautifiers() {
           break
 
         case "yaml-beautifier":
-          formatted = prettier.format(inputText, {
+          formatted = await prettier.format(inputText, {
             parser: "yaml",
             plugins: [parserYaml],
           })
           break
 
         case "markdown-beautifier":
-          formatted = prettier.format(inputText, {
+          formatted = await prettier.format(inputText, {
             parser: "markdown",
             plugins: [parserMarkdown],
           })
           break
 
         case "sql-beautifier":
-          formatted = jsBeautify.sql(inputText, {
-            indent_size: 2,
-            space_after_anon_function: true,
-          })
+        formatted = sqlFormat(inputText, { tabWidth: 2 }) // SQL FIXED
           break
 
         default:
@@ -119,7 +119,6 @@ export function Beautifiers() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Input Section */}
             <div className="space-y-4">
               <label className="text-sm font-medium mb-2 block">Input</label>
               <textarea
@@ -130,7 +129,6 @@ export function Beautifiers() {
               />
             </div>
 
-            {/* Output Section */}
             <div className="space-y-4">
               <label className="text-sm font-medium mb-2 block">Output</label>
               <pre className="border-2 border-dashed border-gray-300 rounded-lg p-4 h-[300px] overflow-auto bg-gray-50 font-mono text-sm whitespace-pre-wrap">
@@ -139,7 +137,6 @@ export function Beautifiers() {
             </div>
           </div>
 
-          {/* Buttons */}
           <div className="mt-6 flex gap-2">
             <Button onClick={handleConvert}>Beautify</Button>
             <Button variant="outline" onClick={handleClear}>Clear</Button>

@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { FileText, Settings, Palette } from "lucide-react"
+import { ReusableSidebar, SidebarContentWrapper, SidebarOption } from "@/components/ui/reusable-sidebar"
+import { Button } from "@/components/ui/button"
 
 // --- Utility Functions ---
 const utils: Record<string, (text: string) => string> = {

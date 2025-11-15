@@ -39,7 +39,7 @@ const ipConverters = {
   "ip-to-decimal": (input: string) => {
     const parts = input.split(".").map(p => parseInt(p))
     if (parts.length !== 4 || parts.some(p => isNaN(p) || p < 0 || p > 255)) return "Invalid IP"
-    return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0
+    return (((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0).toString()
   },
   "octal-to-ip": (input: string) => {
     const dec = parseInt(input, 8)
@@ -53,14 +53,22 @@ const ipConverters = {
   },
   "ipv6-to-binary": (input: string) => {
     // Expand IPv6 shorthand
-    const full = input.split("::").reduce((acc, part, idx) => {
-      const left = idx === 0 ? part.split(":") : acc[0].split(":").concat(part.split(":"))
-      const missing = 8 - left.length
-      const zeros = Array(missing).fill("0")
-      return [left.concat(zeros)]
-    }, [""])[0]
-    if (full.length !== 8) return "Invalid IPv6"
-    return full.map(h => parseInt(h, 16).toString(2).padStart(16, "0")).join(":")
+    const expandIPv6 = (ip: string): string => {
+      if (!ip.includes('::')) {
+        return ip;
+      }
+      const parts = ip.split('::');
+      if (parts.length !== 2) return 'Invalid IPv6';
+      const left = parts[0].split(':').filter(p => p);
+      const right = parts[1].split(':').filter(p => p);
+      const missing = 8 - left.length - right.length;
+      if (missing < 0) return 'Invalid IPv6';
+      const zeros = Array(missing).fill('0000');
+      return left.concat(zeros, right).map(h => h.padStart(4, '0')).join(':');
+    };
+    const full = expandIPv6(input);
+    if (full === 'Invalid IPv6') return full;
+    return full.split(':').map(h => parseInt(h, 16).toString(2).padStart(16, '0')).join(':');
   }
 }
 

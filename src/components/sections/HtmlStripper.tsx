@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button"
 import {
     FileText,
     Code,
-    Image,
     File,
     Settings,
     Download,
     Upload,
     Palette
 } from "lucide-react"
+import Image from "next/image"
 import { base64ToImage, stripHTML } from "@/utils/utils"
 
 export function HtmlConverters() {

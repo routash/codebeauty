@@ -46,7 +46,7 @@ export function NewFun() {
 
               <ToolCard
                 title={tool.title}
-                variant={tool.variant ?? "default"}
+                variant={(tool.variant as "default" | "primary") ?? "default"}
                 isActive={selected === tool.title}
                 onClick={() =>
                   setSelected(selected === tool.title ? null : tool.title)

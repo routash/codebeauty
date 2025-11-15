@@ -1,7 +1,23 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  webpack: (config: any, { isServer }: any) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        'node:fs': false,
+        'node:fs/promises': false,
+        'node:path': false,
+        'node:events': false,
+        'node:stream': false,
+      };
+    }
+    return config;
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

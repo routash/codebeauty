@@ -47,12 +47,12 @@ export function CsvTools() {
                     result = JSON.stringify(parsed.data, null, 2)
                     break
                 case "csv-to-xml":
-                    result = parsed.data.map(row => {
+                    result = (parsed.data as any[]).map((row: any) => {
                         return "<row>" + Object.entries(row).map(([key, val]) => `<${key}>${val}</${key}>`).join("") + "</row>"
                     }).join("\n")
                     break
                 case "csv-to-xml-json":
-                    const xml = parsed.data.map(row => {
+                    const xml = (parsed.data as any[]).map((row: any) => {
                         return "<row>" + Object.entries(row).map(([key, val]) => `<${key}>${val}</${key}>`).join("") + "</row>"
                     }).join("\n")
                     const json = JSON.stringify(parsed.data, null, 2)
@@ -60,22 +60,22 @@ export function CsvTools() {
                     break
                 case "csv-to-html":
                     result = "<table border='1'><tr>" +
-                        Object.keys(parsed.data[0]).map(k => `<th>${k}</th>`).join("") +
+                        Object.keys((parsed.data as any[])[0]).map((k: string) => `<th>${k}</th>`).join("") +
                         "</tr>" +
-                        parsed.data.map(row => "<tr>" + Object.values(row).map(v => `<td>${v}</td>`).join("") + "</tr>").join("") +
+                        (parsed.data as any[]).map((row: any) => "<tr>" + Object.values(row).map((v: any) => `<td>${v}</td>`).join("") + "</tr>").join("") +
                         "</table>"
                     break
                 case "csv-to-tsv":
                     result = Papa.unparse(parsed.data, { delimiter: "\t" })
                     break
                 case "csv-to-multiline-data":
-                    result = parsed.data.map(row => Object.values(row).join("\n")).join("\n\n")
+                    result = (parsed.data as any[]).map((row: any) => Object.values(row).join("\n")).join("\n\n")
                     break
                 case "csv-to-sql":
                     const tableName = "my_table"
-                    result = parsed.data.map(row => {
+                    result = (parsed.data as any[]).map((row: any) => {
                         const cols = Object.keys(row).join(", ")
-                        const vals = Object.values(row).map(v => `'${v}'`).join(", ")
+                        const vals = Object.values(row).map((v: any) => `'${v}'`).join(", ")
                         return `INSERT INTO ${tableName} (${cols}) VALUES (${vals});`
                     }).join("\n")
                     break

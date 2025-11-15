@@ -7,7 +7,7 @@ import { FileText, Settings, Palette } from "lucide-react"
 import YAML from "js-yaml"
 import { parse as parseCSV } from "papaparse" // npm install papaparse
 import { decode as decodeHTML } from "html-entities"
-import BBCodeParser from "bbcode-to-html" // npm install bbcode-to-html
+// import BBCodeParser from "bbcode-to-html" // npm install bbcode-to-html
 
 export function Viewers() {
   const [selectedViewer, setSelectedViewer] = useState("")
@@ -65,8 +65,9 @@ export function Viewers() {
           output = JSON.stringify(parsedCSV.data, null, 2)
           break
         case "bbcode-viewer":
-          const parserBB = new BBCodeParser()
-          output = parserBB.process({ text: inputText })
+          // const parserBB = new BBCodeParser()
+          // output = parserBB.process({ text: inputText })
+          output = inputText // Placeholder, BBCode parsing not implemented
           break
         case "markdown-viewer":
           output = inputText
