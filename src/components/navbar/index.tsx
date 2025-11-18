@@ -18,7 +18,7 @@ export function Navbar() {
     { name: "JSON Formatter", href: "/json-formatter" },
     { name: "XML Formatter", href: "/xml-formatter" },
     { name: "Generator qr", href: "/qrGenerator" },
-    { name: "Remove Backgroung", href: "/backgroundremover" },
+    { name: "Remove Background", href: "/backgroundremover" },
     { name: "Share File", href: "/sharefile" },
     { name: "Blog", href: "/blog" },
   ];

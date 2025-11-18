@@ -102,7 +102,7 @@ export function BackgroundRemover() {
       canvas.height = img.height;
 
       if (backgroundColor === "transparent") {
-        // Keep transparent
+        
       } else if (backgroundColor === "gradient") {
         const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
         gradient.addColorStop(0, "#667eea");
@@ -164,26 +164,10 @@ export function BackgroundRemover() {
         </div>
       </div>
 
-      {/* Features Grid */}
-      {!originalImage && (
-        <div className="max-w-6xl mx-auto px-6 mb-16">
-          <div className="grid md:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="bg-gray-50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
-                  {feature.icon}
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Main Tool */}
+      {/* =================== MAIN TOOL (UPLOAD SECTION) =================== */}
       <div className="max-w-6xl mx-auto px-6 pb-16">
         <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden">
+
           {!originalImage ? (
             <div className="p-12">
               <div className="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/30 transition-all duration-200">
@@ -210,8 +194,9 @@ export function BackgroundRemover() {
               </div>
             </div>
           ) : (
+            
             <div className="p-8 space-y-8">
-              {/* Progress Bar */}
+
               {isProcessing && (
                 <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
                   <div className="flex justify-between items-center text-blue-700 text-sm font-medium mb-3">
@@ -230,12 +215,9 @@ export function BackgroundRemover() {
                 </div>
               )}
 
-              {/* Image Comparison */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-gray-900 font-semibold text-sm uppercase tracking-wider">Original Image</h3>
-                  </div>
+                  <h3 className="text-gray-900 font-semibold text-sm uppercase tracking-wider">Original Image</h3>
                   <div className="bg-gray-100 border-2 border-gray-200 rounded-2xl overflow-hidden aspect-square">
                     <img src={originalImage} className="object-contain w-full h-full" alt="original" />
                   </div>
@@ -246,6 +228,7 @@ export function BackgroundRemover() {
                     <h3 className="text-gray-900 font-semibold text-sm uppercase tracking-wider">
                       {processedImage ? "Background Removed" : "Processing..."}
                     </h3>
+
                     {processedImage && (
                       <button
                         onClick={() => setShowColorPicker(!showColorPicker)}
@@ -270,7 +253,6 @@ export function BackgroundRemover() {
                     )}
                   </div>
 
-                  {/* Color Picker */}
                   {showColorPicker && processedImage && (
                     <div className="p-5 border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-sm">
                       <h4 className="font-semibold text-gray-900 mb-3 text-sm">Choose Background Color</h4>
@@ -297,6 +279,7 @@ export function BackgroundRemover() {
                           />
                         ))}
                       </div>
+
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">Custom Color</label>
                         <div className="flex items-center gap-3">
@@ -326,7 +309,6 @@ export function BackgroundRemover() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                 <button
                   onClick={handleReset}
@@ -335,6 +317,7 @@ export function BackgroundRemover() {
                   <RefreshCcw size={18} /> 
                   <span>Upload New Image</span>
                 </button>
+
                 {processedImage && (
                   <button
                     onClick={handleDownload}
@@ -345,10 +328,29 @@ export function BackgroundRemover() {
                   </button>
                 )}
               </div>
+
             </div>
           )}
         </div>
       </div>
+
+      {/* ================== FEATURES SECTION MOVED DOWN HERE ================== */}
+      {!originalImage && (
+        <div className="max-w-6xl mx-auto px-6 mb-16">
+          <div className="grid md:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="bg-gray-50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                <p className="text-sm text-gray-600">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {/* ================================================================ */}
 
       {/* Benefits Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
