@@ -20,6 +20,8 @@ export function Navbar() {
     { name: "Generator qr", href: "/qrGenerator" },
     { name: "Remove Background", href: "/backgroundremover" },
     { name: "Share File", href: "/sharefile" },
+        { name: "Video downloder", href: "/videodownloder" },
+
     { name: "Blog", href: "/blog" },
   ];
 

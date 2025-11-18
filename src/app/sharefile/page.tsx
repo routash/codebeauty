@@ -1,7 +1,8 @@
-import SnapTubeTray from "@/components/sections/sharefile";
+import RandomToolsPage from "@/components/sections/sharefile";
 
-export default function SnapTubeTrayPage() {
+
+export default function Page() {
   return (
-    <SnapTubeTray />
+    <RandomToolsPage/>
   );
 }

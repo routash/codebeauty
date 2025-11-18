@@ -1,556 +1,717 @@
-"use client";
-import { useState } from "react";
-import {
-  Download,
-  Search,
-  Video,
-  Music,
-  Loader2,
-  AlertCircle,
-  CheckCircle,
-  X,
-  Play,
-  Share2,
-  Trash2,
-  Clock,
-  Film,
-} from "lucide-react";
+"use client"
+import React, { useState, useEffect, useRef } from "react";
+import { Upload, X, Check, Download, Link } from "lucide-react";
 
-export default function SnapTubeTray() {
-  const [url, setUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [videoInfo, setVideoInfo] = useState<any>(null);
-  const [downloads, setDownloads] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState("home");
-  const [error, setError] = useState("");
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+declare global {
+  interface Window {
+    shareData: Record<string, any>;
+  }
+}
 
-  const extractVideoId = (videoUrl: string) => {
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
-      /(?:facebook\.com\/.*\/videos\/)([0-9]+)/,
-      /(?:instagram\.com\/.*\/p\/)([^\/\n?#]+)/,
-      /(?:tiktok\.com\/.*\/video\/)([0-9]+)/,
-    ];
-    for (let pattern of patterns) {
-      const match = videoUrl.match(pattern);
-      if (match) return match[1];
-    }
-    return null;
-  };
+interface ReceivedFile {
+  blob: Blob;
+  name: string;
+  size: number;
+}
 
-  const detectPlatform = (videoUrl: string) => {
-    if (videoUrl.includes("youtube")) return "YouTube";
-    if (videoUrl.includes("facebook")) return "Facebook";
-    if (videoUrl.includes("instagram")) return "Instagram";
-    if (videoUrl.includes("twitter") || videoUrl.includes("x.com"))
-      return "Twitter";
-    if (videoUrl.includes("tiktok")) return "TikTok";
-    if (videoUrl.includes("vimeo")) return "Vimeo";
-    if (videoUrl.includes("dailymotion")) return "Dailymotion";
-    return "Unknown";
-  };
+interface FileInfo {
+  name: string;
+  size: number;
+  type: string;
+}
 
-  const handleSearch = () => {
-    if (!url.trim()) {
-      setError("Please enter a valid URL");
-      setTimeout(() => setError(""), 2500);
-      return;
+export default function RandomToolsPage() {
+  const [step, setStep] = useState<"upload" | "sharing" | "receiving">("upload");
+  const [file, setFile] = useState<File | null>(null);
+  const [shareLink, setShareLink] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  const [peerId, setPeerId] = useState("");
+  const [status, setStatus] = useState<"disconnected" | "waiting" | "connected">("disconnected");
+  const [progress, setProgress] = useState(0);
+  const [receivedFile, setReceivedFile] = useState<ReceivedFile | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const peerRef = useRef<RTCPeerConnection | null>(null);
+  const connectionRef = useRef<RTCDataChannel | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const receivedChunksRef = useRef<string[]>([]);
+  const fileInfoRef = useRef<FileInfo | null>(null);
+  const peerIdRef = useRef("");
+
+  // ---- On mount: generate id and detect ?share= query ----
+  useEffect(() => {
+    const id = Math.random().toString(36).substring(2, 10);
+    setPeerId(id);
+    peerIdRef.current = id;
+
+    // initialize global storage for in-page demo sharing
+    window.shareData = window.shareData || {};
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareId = urlParams.get("share");
+    if (shareId) {
+      setStep("receiving");
+      // slight delay to allow global store initialization if sender in same page created just now
+      setTimeout(() => initializeReceiver(shareId), 50);
     }
 
-    const videoId = extractVideoId(url);
-    if (!videoId) {
-      setError("Invalid URL. Try again.");
-      setTimeout(() => setError(""), 2500);
-      return;
-    }
+    // cleanup on unmount
+    return () => {
+      cleanupConnections();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    setLoading(true);
-    setError("");
-
-    setTimeout(() => {
-      const platform = detectPlatform(url);
-
-      const mockVideoInfo = {
-        id: Date.now(),
-        videoId,
-        platform,
-        title: `${platform} Video: HD Quality Content`,
-        thumbnail: `https://via.placeholder.com/640x360/${Math.floor(
-          Math.random() * 16777215
-        ).toString(16)}/ffffff?text=${platform}`,
-        duration: `${Math.floor(Math.random() * 10) + 3}:${Math.floor(
-          Math.random() * 60
-        )
-          .toString()
-          .padStart(2, "0")}`,
-        channel: `${platform} Creator`,
-        views: `${(Math.random() * 5 + 0.5).toFixed(1)}M`,
-        uploadDate: `${Math.floor(Math.random() * 7) + 1} days ago`,
-        url,
-        formats: [
-          { id: 1, quality: "1080p Full HD", size: "125 MB", type: "video", resolution: "1920x1080", format: "MP4" },
-          { id: 2, quality: "720p HD", size: "75 MB", type: "video", resolution: "1280x720", format: "MP4" },
-          { id: 3, quality: "480p", size: "45 MB", type: "video", resolution: "854x480", format: "MP4" },
-          { id: 4, quality: "360p", size: "25 MB", type: "video", resolution: "640x360", format: "MP4" },
-          { id: 5, quality: "Audio Only (MP3)", size: "5 MB", type: "audio", bitrate: "320kbps", format: "MP3" },
-        ],
-      };
-
-      setVideoInfo(mockVideoInfo);
-      setLoading(false);
-
-      setSearchHistory((prev) => {
-        const filtered = prev.filter((u) => u !== url);
-        return [url, ...filtered].slice(0, 10);
-      });
-    }, 1500);
+  // ---- helpers ----
+  const generateQRCode = (text: string) => {
+    const size = 200;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
+      text
+    )}`;
   };
 
-  const handleDownload = (format: any) => {
-    const newDownload = {
-      id: Date.now(),
-      videoId: videoInfo.videoId,
-      title: videoInfo.title,
-      thumbnail: videoInfo.thumbnail,
-      platform: videoInfo.platform,
-      format: format.quality,
-      size: format.size,
-      type: format.type,
-      fileFormat: format.format,
-      progress: 0,
-      status: "downloading",
-      timestamp: new Date().toLocaleString(),
-      downloadSpeed: "0 MB/s",
-      timeRemaining: "Calculating...",
+  const cleanupConnections = () => {
+    try {
+      if (connectionRef.current && connectionRef.current.close) {
+        connectionRef.current.close();
+      }
+    } catch (e) {}
+    try {
+      if (peerRef.current) {
+        peerRef.current.close();
+      }
+    } catch (e) {}
+    connectionRef.current = null;
+    peerRef.current = null;
+  };
+
+  // ---- SENDER: create peer, datachannel, offer ----
+  const initializeSender = async () => {
+    if (!file) return;
+
+    cleanupConnections();
+
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+      ],
+    });
+
+    peerRef.current = pc;
+
+    // maintain candidate arrays in the shareData for simple local-window signalling
+    const shareId = peerIdRef.current;
+    window.shareData[shareId] = window.shareData[shareId] || {};
+    window.shareData[shareId].candidates = window.shareData[shareId].candidates || [];
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        // push candidate where receiver can find and add it
+        window.shareData[shareId].candidates.push(event.candidate.toJSON());
+      }
     };
 
-    setDownloads((prev) => [newDownload, ...prev]);
+    // create data channel and setup handlers
+    const channel = pc.createDataChannel("fileTransfer", { ordered: true });
+    setupDataChannel(channel, "sender");
 
-    let currentProgress = 0;
+    // create offer
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
 
-    const interval = setInterval(() => {
-      setDownloads((prev) =>
-        prev.map((d) => {
-          if (d.id === newDownload.id) {
-            if (d.progress < 100) {
-              currentProgress = Math.min(
-                d.progress + Math.random() * 14 + 3,
-                100
-              );
-              const speed = (Math.random() * 3 + 1).toFixed(1);
-              const remaining = Math.max(
-                0,
-                Math.floor((100 - currentProgress) / 10)
-              );
-              return {
-                ...d,
-                progress: Math.floor(currentProgress),
-                downloadSpeed: `${speed} MB/s`,
-                timeRemaining:
-                  remaining > 0 ? `${remaining}s remaining` : "Almost done...",
-              };
-            } else {
-              clearInterval(interval);
-              return {
-                ...d,
-                status: "completed",
-                downloadSpeed: "Complete",
-                timeRemaining: "Done",
-              };
+    // share minimal info in global object
+    const domain = window.location.origin;
+    const link = `${domain}?share=${shareId}`;
+    setShareLink(link);
+    setQrCode(generateQRCode(link));
+
+    window.shareData[shareId].offer = offer;
+    window.shareData[shareId].file = {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    };
+    window.shareData[shareId].senderPC = pc;
+
+    setStep("sharing");
+    setStatus("waiting");
+
+    // Poll for answer and for receiver ICE candidates (this is in-page demo signalling)
+    // Wait for receiver to put answer into shareData[shareId].answer.
+    const waitForAnswer = setInterval(async () => {
+      const sd = window.shareData?.[shareId];
+      if (sd && sd.answer && sd.answer.sdp) {
+        clearInterval(waitForAnswer);
+        try {
+          await pc.setRemoteDescription(new RTCSessionDescription(sd.answer));
+          setStatus("connected");
+        } catch (err) {
+          console.error("Error setting remote desc on sender:", err);
+        }
+      }
+    }, 300);
+
+    // Poll for remote ICE candidates from receiver (the receiver will push candidates to shareData[shareId].rCandidates)
+    const waitForRCandidates = setInterval(async () => {
+      const sd = window.shareData?.[shareId];
+      if (sd && Array.isArray(sd.rCandidates) && sd.rCandidates.length > 0) {
+        while (sd.rCandidates.length) {
+          const cand = sd.rCandidates.shift();
+          try {
+            await pc.addIceCandidate(cand);
+          } catch (e) {
+            console.warn("sender addIceCandidate failed:", e);
+          }
+        }
+      }
+      // stop polling if pc closed
+      if (!peerRef.current) clearInterval(waitForRCandidates);
+    }, 300);
+  };
+
+  // ---- RECEIVER: read offer, create answer, connect ----
+  const initializeReceiver = async (shareId: string) => {
+    try {
+      const sd = window.shareData?.[shareId];
+      if (!sd || !sd.offer) {
+        alert("Invalid or expired share link");
+        return;
+      }
+
+      cleanupConnections();
+
+      const pc = new RTCPeerConnection({
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" },
+        ],
+      });
+
+      peerRef.current = pc;
+
+      // prepare arrays for exchanging candidates
+      window.shareData[shareId] = window.shareData[shareId] || {};
+      window.shareData[shareId].rCandidates = window.shareData[shareId].rCandidates || [];
+
+      pc.onicecandidate = (event) => {
+        if (event.candidate) {
+          // push receiver candidate to rCandidates array for sender to consume
+          window.shareData[shareId].rCandidates.push(event.candidate.toJSON());
+        }
+      };
+
+      pc.ondatachannel = (event) => {
+        setupDataChannel(event.channel, "receiver");
+      };
+
+      // set remote (sender's offer)
+      await pc.setRemoteDescription(new RTCSessionDescription(sd.offer));
+
+      // create answer
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+
+      // store answer for sender to pick
+      window.shareData[shareId].answer = answer;
+
+      // Now poll for sender ICE candidates pushed into window.shareData[shareId].candidates
+      const pollSenderCandidates = setInterval(async () => {
+        const s = window.shareData?.[shareId];
+        if (s && Array.isArray(s.candidates) && s.candidates.length > 0) {
+          while (s.candidates.length) {
+            const cand = s.candidates.shift();
+            try {
+              await pc.addIceCandidate(cand);
+            } catch (e) {
+              console.warn("receiver addIceCandidate failed:", e);
             }
           }
-          return d;
+        }
+        // stop if peer closed
+        if (!peerRef.current) clearInterval(pollSenderCandidates);
+      }, 300);
+
+      // if file info existed on shareData, keep it for display (not strictly needed)
+      if (sd.file) {
+        fileInfoRef.current = sd.file;
+      }
+
+      setStatus("connected");
+    } catch (err: any) {
+      console.error("initializeReceiver error:", err);
+      alert("Connection failed: " + (err?.message || err));
+    }
+  };
+
+  // ---- Data channel setup for sender/receiver ----
+  const setupDataChannel = (channel: RTCDataChannel, role: string) => {
+    connectionRef.current = channel;
+
+    channel.onopen = () => {
+      setStatus("connected");
+      if (role === "sender") {
+        // start sending file when channel opens
+        sendFile();
+      }
+    };
+
+    channel.onclose = () => {
+      setStatus("disconnected");
+    };
+
+    if (role === "receiver") {
+      channel.onmessage = (event: MessageEvent) => {
+        // two message types: JSON metadata (fileInfo, chunk meta) OR direct binary - but we always use JSON base64 here
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === "fileInfo") {
+            fileInfoRef.current = data;
+            receivedChunksRef.current = [];
+            setProgress(0);
+          } else if (data.type === "chunk") {
+            // data.data is base64 string
+            receivedChunksRef.current.push(data.data);
+            const currentProgress =
+              (receivedChunksRef.current.length / data.totalChunks) * 100;
+            setProgress(Math.round(currentProgress));
+
+            if (receivedChunksRef.current.length === data.totalChunks) {
+              // assemble
+              const byteArrays = receivedChunksRef.current.map((b64) => {
+                const binary = atob(b64);
+                const len = binary.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+                return bytes;
+              });
+              // combine into single blob
+              if (fileInfoRef.current) {
+                const blob = new Blob(byteArrays, { type: fileInfoRef.current.type });
+                setReceivedFile({
+                  blob,
+                  name: fileInfoRef.current.name,
+                  size: fileInfoRef.current.size,
+                });
+                setProgress(100);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error parsing data channel message:", error);
+        }
+      };
+    } else {
+      // sender may choose to monitor messages as well (ack/nacks)
+      channel.onmessage = (e: MessageEvent) => {
+        // optional: handle acks here
+        // console.log("sender got message:", e.data);
+      };
+    }
+  };
+
+  // ---- Sending file in chunks (sender) ----
+  const sendFile = async () => {
+    if (!file || !connectionRef.current || connectionRef.current.readyState !== "open") {
+      console.warn("No file or datachannel not open yet.");
+      return;
+    }
+
+    setProgress(0);
+
+    // send file metadata first
+    if (connectionRef.current) {
+      connectionRef.current.send(
+        JSON.stringify({
+          type: "fileInfo",
+          name: file.name,
+          size: file.size,
+          mimeType: file.type,
         })
       );
-    }, 380);
+    }
+
+    const chunkSize = 16 * 1024; // 16KB
+    const totalChunks = Math.ceil(file.size / chunkSize);
+
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * chunkSize;
+      const end = Math.min(start + chunkSize, file.size);
+      const chunk = file.slice(start, end);
+
+      // read as arrayBuffer
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const arr = new Uint8Array(reader.result as ArrayBuffer);
+            // convert to binary string then base64
+            let binary = "";
+            const block = 0x8000; // chunking to avoid stack issues on large arrays
+            for (let j = 0; j < arr.length; j += block) {
+              const slice = arr.subarray(j, j + block);
+              binary += String.fromCharCode.apply(null, Array.from(slice));
+            }
+            const b64 = btoa(binary);
+            resolve(b64);
+          } catch (err) {
+            reject(err);
+          }
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(chunk);
+      });
+
+      connectionRef.current.send(
+        JSON.stringify({
+          type: "chunk",
+          data: base64,
+          totalChunks,
+        })
+      );
+
+      setProgress(Math.round(((i + 1) / totalChunks) * 100));
+
+      // small delay to avoid saturating channel
+      await new Promise((r) => setTimeout(r, 8));
+    }
   };
 
-  const removeDownload = (id: number) => {
-    setDownloads((prev) => prev.filter((d) => d.id !== id));
+  // ---- file select / drag-drop handlers ----
+  const handleFileSelect = (selectedFile: File) => {
+    if (selectedFile) {
+      setFile(selectedFile);
+      // initialize sender flow
+      setTimeout(() => initializeSender(), 50);
+    }
   };
 
-  const clearAllDownloads = () => {
-    setDownloads([]);
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile) handleFileSelect(droppedFile);
   };
 
-  const getProgressColor = (progress: number) => {
-    if (progress < 30) return "from-red-500 to-orange-500";
-    if (progress < 70) return "from-orange-500 to-yellow-500";
-    return "from-green-500 to-emerald-500";
+  // ---- copy to clipboard ----
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (error) {
+      alert("Copy failed");
+    }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500">
-      <div className="max-w-4xl mx-auto pb-24">
-        
-        {/* HEADER */}
-        <div className="bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 px-6 py-5 sticky top-0 z-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-1 flex items-center gap-2">
-                <Film className="animate-pulse" />
-                SnapTube Pro
-              </h1>
-              <p className="text-white text-opacity-90 text-sm">
-                Fast & Free Video Downloader
-              </p>
-            </div>
-            <div className="bg-white bg-opacity-20 rounded-full p-3 hover:bg-opacity-30 transition-all cursor-pointer">
-              <Download className="text-white" size={28} />
-            </div>
-          </div>
-        </div>
+  // ---- download received file ----
+  const downloadReceivedFile = () => {
+    if (!receivedFile) return;
+    const url = URL.createObjectURL(receivedFile.blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = receivedFile.name || "download";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
-        {/* MAIN */}
-        <div className="px-4 pt-4">
+  const formatFileSize = (bytes: number) => {
+    if (!bytes) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
+  };
 
-          {activeTab === "home" && (
-            <div>
-              {/* Search Section */}
-              <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
-                <h2 className="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                  <Search size={24} className="text-purple-600" />
-                  Download Any Video
-                </h2>
+  const resetApp = () => {
+    setStep("upload");
+    setFile(null);
+    setShareLink("");
+    setQrCode("");
+    setProgress(0);
+    setReceivedFile(null);
+    setStatus("disconnected");
+    try {
+      if (connectionRef.current && connectionRef.current.close) connectionRef.current.close();
+    } catch (e) {}
+    try {
+      if (peerRef.current) peerRef.current.close();
+    } catch (e) {}
+    connectionRef.current = null;
+    peerRef.current = null;
+    // cleanup global shareData entry if any
+    try {
+      if (window.shareData && peerIdRef.current && window.shareData[peerIdRef.current]) {
+        delete window.shareData[peerIdRef.current];
+      }
+    } catch {}
+  };
 
-                <div className="flex gap-2 mb-3">
-                  <input
-                    type="text"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="Paste video URL here..."
-                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-purple-500"
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                  />
-
-                  <button
-                    onClick={handleSearch}
-                    disabled={loading}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2 hover:scale-105"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="animate-spin" size={20} />
-                        Searching...
-                      </>
-                    ) : (
-                      <>
-                        <Search size={20} />
-                        Search
-                      </>
-                    )}
-                  </button>
+  // ----- UI: Receiving screen ----
+  if (step === "receiving") {
+    return (
+      <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          {!receivedFile ? (
+            <div className="bg-slate-800/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-slate-700">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full mb-4 shadow-lg shadow-orange-500/50">
+                  <Download size={36} className="text-white" />
                 </div>
-
-                {error && (
-                  <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg mb-4 animate-pulse border border-red-200">
-                    <AlertCircle size={20} />
-                    <span className="text-sm font-medium">{error}</span>
-                  </div>
-                )}
-
-                {searchHistory.length > 0 && !videoInfo && (
-                  <div className="border-t pt-4 mt-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <p className="text-sm text-gray-600 font-medium flex items-center gap-2">
-                        <Clock size={16} /> Recent Searches
-                      </p>
-                      <button
-                        onClick={() => setSearchHistory([])}
-                        className="text-xs text-red-500 hover:underline"
-                      >
-                        Clear
-                      </button>
-                    </div>
-
-                    <div className="space-y-1">
-                      {searchHistory.slice(0, 3).map((historyUrl, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            setUrl(historyUrl);
-                            setActiveTab("home");
-                          }}
-                          className="w-full text-left px-3 py-2 bg-gray-50 hover:bg-purple-50 rounded-lg text-sm text-gray-600 truncate transition-colors"
-                        >
-                          {historyUrl}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <h2 className="text-3xl font-bold text-white mb-2">Receiving File</h2>
+                <p className="text-slate-400">Connecting to sender...</p>
               </div>
 
-              {/* Video Details */}
-              {videoInfo && (
-                <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
-                  <div className="flex gap-4 mb-6">
-                    <div className="relative">
-                      <img
-                        src={videoInfo.thumbnail}
-                        className="w-48 h-28 object-cover rounded-lg shadow-md"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="bg-black bg-opacity-60 rounded-full p-3">
-                          <Play className="text-white" size={28} />
-                        </div>
-                      </div>
-
-                      <div className="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
-                        {videoInfo.duration}
-                      </div>
-
-                      <div className="absolute top-2 left-2 bg-purple-600 text-white text-xs px-2 py-1 rounded">
-                        {videoInfo.platform}
-                      </div>
-                    </div>
-
-                    <div className="flex-1">
-                      <h2 className="font-bold text-lg mb-2 text-gray-800">
-                        {videoInfo.title}
-                      </h2>
-
-                      <p className="text-gray-600 text-sm">{videoInfo.channel}</p>
-                      <p className="text-gray-500 text-xs mt-1">
-                        {videoInfo.views} • {videoInfo.uploadDate}
-                      </p>
-
-                      <div className="flex gap-2 mt-3">
-                        <button
-                          onClick={() => {
-                            setUrl("");
-                            setVideoInfo(null);
-                          }}
-                          className="text-purple-600 text-sm font-medium flex items-center gap-1"
-                        >
-                          <Search size={14} /> New Search
-                        </button>
-
-                        <button className="text-gray-600 text-sm font-medium flex items-center gap-1">
-                          <Share2 size={14} /> Share
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2 text-lg">
-                      <Download size={20} />
-                      Select Quality & Download:
-                    </h3>
-
-                    {videoInfo.formats.map((format: any) => (
-                      <div
-                        key={format.id}
-                        className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border hover:border-purple-300 hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`p-3 rounded-lg ${
-                              format.type === "video"
-                                ? "bg-purple-100"
-                                : "bg-pink-100"
-                            }`}
-                          >
-                            {format.type === "video" ? (
-                              <Video size={24} className="text-purple-600" />
-                            ) : (
-                              <Music size={24} className="text-pink-600" />
-                            )}
-                          </div>
-
-                          <div>
-                            <p className="font-semibold text-gray-800">
-                              {format.quality}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {format.size} •{" "}
-                              {format.type === "video"
-                                ? format.resolution
-                                : format.bitrate}{" "}
-                              • {format.format}
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => handleDownload(format)}
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:shadow-lg flex items-center gap-2 hover:scale-105"
-                        >
-                          <Download size={18} /> Download
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* DOWNLOAD PAGE */}
-          {activeTab === "downloads" && (
-            <div className="bg-white rounded-2xl shadow-2xl p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                  <Download size={28} className="text-purple-600" />
-                  My Downloads
-                </h2>
-
-                {downloads.length > 0 && (
-                  <button
-                    onClick={clearAllDownloads}
-                    className="text-red-500 text-sm font-medium hover:bg-red-50 px-3 py-2 rounded-lg flex items-center gap-1"
-                  >
-                    <Trash2 size={16} /> Clear All
-                  </button>
-                )}
-              </div>
-
-              {downloads.length === 0 ? (
-                <div className="text-center py-16 text-gray-400">
-                  <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-4">
-                    <Download size={56} className="text-purple-400" />
-                  </div>
-
-                  <p className="text-xl font-semibold text-gray-600 mb-2">
-                    No downloads yet
-                  </p>
-                  <p className="text-sm">
-                    Start downloading videos from the Home tab
-                  </p>
-
-                  <button
-                    onClick={() => setActiveTab("home")}
-                    className="mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:shadow-lg"
-                  >
-                    Browse Videos
-                  </button>
-                </div>
-              ) : (
+              {status === "connected" && progress > 0 && (
                 <div className="space-y-4">
-                  {downloads.map((download) => (
-                    <div
-                      key={download.id}
-                      className="border-2 border-gray-200 rounded-xl p-4 hover:border-purple-300 hover:shadow-lg transition-all"
-                    >
-                      <div className="flex gap-4 mb-3">
-                        <img
-                          src={download.thumbnail}
-                          className="w-24 h-16 object-cover rounded-lg"
-                        />
-
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-800 truncate">
-                            {download.title}
-                          </p>
-
-                          <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                            <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                              {download.platform}
-                            </span>
-                            <span>{download.format}</span>
-                            <span>•</span>
-                            <span>{download.size}</span>
-                            <span>•</span>
-                            <span>{download.fileFormat}</span>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => removeDownload(download.id)}
-                          className="text-gray-400 hover:text-red-500 p-2 hover:bg-red-50 rounded-lg"
-                        >
-                          <X size={20} />
-                        </button>
-                      </div>
-
-                      {download.status === "downloading" ? (
-                        <div>
-                          <div className="w-full bg-gray-200 rounded-full h-3 mb-2 overflow-hidden">
-                            <div
-                              className={`bg-gradient-to-r ${getProgressColor(
-                                download.progress
-                              )} h-3 rounded-full transition-all`}
-                              style={{ width: `${download.progress}%` }}
-                            ></div>
-                          </div>
-
-                          <div className="flex justify-between text-xs">
-                            <p className="text-gray-600 font-medium">
-                              {download.downloadSpeed}
-                            </p>
-                            <p className="text-purple-600 font-bold">
-                              {download.progress}%
-                            </p>
-                            <p className="text-gray-500">
-                              {download.timeRemaining}
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex justify-between bg-green-50 p-3 rounded-lg border border-green-200">
-                          <div className="flex items-center gap-2 text-green-600">
-                            <CheckCircle size={20} />
-                            <span className="font-semibold text-sm">
-                              Download Complete!
-                            </span>
-                          </div>
-
-                          <div className="flex gap-2">
-                            <button className="text-purple-600 text-sm font-medium hover:underline">
-                              Open
-                            </button>
-                            <button className="text-gray-600 text-sm font-medium hover:underline">
-                              Share
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      <p className="text-xs text-gray-400 mt-2">
-                        {download.timestamp}
-                      </p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm text-slate-400">
+                      <span>Downloading...</span>
+                      <span className="font-semibold text-orange-400">{progress}%</span>
                     </div>
-                  ))}
+                    <div className="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 h-4 rounded-full transition-all duration-300 shadow-lg shadow-orange-500/50"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
+
+              {status !== "connected" && (
+                <div className="text-center py-6">
+                  <div className="animate-spin w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
+                  <p className="text-slate-400 mt-4">Establishing connection...</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-slate-800/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-slate-700">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full mb-4 shadow-lg shadow-green-500/50">
+                  <Check size={36} className="text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-2">File Received!</h2>
+              </div>
+
+              <div className="bg-slate-700/50 backdrop-blur-sm rounded-xl p-5 mb-6 border border-slate-600">
+                <p className="text-white font-semibold text-lg truncate">{receivedFile.name}</p>
+                <p className="text-slate-400 text-sm mt-1">{formatFileSize(receivedFile.size)}</p>
+              </div>
+
+              <button
+                onClick={downloadReceivedFile}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-semibold transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 flex items-center justify-center gap-2"
+              >
+                <Download size={22} />
+                Download File
+              </button>
             </div>
           )}
         </div>
       </div>
+    );
+  }
 
-      {/* BOTTOM NAV */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t">
-        <div className="max-w-4xl mx-auto flex justify-around py-3">
-
-          {[
-            { id: "home", icon: Search, label: "Home" },
-            { id: "downloads", icon: Download, label: "Downloads", badge: downloads.length },
-          ].map((tab) => (
+  // ----- UI: Sharing screen ----
+  if (step === "sharing") {
+    return (
+      <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 overflow-hidden">
+        <div className="max-w-md w-full">
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-slate-700 relative">
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`relative flex flex-col items-center px-8 py-2 rounded-xl ${
-                activeTab === tab.id
-                  ? "text-purple-600 bg-purple-50 scale-105"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-              }`}
+              onClick={resetApp}
+              className="absolute top-6 right-6 text-slate-400 hover:text-white transition-all hover:rotate-90 duration-300"
             >
-              <div className="relative">
-                <tab.icon size={24} />
-
-                {(tab.badge ?? 0) > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-pulse">
-                    {(tab.badge ?? 0) > 9 ? "9+" : (tab.badge ?? 0)}
-                  </span>
-                )}
-              </div>
-
-              <span className="text-xs font-semibold">{tab.label}</span>
+              <X size={24} />
             </button>
-          ))}
 
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-white mb-1 truncate">{file?.name}</h2>
+              <p className="text-slate-400 text-lg">{formatFileSize(file?.size || 0)}</p>
+            </div>
+
+            <div className="bg-slate-700/50 backdrop-blur-sm rounded-xl p-4 mb-6 font-mono text-sm text-slate-300 break-all border border-slate-600">
+              {shareLink}
+            </div>
+
+            {qrCode && (
+              <div className="bg-white rounded-xl p-5 mb-6 flex justify-center shadow-lg">
+                <img src={qrCode} alt="QR Code" className="w-48 h-48" />
+              </div>
+            )}
+
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <button
+                onClick={() => copyToClipboard(shareLink)}
+                className="bg-gradient-to-br from-green-600 to-green-700 rounded-full p-4 flex items-center justify-center transition-all shadow-lg hover:scale-105"
+                title="Copy link"
+              >
+                <Link size={20} className="text-white" />
+              </button>
+              <button
+                onClick={() => {
+                  // share via navigator.share if available
+                  if (navigator.share) {
+                    navigator
+                      .share({ title: "Share file", url: shareLink })
+                      .catch(() => {});
+                  } else {
+                    copyToClipboard(shareLink);
+                  }
+                }}
+                className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-full p-4 flex items-center justify-center transition-all shadow-lg hover:scale-105"
+                title="Native share / copy"
+              >
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+              </button>
+              <button
+                onClick={() => {
+                  // small convenience: open in new window (same page signalling demo)
+                  window.open(shareLink, "_blank");
+                }}
+                className="bg-gradient-to-br from-sky-500 to-sky-600 rounded-full p-4 flex items-center justify-center transition-all shadow-lg hover:scale-105"
+                title="Open share link"
+              >
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <label className="flex items-center gap-3 text-slate-300 hover:text-white transition cursor-pointer">
+                <input type="checkbox" defaultChecked className="w-5 h-5 accent-orange-500" />
+                <span className="text-sm">Share with nearby devices</span>
+              </label>
+              <label className="flex items-center gap-3 text-slate-300 hover:text-white transition cursor-pointer">
+                <input type="checkbox" defaultChecked className="w-5 h-5 accent-orange-500" />
+                <span className="text-sm">Use fallback when no direct connection can be made</span>
+              </label>
+            </div>
+
+            <div className="bg-yellow-900/30 border border-yellow-600/50 rounded-xl p-4 backdrop-blur-sm">
+              <p className="text-yellow-500 font-semibold mb-2 flex items-center gap-2">⚠️ Please note:</p>
+              <p className="text-yellow-200 text-sm leading-relaxed">
+                Closing this page will stop sharing. Keep it open to continue.
+              </p>
+            </div>
+
+            {status === "connected" && progress > 0 && (
+              <div className="mt-6 space-y-2">
+                <div className="flex justify-between text-sm text-slate-400">
+                  <span>Sending...</span>
+                  <span className="font-semibold text-orange-400">{progress}%</span>
+                </div>
+                <div className="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-orange-500 to-orange-600 h-4 rounded-full transition-all duration-300 shadow-lg shadow-orange-500/50"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ----- Default upload UI -----
+  return (
+    <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="order-1">
+            <input
+              ref={fileInputRef}
+              type="file"
+              onChange={(e) => {
+                const selectedFile = e.target.files?.[0];
+                if (selectedFile) handleFileSelect(selectedFile);
+              }}
+              className="hidden"
+            />
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`bg-slate-800/50 backdrop-blur-sm rounded-3xl border-4 border-dashed ${
+                isDragging ? "border-orange-500 bg-slate-700/50 scale-105" : "border-slate-600"
+              } p-16 cursor-pointer hover:border-orange-500 hover:bg-slate-700/50 transition-all duration-300 shadow-2xl`}
+            >
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full mb-6 shadow-lg shadow-orange-500/50 animate-pulse">
+                  <Upload size={48} className="text-white" />
+                </div>
+                <p className="text-white text-2xl font-semibold mb-3">Drop your file here</p>
+                <p className="text-slate-400 text-lg">or click to browse</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-white space-y-6 order-2">
+            <div>
+              <h1 className="text-6xl font-bold mb-6 leading-tight bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+                Share files directly from your device
+              </h1>
+              <p className="text-slate-300 text-xl">Send files of any size directly from your device without ever storing anything online.</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 border border-slate-700 hover:border-orange-500 transition-all">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <div className="bg-orange-500/10 p-2 rounded-lg"><Link size={20} className="text-orange-500" /></div>
+                  <span className="font-medium">No size limit</span>
+                </div>
+              </div>
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 border border-slate-700 hover:border-orange-500 transition-all">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <div className="bg-orange-500/10 p-2 rounded-lg">
+                    <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Peer-to-peer</span>
+                </div>
+              </div>
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 border border-slate-700 hover:border-orange-500 transition-all">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <div className="bg-orange-500/10 p-2 rounded-lg">
+                    <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Blazingly fast</span>
+                </div>
+              </div>
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 border border-slate-700 hover:border-orange-500 transition-all">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <div className="bg-orange-500/10 p-2 rounded-lg">
+                    <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Encrypted</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
